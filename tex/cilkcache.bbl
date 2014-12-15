@@ -1,0 +1,67 @@
+\begin{thebibliography}{10}
+
+\bibitem{Aho:1974:DAC:578775}
+A.~V. Aho, J.~E. Hopcroft, and J.~D. Ullman.
+\newblock {\em The Design and Analysis of Computer Algorithms}.
+\newblock Addison-Wesley Longman Publishing Co., Inc., Boston, MA, USA, 1st
+  edition, 1974.
+
+\bibitem{Blelloch:2008:PGM:1347082.1347137}
+G.~E. Blelloch, R.~A. Chowdhury, P.~B. Gibbons, V.~Ramachandran, S.~Chen, and
+  M.~Kozuch.
+\newblock Provably good multicore cache performance for divide-and-conquer
+  algorithms.
+\newblock In {\em Proceedings of the Nineteenth Annual ACM-SIAM Symposium on
+  Discrete Algorithms}, SODA '08, pages 501--510, Philadelphia, PA, USA, 2008.
+  Society for Industrial and Applied Mathematics.
+
+\bibitem{Blumofe:1996:ADD:237502.237574}
+R.~D. Blumofe, M.~Frigo, C.~F. Joerg, C.~E. Leiserson, and K.~H. Randall.
+\newblock An analysis of dag-consistent distributed shared-memory algorithms.
+\newblock In {\em Proceedings of the Eighth Annual ACM Symposium on Parallel
+  Algorithms and Architectures}, SPAA '96, pages 297--308, New York, NY, USA,
+  1996. ACM.
+
+\bibitem{Blumofe:1999:SMC:324133.324234}
+R.~D. Blumofe and C.~E. Leiserson.
+\newblock Scheduling multithreaded computations by work stealing.
+\newblock {\em J. ACM}, 46(5):720--748, Sept. 1999.
+
+\bibitem{Burton:1981:EFP:800223.806778}
+F.~W. Burton and M.~R. Sleep.
+\newblock Executing functional programs on a virtual tree of processors.
+\newblock In {\em Proceedings of the 1981 conference on Functional programming
+  languages and computer architecture}, FPCA '81, pages 187--194, New York, NY,
+  USA, 1981. ACM.
+
+\bibitem{Cormen:2009:IAT:1614191}
+T.~H. Cormen, C.~E. Leiserson, R.~L. Rivest, and C.~Stein.
+\newblock {\em Introduction to Algorithms, Third Edition}.
+\newblock The MIT Press, 3rd edition, 2009.
+
+\bibitem{Frigo:1999:CA:795665.796479}
+M.~Frigo, C.~E. Leiserson, H.~Prokop, and S.~Ramachandran.
+\newblock Cache-oblivious algorithms.
+\newblock In {\em Proceedings of the 40th Annual Symposium on Foundations of
+  Computer Science}, FOCS '99, pages 285--, Washington, DC, USA, 1999. IEEE
+  Computer Society.
+
+\bibitem{Frigo:2012:CA:2071379.2071383}
+M.~Frigo, C.~E. Leiserson, H.~Prokop, and S.~Ramachandran.
+\newblock Cache-oblivious algorithms.
+\newblock {\em ACM Trans. Algorithms}, 8(1):4:1--4:22, Jan. 2012.
+
+\bibitem{Frigo:2006:CCM:1148109.1148157}
+M.~Frigo and V.~Strumpen.
+\newblock The cache complexity of multithreaded cache oblivious algorithms.
+\newblock In {\em Proceedings of the Eighteenth Annual ACM Symposium on
+  Parallelism in Algorithms and Architectures}, SPAA '06, pages 271--280, New
+  York, NY, USA, 2006. ACM.
+
+\bibitem{Halstead:1984:IML:800055.802017}
+R.~H. Halstead, Jr.
+\newblock Implementation of multilisp: Lisp on a multiprocessor.
+\newblock In {\em Proceedings of the 1984 ACM Symposium on LISP and functional
+  programming}, LFP '84, pages 9--17, New York, NY, USA, 1984. ACM.
+
+\end{thebibliography}
