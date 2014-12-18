@@ -1,0 +1,45 @@
+{\em Dynamic multithreading} (DYM) \cite[Chapter 27]{Cormen2009} is a
+model of parallel computation which is faithful to several industry standards
+such as Intel's CilkPlus (\url{cilkplus.org}) and OpenMP Tasks
+(\url{openmp.org/wp}), and Threading Building
+Blocks (\url{threadingbuildingblocks.org}).
+
+We will define a {\em multithreaded computation} as a directed acyclic
+graph (DAG) $G=(V,E)$, where the set of vertices $V$ are instructions
+and $(u,v) \in E$ are dependencies between instructions; whereby in
+this case, $u$ must be executed before $v$.\footnote{Notice that the
+  RAM model is a subset of the DYM model where the outdegree of every
+  vertex $v \in V$ is $\leq 1$.} In order to signal parallel
+execution, we will augment sequential pseudocode with three keywords,
+{\bf spawn}, {\bf sync} and {\bf parfor}. The {\bf spawn} keyword
+signals that the procedure call that it precedes {\em may be} executed
+in parallel with the next instruction in the instance that executes
+the {\bf spawn}. In turn, the {\bf sync} keyword signals that all
+spawned procedures must finish before proceeding with the next
+instruction in the stream. Finally, {\bf parfor} is simply ``syntactic
+sugar'' for {\bf spawn}'ing and {\bf sync}'ing ranges of a loop
+iteration. If a stream of instructions does not contain one of the
+above keywords, or a {\bf return} (which implicitly {\bf sync}'s) from
+a procedure, we will group these instruction into a single {\em
+  strand}. Strands are scheduled onto processors using a {\em
+  work-stealing} scheduler, which does the load-balancing of the
+computations. Work-stealing schedulers have been proved to be a factor
+of 2 away from optimal performance
+\cite{Blumofe:1999:SMC:324133.324234}.
+
+To measure the efficiency of our parallel algorithm, we
+will use three metrics: the {\em work}, the {\em span} and the number
+of processors. In accordance to the parallel literature, we will
+subscript running times by $P$, so $T_P$ is the running time of an
+algorithm on $P$ processors. The {\em work} is the total running time
+taken by all (unit-time) strands when executing on a {\em single}
+processor (i.e., $T_1$),\footnote{Notice, again, that analyzing the
+  work amounts to finding the running time of the serial algorithm
+  using the RAM model.} while the {\em span}, denoted as $T_\infty$,
+is the {\em critical path} (the longest path) of $G$. In this work,
+we are interested in speeding up the succinct tree construction and finding
+out the upper bounds of this speedup. To measure this, we will define
+{\em speedup} as $T_1/T_P = O(P)$, where linear speedup $T_1/T_P =
+\Theta(P)$, is the goal. We also define {\em parallelism} as the ratio
+$T_1/T_{\infty}$, the maximum theoretical speedup that can be achieved
+on {\em any} number of processors.

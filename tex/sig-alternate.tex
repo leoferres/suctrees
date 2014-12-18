@@ -47,10 +47,12 @@
 
 \documentclass{sig-alternate}
 
+\usepackage{url}
+
 \begin{document}
 %
 % --- Author Metadata here ---
-\conferenceinfo{WOODSTOCK}{'97 El Paso, Texas USA}
+\conferenceinfo{SPAA}{'15 Portland, Oregon, USA}
 %\CopyrightYear{2007} % Allows default copyright year (20XX) to be over-ridden - IF NEED BE.
 %\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
 % --- End of Author Metadata ---
@@ -86,7 +88,7 @@
 % without further effort on your part as the last section in
 % the body of your article BEFORE References or any Appendices.
 
-\numberofauthors{8} %  in this sample file, there are a *total*
+\numberofauthors{4} %  in this sample file, there are a *total*
 % of EIGHT authors. SIX appear on the 'first-page' (for formatting
 % reasons) and the remaining two appear in the \additionalauthors section.
 %
@@ -143,9 +145,18 @@ Leo Ferres\\
 
 \keywords{}
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% INTRODUCTION %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}
 \label{sec:introduction}
 \input{introduction}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% RELATED WORK %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Related Work}
 \label{sec:relwork}
@@ -159,13 +170,30 @@ Leo Ferres\\
 \label{subsec:dym}
 \input{dym}
 
+\subsection{Multicore succinct data structures}
+\label{subsec:multicoreSDS}
+\input{multicoreSDS}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% MULTICORE SUCCINCT TREE %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Multicore Succinct Tree}
 \label{sec:multicoreST}
 \input{multicoreST}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% EXPERIMENTS %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Experimental Results}
 \label{sec:exps}
 \input{exps}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%% CONCLUSION %%%%%
+%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
 \label{sec:conclusion}
