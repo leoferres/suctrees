@@ -49,6 +49,7 @@
 
 \usepackage{url}
 \usepackage[usenames]{xcolor}
+\usepackage[vlined]{algorithm2e}
 
 \newcommand{\Jose}[1]{{\color{red} [[JOSE:: #1]]}}
 \newcommand{\Leo}[1]{{\color{blue} [[LEO:: #1]]}}
@@ -117,24 +118,26 @@
        \email{jfuentess@udec.cl}
 % 2nd. author
 \alignauthor
+Meng He\\
+       \affaddr{Dalhousie University}\\
+       \affaddr{Mona Campbell 314}\\
+       \affaddr{Halifax, Canada}\\
+       \email{menghe@dal.ca}
+\and  % use '\and' if you need 'another row' of author names
+% 3rd. author
+\alignauthor
+Norbert Zhe\\
+       \affaddr{Dalhousie University}\\
+       \affaddr{Mona Campbell 314}\\
+       \affaddr{Halifax, Canada}\\
+       \email{nzeh@cs.dal.ca}
+% 4th. author
+\alignauthor
 Leo Ferres\\
        \affaddr{Universidad de Concepci\'on}\\
        \affaddr{Edmundo Larenas 219}\\
        \affaddr{Concepci\'on, Chile}\\
        \email{lferres@udec.cl}
-\and  % use '\and' if you need 'another row' of author names
-% 3rd. author
-\alignauthor Meng He\\
-       \affaddr{Dalhousie University}\\
-       \affaddr{Mona Campbell 314}\\
-       \affaddr{Halifax, Canada}\\
-       \email{menghe@dal.ca}
-% 4th. author
-\alignauthor Norbert Zhe\\
-       \affaddr{Dalhousie University}\\
-       \affaddr{Mona Campbell 314}\\
-       \affaddr{Halifax, Canada}\\
-       \email{nzeh@cs.dal.ca}
 }
 
 \maketitle
@@ -188,6 +191,13 @@ Leo Ferres\\
 \label{sec:multicoreST}
 \input{multicoreST}
 
+\subsection{Parallel Succinct Tree Algorithm}
+\label{subsec:multicoreSTAlgorithm}
+\input{multicoreSTAlgorithm}
+
+\subsection{Theoretical Analysis}
+\label{subsec:theoreticalAnalysis}
+\input{theoreticalAnalysis}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%% EXPERIMENTS %%%%%

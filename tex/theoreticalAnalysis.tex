@@ -1,0 +1,152 @@
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
+  $o$ = $\frac{\lceil |P|/s \rceil-1}{k-1}$\tcp*[h]{Internal nodes of the RMMT}\;
+  $e^{\prime}$ = array of size $\lceil |P|/s \rceil$\;
+  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil |P|/s \rceil + o$\;
+  $ct$ = $\lceil |P|/s \rceil/num\_threads$\tcp*[h]{Chunks per thread}\;
+  \PFor{$t\leftarrow 0$ \KwTo $num\_threads-1$}{
+	  $partial\_excess, local\_min$ = $0$\;
+	  $local\_max, num\_mins$ = $0$\;
+	  
+	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
+		  $llimit$ = $t*ct*s+chunk*s$\;
+		  $ulimit$ = $llimit+s$\;
+	  	
+		  \For{$par \leftarrow llimit$ \KwTo $ulimit$}{
+		  	\eIf{$P[par]$ is $closed$}{
+		  		$partial\_excess$ -= $1$\;
+		  	}
+		    {
+		  		$partial\_excess$ += $1$\;
+		    }
+		    
+		    \uIf{$partial\_excess < local\_min$}{
+				$local\_min$ = $partial\_excess$\;
+				$num\_mins$ = $1$
+			}
+			\uElseIf{$partial\_excess == local\_min$}{
+				$num\_mins$ += $1$\;
+			}
+			\uElseIf{$partial\_excess > local\_max$}{
+				$local\_max$ = $partial\_excess$\;
+			}
+		  }
+		  $e^{\prime}[t*ct+chunk]$ = $local\_excess$\;
+		  $m^{\prime}[t*ct+chunk+o]$ = $local\_min$\;
+		  $M^{\prime}[t*ct+chunk+o]$ = $local\_max$\;
+		  $n^{\prime}[t*ct+chunk+o]$ = $num\_mins$\;		  
+	  }
+  }
+  \BlankLine
+  \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
+		$e^{\prime}[(t+1)*ct]$ += $e^{\prime}[t*ct-1]$\;
+  }
+  \BlankLine
+  \PFor{$t\leftarrow 1$ \KwTo $num\_threads$}{
+	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
+	  	\If{$t == num\_threads-1$ oR $chunk < ct-1$}{
+	  	  $e^{\prime}[t*ct+chunk]$ += $e^{\prime}[t*ct-1]$\;
+	  	}
+  	  	$m^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
+  	  	$M^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
+	  }
+  }
+
+
+%  \Return{$WT$}\;
+
+  \caption{{\tt PSTA} (part 1)}
+  \label{algo:PSTA1}
+\end{algorithm}
+\normalsize
+
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
+
+  $level$ = $\lceil \log_{k}num\_threads \rceil$\;
+  \PFor{$subtree\leftarrow 0$ \KwTo $k^{level}$}{
+	  \For{$l\leftarrow \log_{k}(\lceil |P|/s \rceil-1)$ \KwTo $level$}{
+		  \For{$node\leftarrow 0$ \KwTo $k^{l-level}$}{
+		  	$pos$ = $node + k^{l} - 1 +subtree*k^{l-level}$\;
+			\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
+				\tcp*[h]{first time}\;
+			  	\eIf{$child == pos*k+1$}{
+				  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+				  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+				  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
+			  	}
+			    	{
+				    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
+						$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+						$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
+					}
+					\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
+						$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
+					}
+					\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
+						$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+					}
+		    		}
+			}		  	
+		  }
+	  }
+  }
+  \BlankLine
+  \For{$l\leftarrow level-1$ \KwTo $0$}{
+	  \PFor{$node\leftarrow 0$ \KwTo $k^{l}$}{
+	  	$pos$ = $node + \frac{k^{l}-1}{k-1}$\;
+		\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
+			\tcp*[h]{first time}\;
+		  	\eIf{$child == pos*k+1$}{
+			  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+			  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+			  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
+		  	}
+		    	{
+			    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
+					$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+					$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
+				}
+				\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
+					$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
+				}
+				\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
+					$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+				}
+	    		}
+		}		  	
+	  }
+  }
+  \BlankLine  
+  $CreateUniversalTables()$
+
+  \caption{{\tt PSTA} (part 2)}
+  \label{algo:PSTA2}
+\end{algorithm}
+\normalsize
