@@ -1,40 +1,196 @@
-We propose a parallel algorithm based in the construct of the \emph{Range Min-Max Tree}, {\tt RMMT}\cite{Navarro:2014:FFS:2620785.2601073}. Our algorithm, called \emph{Parallel Succinct Tree Algorithm}, {\tt PSTA}, has as input a possibly non-balanced parentheses sequence $P$, where an opened-parenthesis is encoded by \emph{1} and a closed-parenthesis by \emph{0}.
+The {\tt PSTA} algorithm is shown in Algorithm \ref{algo:PSTA1}, \ref{algo:PSTA2} and \ref{algo:PSTA3}. Algorithm \ref{algo:PSTA1} shows the computation of the leaves of the {\tt RMMT}, Algorithm \ref{algo:PSTA2} shows the computation of the internal nodes  of the {\tt RMMT} and finally Algorithm \ref{algo:PSTA3} shows the computation of the universal tables. The sequential version of {\tt PSTA} can be obtained by replacing {\bf parfor} instruction with sequential {\bf for} instructions. The algorithm takes as input a parentheses sequence $P$, the arity $k$ of the internal nodes in the {\tt RMMT}, the size of each chunk $s$ and the total numbers of available threads. In the sequence $P$, opened-parenthesis and closed-parenthesis are coded by $1$ and $0$, respectively. The output is the {\tt RMMT} represented by its arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables, used to support queries in constant time.
 
-The {\tt RMMT} is constructed over $P$, partitioning $P$ in disjoint chunks of size $s$. Considering those chunks, the construction of the {\tt RMMT} is based in the computation of different arrays of size $O(\frac{|P|}{s})$. Such arrays are $e^{\prime}$, saving the final excess of each chunk, $m^{\prime}$, saving the minimum excess value of each chunk, $M^{\prime}$, saving the maximum excess value of each chunk and $n^{\prime}$, saving the number of ocurrences of the minimum value of each chunk. As a reminder, the excess value at position $i$ is:
-\begin{equation}
-		\displaystyle E[i] = \sum_{k=0}^{i} \pi(P[k])
-		\label{eq:excess}
-\end{equation}
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
+  $o$ = $\frac{\lceil |P|/s \rceil-1}{k-1}$\tcp*[h]{Internal nodes of the RMMT}\;
+  $e^{\prime}$ = array of size $\lceil |P|/s \rceil$\;
+  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil |P|/s \rceil + o$\;
+  $ct$ = $\lceil |P|/s \rceil/num\_threads$\tcp*[h]{Chunks per thread}\;
+  \PFor{$t\leftarrow 0$ \KwTo $num\_threads-1$}{
+	  $partial\_excess, local\_min$ = $0$\;
+	  $local\_max, num\_mins$ = $0$\;
+	  
+	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
+		  $llimit$ = $t*ct*s+chunk*s$\;
+		  $ulimit$ = $llimit+s$\;
+	  	
+		  \For{$par \leftarrow llimit$ \KwTo $ulimit$}{
+		  	\eIf{$P[par]$ is $closed$}{
+		  		$partial\_excess$ -= $1$\;
+		  	}
+		    {
+		  		$partial\_excess$ += $1$\;
+		    }
+		    
+		    \uIf{$partial\_excess < local\_min$}{
+				$local\_min$ = $partial\_excess$\;
+				$num\_mins$ = $1$
+			}
+			\uElseIf{$partial\_excess == local\_min$}{
+				$num\_mins$ += $1$\;
+			}
+			\uElseIf{$partial\_excess > local\_max$}{
+				$local\_max$ = $partial\_excess$\;
+			}
+		  }
+		  $e^{\prime}[t*ct+chunk]$ = $local\_excess$\;
+		  $m^{\prime}[t*ct+chunk+o]$ = $local\_min$\;
+		  $M^{\prime}[t*ct+chunk+o]$ = $local\_max$\;
+		  $n^{\prime}[t*ct+chunk+o]$ = $num\_mins$\;		  
+	  }
+  }
+  \BlankLine
+  \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
+		$e^{\prime}[(t+1)*ct]$ += $e^{\prime}[t*ct-1]$\;
+  }
+  \BlankLine
+  \PFor{$t\leftarrow 1$ \KwTo $num\_threads$}{
+	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
+	  	\If{$t == num\_threads-1$ OR $chunk < ct-1$}{
+	  	  $e^{\prime}[t*ct+chunk]$ += $e^{\prime}[t*ct-1]$\;
+	  	}
+  	  	$m^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
+  	  	$M^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
+	  }
+  }
 
-where $\pi(``(") = 1$ and $\pi(``)") = -1$. See Figure \ref{fig:RangeMinMaxTree} as an example of {\tt RMMT}, with $s=3$ and $k=3$.
 
- 	\begin{figure}[ht]
-		\centering
-		\includegraphics[scale=0.13]{./images/Range-min-max-tree.png}
-     	\caption{Range min-max tree}
-		\label{fig:RangeMinMaxTree} 
-	\end{figure}
+%  \Return{$WT$}\;
 
-The first step of {\tt PSTA} is to compute the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ in parallel. Since $e^{\prime}$ just saves the last excess value of each chunk, which is a sum, {\tt PSTA} needs to apply a parallel list-ranking algorithm. Computing the last element of $e^{\prime}$, at position $\frac{|P|}{s}-1$, we indirectly compute the rest of the elements of $e^{\prime}$. We adapted the algorithm in \cite{Helman2001265} for this context, computing $e^{\prime}$ in $O(\frac{|P|}{p})$ time, using $p$ threads. Note that we do not need to compute more elements of $e^{\prime}$ to the internal nodes of the {\tt RMMT}. The final size of $e^{\prime}$  and the memory used in construction time are bounded by $O(\frac{nc\lg(w)}{w})$ bits, where $c\geqslant 1$ and $w$ is the word size in the RAM model.
+  \caption{{\tt PSTA} (part I)}
+  \label{algo:PSTA1}
+\end{algorithm}
+\normalsize
 
-To compute $m^{\prime}$, let's assume, without loss of generality, that $p = k^{i}$, where $k = \Theta(\frac{w}{c\lg(w)})$ is the arity of the internal nodes in the {\tt RMMT} and $i > 0$. {\tt PSTA} assigns one thread per sub-tree of size $O(\frac{|P|}{sp})$, at level $i$. So, it is possible to compute the $m^{\prime}$ values in all sub-trees, in parallel, in $O(\frac{|P|}{sp}k)$ time. Then, for the rest $O(p)$ nodes in the top of the tree, we compute the corresponding minimum values in $O(k\lg_{k} p)$ time, computing each level in $O(k)$ time, just looking the $k$ values on the previous level using one thread per vertex. If we consider $k$ as a constant, we can compute $m^{\prime}$ in $O(\frac{|P|}{sp}k + \lg p) = O(\frac{|P|}{p\lg(w)}+\lg p)$ time, using $O(\frac{|P|c\lg(w)}{w})$ bits in construction time and in the final array. Note that this solution makes sense considering that $p\ll |P|$. Figure \ref{fig:min-max-array} illustrates the solution explained here. We can compute $M^{\prime}$ and $n^{\prime}$ in the same way, obtaining the same complexities.
+	Let's analyze the Algorithm \ref{algo:PSTA1}. Since the {\tt RMMT} can be seen as a complete tree of arity $k$, it is easy to calculate the size of the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$. The size of array $e^{\prime}$ is the number of leaves of the {\tt RMMT} (line 2). The size of arrays $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ is equal to the total number of nodes of the {\tt RMMT}, that is, $\frac{\lceil |P|/s \rceil-1}{k-1} + \lceil |P|/s \rceil$ (lines 1 and 3). Lines 4 to 26 shows the computation of partial excess values in parallel. The first step is to compute the number of chunks that each thread has to process (line 4). Then, in parallel, each thread computes the excess value of $ct$ consecutive chunks, following the Equation \ref{eq:excess}. In each chunk, the thread increases by one the partial excess value each time that a open parenthesis appears, and decreases by one in other case (lines 12 to 15). Immediately after the partial excess changes, it is necessary to verify if the maximum, minimum and number of minimum values change, too (lines 16 to 22). When a chunk is completed, the local excess and its associated values are stored in the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ (lines 23 to 26). After a thread finishes its chunks, it is necessary to complement its local excess values considering the local values of previous threads. To do that, first we update sequentially the final excess value of each thread (lines 27 and 28). Those excess values do not need to be changed again. Now, thanks to the final excess value of each thread is updated, each thread can update the other excess, minimum and maximum values in parallel (lines 29 to 34). At this point, {\tt PSTA} has computed all the leaves of the {\tt RMMT} in parallel.
 
-	 	\begin{figure}[ht]
-			\centering
-			\includegraphics[scale=0.28]{./images/Min-Max-array.png}
-     		\caption{Computation of $m^{\prime}$ and $M^{\prime}$}
-			\label{fig:min-max-array} 
-		\end{figure}
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
 
-	In addition to the arrays, the construction of the {\tt RMMT} involves the computation of \emph{universal tables}. The universal tables are used to support \emph{fwd\_search}($\bullet$), \emph{bwd\_search}($\bullet$), \emph{rmqi}($\bullet$), \emph{RMQi}($\bullet$), \emph{degree}($\bullet$) and \emph{child}($\bullet$) queries in constant time. We can divide universal tables in two kinds: Those that depend on the leaves of the {\tt RMMT} and those that depend on the internal nodes. In the first case, we can compute each universal table in parallel assigning one processor per leaf or chunk, which allows to compute different parts of the table at the same time. For the second kind of tables, we can assign one processor per internal node. Such processor computes the section corresponding to that internal node in the universal table. In that way, since compute the universal tables sequentially has a complexity of $O(\sqrt{2^{w}}poly(w))$ time according to \cite{Navarro:2014:FFS:2620785.2601073}, we can compute those universal tables in $\displaystyle O(\frac{\sqrt{2^{w}}poly(w)}{p})$, using $p$ processors.
+  $level$ = $\lceil \log_{k}num\_threads \rceil$\;
+  \PFor{$subtree\leftarrow 0$ \KwTo $k^{level}$}{
+	  \For{$l\leftarrow \lceil\log_{k}(|P|/s)\rceil-1$ \KwTo $level$}{
+		  \For{$node\leftarrow 0$ \KwTo $k^{l-level}$}{
+		  	$pos$ = $node + k^{l} - 1 +subtree*k^{l-level}$\;
+			\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
+				\tcp*[h]{first time}\;
+			  	\eIf{$child == pos*k+1$}{
+				  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+				  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+				  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
+			  	}
+			    	{
+				    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
+						$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+						$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
+					}
+					\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
+						$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
+					}
+					\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
+						$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+					}
+		    		}
+			}		  	
+		  }
+	  }
+  }
+  \BlankLine
+  \For{$l\leftarrow level-1$ \KwTo $0$}{
+	  \PFor{$node\leftarrow 0$ \KwTo $k^{l}$}{
+	  	$pos$ = $node + \frac{k^{l}-1}{k-1}$\;
+		\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
+			\tcp*[h]{first time}\;
+		  	\eIf{$child == pos*k+1$}{
+			  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+			  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+			  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
+		  	}
+		    	{
+			    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
+					$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
+					$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
+				}
+				\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
+					$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
+				}
+				\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
+					$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
+				}
+	    		}
+		}		  	
+	  }
+  }
+  \caption{{\tt PSTA} (part II)}
+  \label{algo:PSTA2}
+\end{algorithm}
+\normalsize
 
-To reduce the space used by the {\tt RMMT}, Sadakane y Navarro used the results of \cite{Patrascu:2008:SUC:1470582.1470670}. They represented the {\tt RMMT} as a \emph{aB-tree}, which is a complete tree. As the {\tt RMMT} is also a complete, we can apply a construction as the exposed in Figure \ref{fig:min-max-array} to construct the aB-tree. With respect to the universal tables needed in the aB-tree, them can be computed following the same strategy explained previously, but now with size $O(\sqrt{2^{w}})$ bits. Although we can apply a similar strategy, the results of \cite{Patrascu:2008:SUC:1470582.1470670} are not practical, so we did not implement this part of our solution. Previous implementations of the {\tt RMMT} neither implement this part.
+	Algorithm \ref{algo:PSTA2} shows the computation of the internal nodes, which has two substeps: The first substep computes $O(p)$ subtrees in parallel (lines 2 to 18) and the second one computes the top of the {\tt RMMT} (lines 19 to 34). To ensure that $O(p)$ subtrees will be computed in parallel, it is necessary to compute the closest level to the root that has at least $p$ subtrees (line 1). After that, {\tt PSTA} computes in parallel each subtree at such level. Each thread compute each node of the corresponding subtree by scanning the $k$ children of such node, obtaining the corresponding minimum and maximum values (lines 3 to 18). Observe that one thread can compute more than one subtree and those subtrees can be non-consecutive. With a scheduler that balances the work, such as a work-stealing scheduler, threads have a similar load work. In the second substep, the $O(\lceil \log_{k}p \rceil)$ levels of the top of the {\tt RMMT} are computed in parallel. {\tt PSTA} assigns one node per thread, computing each level in $O(1)$ time, considering $k$ as a constant.
 
-Finally, we can modified the Theorem 4 of \cite{Navarro:2014:FFS:2620785.2601073} as follows:
-			
-\newtheorem{theorem}{Threorem 4 (modified)}
-\begin{theorem}
-	On a $w$-bit word RAM, for any constant $c>\frac{3}{2}$, we can represent a sequence $P$ of $N=B^{c}$ parentheses, for sufficiently small $B=\Theta(\frac{w}{c\lg(w)})$, computing all operations of Table 1 of \cite{Navarro:2014:FFS:2620785.2601073} in $O(c)$ time, with data structure depending on $P$ that uses $N+2$ bits, and universal tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$ bits. The preprocessing time is $O(\frac{N}{p} + \log p)$, using $p$ processors, and its working space is $O(N\log N)$ bits.
-\end{theorem}
-				
-	When we talk about a $w$-bit word RAM, we are thinking in a model that support parallelism, not RAM model, and can manipulate $w$ bits in $O(1)$, as RAM model. DYM meets these conditions. Additionally, we consider that the over-head (in memory and time) imposed by the scheduling of processors is negligible. This is reflected in the assumption $ N\gg p$ and in the results of \cite{Blumofe:1999:SMC:324133.324234}.
+
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
+
+  \PFor{$x\leftarrow -w$ \KwTo $w$}{
+      \For{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}$}{
+          $i\leftarrow ((x+w) << w)$ OR $w$\;
+          $near\_fwd\_pos[i] = w$\;
+          $p=0$\;
+          $excess=0$\;
+          \Repeat{$p\geq w$}{
+              $excess$ += $1-2*((y$ AND $(1 << p)) == 0)$\;
+              \If{$excess == x$}{
+                  $near\_fwd\_pos[i] = p$\;
+                  $break$\;
+              }
+              $p$ += $1$\;
+          }                 
+      }
+  }
+
+  \caption{{\tt PSTA} (part III)}
+  \label{algo:PSTA3}
+\end{algorithm}
+\normalsize
+
+ In the last step, Algorithm \ref{algo:PSTA3} shows the computation of universal tables. To simplify the explanation, Algorithm \ref{algo:PSTA3} just shows the computation of one universal table, $near\_fwd\_pos$. The same algorithm can be applied to the other tables. All of these tables do not depend on the input, except for the number of available threads.
