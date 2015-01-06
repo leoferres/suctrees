@@ -172,7 +172,7 @@ The {\tt PSTA} algorithm is shown in Algorithm \ref{algo:PSTA1}, \ref{algo:PSTA2
   % algorithm
 
   \PFor{$x\leftarrow -w$ \KwTo $w$}{
-      \For{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}$}{
+      \PFor{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}$}{
           $i\leftarrow ((x+w) << w)$ OR $w$\;
           $near\_fwd\_pos[i] = w$\;
           $p=0$\;

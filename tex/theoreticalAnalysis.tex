@@ -1,15 +1,3 @@
-$T_p = O(\frac{N}{p}+p) + O(\frac{Nk}{sp}) + O(\log_{k}p) + O(\frac{\sqrt{2^{w}}poly(w)}{p})$\\
-$T_p = O(\frac{N}{p}+p+\frac{\sqrt{2^{w}}poly(w)}{p})$\\
+The sequential version of {\tt PSTA} takes $O(N+\sqrt{2^{w}}poly(w))$, the same complexity reported in \cite{Navarro:2014:FFS:2620785.2601073}. The amount of work of {\tt PSTA}, $T_1$, is also $O(N+\sqrt{2^{w}}poly(w))$, dominated mainly by the part I of our algorithm (\ref{algo:PSTA1}). The complexity of {\tt PSTA} considering $p$ processors, is $T_p = O(\frac{N}{p}+p+\frac{\sqrt{2^{w}}poly(w)}{p})$. Now, the complexity with enough amount of processors, $T_\infty$, is $O(N)$. The speedup of our algorithm is $T_1/T_P$ = $O(\frac{N+\sqrt{2^{w}}poly(w)}{\frac{N+\sqrt{2^{w}}poly(w)}{p}+p})$. As we can see, when $p$ is small, the speedup tends to $O(p)$, which meets our assumption of $p\ll N$. However, when $p$ tends to $N$, the speedup tends to decrease. This last observation is more evident in the parallelism, $T_1/T_{\infty}$ = $\frac{N+\sqrt{2^{w}}poly(w)}{N}$, which tends to $1$. The assumption $p\ll N$ is realistic, especially considering current SMP-like systems, where the amount of available processing units, even though they have increased in the last years, is much less than the input, $N$ in this case. Moreover, the size of trees have increased, having today trees with millions of nodes, such as suffix trees of text collections and XML collections.
 
-$T_1 = O(N) + O(\frac{Nk}{s}) + O(\sqrt{2^{w}}poly(w))$\\
-$T_1 = O(N+\sqrt{2^{w}}poly(w))$\\
-
-$T_\infty = O(N) + O(\log_{k}(\frac{N}{s})) + O(1)$\\
-$T_\infty = O(N)$\\
-
-speedup($T_1/T_P$) = $O(\frac{N+\sqrt{2^{w}}poly(w)}{\frac{N}{p}+p+\frac{\sqrt{2^{w}}poly(w)}{p}})$\\
-speedup($T_1/T_P$) = $O(\frac{N+\sqrt{2^{w}}poly(w)}{\frac{N+\sqrt{2^{w}}poly(w)}{p}+p})$\\
-
-parallelism($T_1/T_{\infty}$) = $\frac{N+\sqrt{2^{w}}poly(w)}{N}$
-
-\Jose{Here it is necessary to remember the restriction $p\ll N$. Considering this, the speedup changes to $O(p)$ and the parallelism would need to be explained in a different way.}
+\Jose{Add memory analysis}

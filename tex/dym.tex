@@ -18,7 +18,8 @@ the {\bf spawn}. In turn, the {\bf sync} keyword signals that all
 spawned procedures must finish before proceeding with the next
 instruction in the stream. Finally, {\bf parfor} is simply ``syntactic
 sugar'' for {\bf spawn}'ing and {\bf sync}'ing ranges of a loop
-iteration. If a stream of instructions does not contain one of the
+iteration, adding an overhead which is logarithmic in the number of
+iterations. If a stream of instructions does not contain one of the
 above keywords, or a {\bf return} (which implicitly {\bf sync}'s) from
 a procedure, we will group these instruction into a single {\em
   strand}. Strands are scheduled onto processors using a {\em
