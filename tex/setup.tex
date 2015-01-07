@@ -1,0 +1,13 @@
+{\tt PSTA} was implemented in the C programming language and
+compiled using GCC 4.9 using the -O2 and -ffast-math flags. The same flags was used
+to {\tt libcds} and {\tt sdsl}. The experiments were carried out on a quad-processor AMD Opteron\texttrademark{} Processor 6278
+	 with eight cores per processor, for a total of 32 physical cores
+running at 2.40GHz. Hyperthreading was abled. The computer runs
+Linux 3.11.0-26-generic, in 64-bit mode. This machine has per-core L1
+and L2 caches of sizes 64KB and 2048KB, respectively and a
+per-processor shared L3 cache of 6MB, with a 189GB DDR
+RAM memory. Algorithms were compared in terms of running times using
+the usual high-resolution (nanosecond) C functions in {\tt
+  <time.h>}.\footnote{This is a reproducible-research-friendly paper,
+  everything needed to replicate these results is available at
+  \url{https://github.com/jfuentess/spaa2015}}
