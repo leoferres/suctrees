@@ -3,7 +3,7 @@
   \centering
   \begin{tabular}{crrrrrrrrrrrrrrr}
     & \multicolumn{3}{c}{xml} & \multicolumn{3}{c}{dna} & \multicolumn{3}{c}{psd7003} & \multicolumn{3}{c}{protein} & \multicolumn{3}{c}{comptree}\\
-    &  \multicolumn{3}{c}{(23,551,472)} & \multicolumn{3}{c}{(32,747,474)} & \multicolumn{3}{c}{(42,611,636)} & \multicolumn{3}{c}{(60,160,372)} & \multicolumn{3}{c}{(2,147,483,645)}\\
+    &  \multicolumn{3}{c}{(23,551,472)} & \multicolumn{3}{c}{(32,747,474)} & \multicolumn{3}{c}{(42,611,636)} & \multicolumn{3}{c}{(60,160,372)} & \multicolumn{3}{c}{(2,147,483,646)}\\
 \hline
     $p$ & \verb|psta| & \verb|libcds| & \verb|sdsl|  & \verb|psta| & \verb|libcds| & \verb|sdsl| & \verb|psta| & \verb|libcds| & \verb|sdsl| & \verb|psta| & \verb|libcds| & \verb|sdsl| & \verb|psta| & \verb|libcds| & \verb|sdsl|\\
 \hline
@@ -26,17 +26,26 @@
  32  &  3.51 &  35.30 & 2.14 &  5.06 & 53.78  & 3.24 &  6.60  & 68.41  & 4.03 &  5.82  &  59.47  &  3.58  & 19.28 & 223.67 & 13.24\\
  \hline
 \end{tabular}
-\caption{Speedup}\label{tbl:speedup}
+\caption{Speedup. }
+\label{tbl:speedup}
 \end{table*}
 
 
+In Table \ref{tbl:speedup} we report speedups considering five different inputs. Columns \verb+xml+, \verb+dna+, \verb+protein+ correspond to LZ78 parsings of the DNA, protein and XML texts from the Pizza\&Chili corpus\footnote{\url{http://pizzachili.dcc.uchile.cl}}, column \verb+psd7003+ correspond to the XMLData Repository from University of Washington\footnote{\url{http://www.cs.washington.edu/research/xmldatasets/}} and column \verb+comptree+ is a complete binary tree of depth 30. Below of each corpus name we report the size of each corpus, the number of parentheses of their folklore encoding. For each corpus, we report three values: \verb+psta+ which is the speedup of our sequential algorithm over our parallel algorithm, \verb+libcds+ the speedup of libcds library over our parallel algorithm and \verb+sdsl+ the speedup of sdsl library over our parallel algorithm. Column \verb+p+ shows the number of threads that were tested. We repeated each experiment three times and took the minimum time, assuming that slightly larger values of any given experiment are just ``noise'' from external processes such as operating system and networking tasks\footnote{For experiments with more corpus, please visit \url{http://www.inf.udec.cl/~josefuentes/spaa2015}}.
+
+ 	\begin{figure}[ht]
+		\centering
+		\includegraphics[scale=0.3]{./images/Speedup.png}
+     	\caption{Speedup of comptree corpus}
+		\label{fig:speedup} 
+	\end{figure}
+
+	We do not optimize our code, we just care to generate a correct implementation, that why our sequential version is slower that state-of-the-art implementations, such as \verb+sdsl+. However, our implementation as a similar behavior that state-of-the-art implementations. To make more legible the results, Figure \ref{fig:speedup} shows the speedup of the biggest corpus. Libcds was not considered. When the number of threads is a power of two: 1, 2, 4, 8, 16, the speedup of \verb+psta+ is almost lineal. This result is due to, when the number of threads is a power of two, our algorithm can assign exactly one subtree per thread (see Algorithm \ref{algo:PSTA2}), distributing the work homogeneously. When the number of threads is not a power of two, some threads have to process more than one subtree and other threads just process one, degrading the performance. Even though this strategy degrades the performance a little, the threads are always working, which is a good feature on parallel processing. Since the machine where we run our experiments has 32 physical cores and other processes were running, such as, the operating system, the speedup near of 32 threads does not reach a linear behavior. 
+
+We could not test the breakeven of our algorithm because we do not have a machine with enough amount of physical cores.
 
 
-
-
-
-
-
+\Jose{Add memory results}
 
 
 
