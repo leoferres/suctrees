@@ -26,7 +26,7 @@
  32  &  3.51 &  35.30 & 2.14 &  5.06 & 53.78  & 3.24 &  6.60  & 68.41  & 4.03 &  5.82  &  59.47  &  3.58  & 19.28 & 223.67 & 13.24\\
  \hline
 \end{tabular}
-\caption{Speedup. }
+\caption{Speedup.}
 \label{tbl:speedup}
 \end{table*}
 
@@ -42,11 +42,26 @@ In Table \ref{tbl:speedup} we report speedups considering five different inputs.
 
 	We do not optimize our code, we just care to generate a correct implementation, that why our sequential version is slower that state-of-the-art implementations, such as \verb+sdsl+. However, our implementation as a similar behavior that state-of-the-art implementations. To make more legible the results, Figure \ref{fig:speedup} shows the speedup of the biggest corpus. Libcds was not considered. When the number of threads is a power of two: 1, 2, 4, 8, 16, the speedup of \verb+psta+ is almost lineal. This result is due to, when the number of threads is a power of two, our algorithm can assign exactly one subtree per thread (see Algorithm \ref{algo:PSTA2}), distributing the work homogeneously. When the number of threads is not a power of two, some threads have to process more than one subtree and other threads just process one, degrading the performance. Even though this strategy degrades the performance a little, the threads are always working, which is a good feature on parallel processing. Since the machine where we run our experiments has 32 physical cores and other processes were running, such as, the operating system, the speedup near of 32 threads does not reach a linear behavior. 
 
-We could not test the breakeven of our algorithm because we do not have a machine with enough amount of physical cores.
+	We could not test the breakeven of our algorithm because we do not have a machine with enough amount of physical cores.
 
+	Since {\tt psta} generates tasks that work on different memory regions, the generated cache misses do not degrade the performance. The same effect is present on \emph{Domain Decomposition Algorithms}. Although the decomposition of the {\tt RMMT} was not evident, we could produce a decomposition that generated an competitive algorithm.
+	
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{crrrrr}
+\hline
+    & xml & dna & psd7003 & protein & comptree\\
+\hline
+ \verb|psta|   &  1.46  &  1.74  & 2.78  &  3.30 & 112.01\\
+ \verb|libcds|   &  .42 &  .58 & .77 &  1.08 & 38.25\\
+ \verb|sdsl|   &  .95 &  1.31 & 1.73 &  2.41 & 76.40\\
+ \hline
+\end{tabular}
+\caption{Peak of memory consumption. Values are in MB}
+\label{tbl:memory_consumption}
+\end{table}
 
-\Jose{Add memory results}
-
+	Table \ref{tbl:memory_consumption} shows the memory consumption over the same corpus of Table \ref{tbl:speedup}. To measure the memory consumption, we monitored the memory allocated with \emph{malloc} and released with \emph{free}, taking the peak of consumption. We only consider the memory allocated during the construction, but not the memory allocated to store de parentheses sequence. We just report the memory consumption of {\tt psta} with $p=1$, because the consumption associated to thread scheduling was negligible. Even though {\tt psta} consumes more memory that the baselines, our algorithm exhibit the same tendency that was shown on Section \ref{subsec:theoreticalAnalysis}. Use the memory allocated to arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ to save the partial excess values was an important feature of our algorithm, because {\tt psta} could use the same amount of memory that its sequential version. In the experiments, we always assume 16 bits per excess value, which is the reason of why {\tt psta} use more memory that the baselines. If we use a simplification of the Algorithm \ref{algo:PSTA1} to calculate the depth $d$ of the input sequence (the maximum excess value), we could use it to allocated just $\log d$ bits per excess value, saving memory and improving the performance, since it should reduce the memory transfers. It will be included in the next release of our code.
 
 
 
