@@ -1,1 +1,16 @@
-A weak point of succinct data structures is their construction time, which is generally quite slow compared with the construction time of traditional ``pointer linked" data structures. In the last time, a new research line has emerged to improve the construction performance of succinct data structures using multicore architectures. As far as we know, the work on \cite{Fuentes2014} is the first work in that research line. Fuentes-Sep\'ulveda et al. introduced two practical multicore algorithms for wavelet tree construction. Both algorithms run have $O(n\lg \sigma)$ {\em work} time and $O(n)$ {\em span}, where $n$ is the input size and $\sigma$ is the alphabet size. In \cite{DBLP:journals/corr/Shun14}, Shun introduced 3 new algorithms to construct wavelet trees in parallel. The best algorithm, in practice, has $O(n\lg \sigma)$ {\em work} time and $O(\lg n\lg \sigma)$ {\em span}. Shun also explain how to parallelize the construction of rank/select structures, taking $O(n)$ {\em work} time and $O(1)$ {\em span} for rank structures and $O(n)$ {\em work} time and $O(\lg n)$ {\em span} for select structures. The author does not provide an implementation of its proposal.
+A weak point of succinct data structures is their construction time,
+which is generally quite slow compared to the construction time of
+traditional ``pointer-linked'' data structures. We have been working
+on improving construction time for succinct data structures
+\cite{Fuentes2014}. In that paper, two practical multicore algorithms
+for wavelet tree construction were introduced. Both algorithms run
+have $O(n\lg \sigma)$ {\em work} time and $O(n)$ {\em span}, where $n$
+is the input size and $\sigma$ is the alphabet size. In
+\cite{DBLP:journals/corr/Shun14}, Shun introduced 3 new algorithms to
+construct wavelet trees in parallel. The best algorithm, in practice,
+has $O(n\lg \sigma)$ {\em work} time and $O(\lg n\lg \sigma)$ {\em
+span}. Shun also explain how to parallelize the construction of
+rank/select structures, taking $O(n)$ {\em work} time and $O(1)$ {\em
+span} for rank structures and $O(n)$ {\em work} time and $O(\lg n)$
+{\em span} for select structures. The author does not provide an
+implementation of its proposal.
