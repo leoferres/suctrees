@@ -32,10 +32,14 @@ To reduce the space used by the {\tt RMMT}, Sadakane y Navarro used the results 
 
 Finally, we can modified the Theorem 4 of \cite{Navarro:2014:FFS:2620785.2601073} as follows:
 			
-			
 \newtheorem{theorem}{Threorem}
 \begin{theorem}
 	 {\sc (modified from Thm. 4 in \cite{Navarro:2014:FFS:2620785.2601073})} On a $w$-bit word RAM, for any constant $c>\frac{3}{2}$, we can represent a sequence $P$ of $N=B^{c}$ parentheses, for sufficiently small $B=\Theta(\frac{w}{c\lg(w)})$, computing all operations of Table 1 of \cite{Navarro:2014:FFS:2620785.2601073} in $O(c)$ time, with data structure depending on $P$ that uses $N+2$ bits, and universal tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$ bits. The preprocessing time is $O(\frac{N}{p} + \log p)$, using $p$ processors, and its working space is $O(N\log N)$ bits.
 \end{theorem}
 				
 	When we talk about a $w$-bit word RAM, we are thinking in a model that support parallelism, not RAM model, and can manipulate $w$ bits in $O(1)$, as RAM model. DYM meets these conditions. Additionally, we consider that the over-head (in memory and time) imposed by the scheduling of processors is negligible. This is reflected in the assumption $ N\gg p$ and in the results of \cite{Blumofe:1999:SMC:324133.324234}.
+
+
+
+
+    As we mentioned above, to the {\tt RMMT}, we need as input a parentheses sequence $P$. However, sometimes $P$ is not available, instead we have un ordinal tree, $T$. The construction of $P$ from $T$ has not been considered in previous implementations of the {\tt RMMT}. Here, we proposed an algorithm to compute $P$ on parallel, complementing the {\tt PSTA} algorithm. We will call this algorithm \emph{Parallel Folklore Enconding Algorithm}, {\tt PFEA}. The key observation to obtain $P$ is that each parenthesis associated to an edge $(u,v)$, ``('' or ``)'', is followed in the enconding to an parenthesis associated to the edge $(parent(u), v)$, $(v, first(v))$ or $(u, next(u,v))$. All of them at distance one of the edge $(u,v)$. In the observation, $parent(u)$ is the parent node $u$, $first(v)$ is the first child of $v$ and $next(u,v)$ is the child of $u$ that succeeds the node $v$ in the array or children. With the observation, the core of {\tt PFEA} works as follows: Let $(u,v)$ be an edge of $T$, where $u$ is parent of $v$ and let $(u,v)_{0}$ ($(u,v)_{1}$) the opened (closed) parenthesis associated to $(u,v)$. First, if $v$ is a leaf, then $(u,v)_{0}$ is followed by $(u,v)_{1}$. If $v$ is not a leaf, then $(u,v)_{0}$ is followed by $(v,first(v))_{0}$. If $v$ is not the last child of $u$,then $(u,v)_{1}$ is followed by $(u,next(u,v))_{0}$. Finally, if $v$ is the last child of $u$, then $(u,v)_{1}$ is followed by $(u,parent(u))_{1}$. In the next section we will give more details of {\tt PFEA} algorithm.
