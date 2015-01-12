@@ -36,15 +36,8 @@ needed by our algorithm is $O(N+S_1p)$. Thus, considering the
 assumption $p\ll N$, the working space is dominated by the input
 size. The scheduling space is negligible.
 
-The algorithm reaches its optimal behavior when the amount of work of
-each subtree that is processed in parallel (lines 2 to 18 of Algorithm
-\ref{algo:PSTA2}) is equal to the work to create the top of the {\tt
+The algorithm reaches its optimal behavior when the work of building
+each subtree in parallel (lines 2 to 18 of Algorithm \ref{algo:PSTA2})
+is the same as the work needed to create the top part of the {\tt
 RMMT} (lines 19 to 32 of Algorithm \ref{algo:PSTA2}). This point is
-reached when the $p\log_{k}p=N/s$. Yet another possible best case for
-the \ref{algo:PSTA1} algorithm happens when the computation of partial
-excess values (lines 4 to 26) involves the same amount of work than
-that used to update the sequentially the final excess value of each
-thread (lines 27 and 28) \Leo{Huh????}. This point is reached when
-$p=\sqrt{N}$. Now considering the complete algorithm, breakeven
-occurrs when $p\log_{k}p=N/s$, since it is reached first. \Leo{I don't
-get this.}
+reached when the $p\log_{k}p=N/s$. 

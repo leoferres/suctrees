@@ -38,20 +38,20 @@ Chili corpus\footnote{\url{http://pizzachili.dcc.uchile.cl}}, column
 \verb+psd7003+ correspond to the XMLData Repository from University of
 Washington\footnote{\url{http://www.cs.washington.edu/research/xmldatasets/}}
 and column \verb+comptree+ is a complete binary tree of depth
-30. Below of each corpus name we report the size of each corpus, the
-number of parentheses of their folklore encoding\Leo{Both opening and
-  closing? (so, that number divided by two for number of nodes?)}. For
-each corpus, we report three values: \verb+psta+ which is the speedup
-of the sequential version of our parallel algorithm (i.e., without the
-parallel extensions) over our parallel algorithm; \verb+libcds+, the
-speedup of the \verb+libcds+ library over our parallel algorithm and
-\verb+sdsl+ the speedup of sdsl library over our parallel
-algorithm. Column \verb+p+ shows the number of threads that were
-tested (threads are 1:1 to the number of physical cores). We repeated
-each experiment three times and recorded the minimum time, assuming
-that slightly larger values of any given experiment are just ``noise''
-from external processes such as operating system and networking
-tasks\footnote{For experiments with more corpus, please visit
+30. Below of each corpus' name we report its size, the number of
+parentheses of their folklore encoding (i.e., the number of ``real''
+nodes is that figure divided by 2). For each corpus, we report three
+values: \verb+psta+ which is the speedup of the sequential version of
+our parallel algorithm (i.e., without the parallel extensions) over
+our parallel algorithm; \verb+libcds+, the speedup of the
+\verb+libcds+ library over our parallel algorithm and \verb+sdsl+ the
+speedup of sdsl library over our parallel algorithm. Column \verb+p+
+shows the number of threads that were tested (threads are 1:1 to the
+number of physical cores). We repeated each experiment three times and
+recorded the minimum time, assuming that slightly larger values of any
+given experiment are just ``noise'' from external processes such as
+operating system and networking tasks\footnote{For experiments with
+  more corpus, please visit
   \url{http://www.inf.udec.cl/~josefuentes/spaa2015}}.
 
 \begin{figure}[ht]
@@ -67,22 +67,24 @@ state-of-the-art sequential implementations such as
 \verb+sdsl+. However, our implementation does have a similar behavior
 compared to those state-of-the-art implementations. To make the
 results more intuitive, Figure \ref{fig:speedup} shows the speedup of
-the largest corpus. Libcds was not considered \Leo{why is that?}. When
-the number of threads is a power of two: 1, 2, 4, 8, 16, the speedup
-of \verb+psta+ is almost linear. This happens because when the number
-of threads is a power of two, our algorithm can assign exactly one
-subtree per thread (see Algorithm \ref{algo:PSTA2}), distributing the
-work homogeneously (without enrolling the work-stealing
-scheduler). When the number of threads is not a power of two, some
-threads have to process more than one subtree and other threads just
-process one, degrading the performance. Even though this strategy
-degrades the performance a little, the threads are always working,
-which is a good feature on parallel processing. Since the machine
-where we run our experiments has 32 physical cores and other processes
-were running, such as, the operating system, the speedup near the 32nd
-thread does not reach a linear behavior\footnote{We could not test the
-  ``breakeven'' characteristic of our algorithm because we do not have
-  a machine with enough physical cores.}.
+the largest corpus. The \verb+libcds+ library is not shown in Figure
+\ref{fig:speedup} because the times we obtained were not comparable to
+either ours or \verb+sdsl+. They were slower by an order of
+magnitude. When the number of threads is a power of two: 1, 2, 4, 8,
+16, the speedup of \verb+psta+ is almost linear. This happens because
+when the number of threads is a power of two, our algorithm can assign
+exactly one subtree per thread (see Algorithm \ref{algo:PSTA2}),
+distributing the work homogeneously (without enrolling the
+work-stealing scheduler). When the number of threads is not a power of
+two, some threads have to process more than one subtree and other
+threads just process one, degrading the performance. Even though this
+strategy degrades the performance a little, the threads are always
+working, which is a good feature on parallel processing. Since the
+machine where we run our experiments has 32 physical cores and other
+processes were running, such as, the operating system, the speedup
+near the 32nd thread does not reach a linear behavior\footnote{We
+  could not test the ``breakeven'' characteristic of our algorithm
+  because we do not have a machine with enough physical cores.}. 
 
 
 Since {\tt psta} generates tasks that work on different memory
@@ -107,29 +109,29 @@ generated a competitive algorithm.
 \label{tbl:memory_consumption}
 \end{table}
 
-Table \ref{tbl:memory_consumption} shows the memory consumption for
-the same corpora in Table \ref{tbl:speedup}. To measure memory
-consumption, we monitored how much memory was allocated with
-\emph{malloc} and released with \emph{free} at execution time,
-recording the peak of consumption. We only consider memory allocated
-during construction, but not the memory allocated to store the
-parentheses sequence. We just report the memory consumption of {\tt
-  psta} with $p=1$, because the consumption associated to thread
-scheduling was negligible. Even though {\tt psta} consumes more memory
-than the baseline algorithms, our algorithm exhibit the same tendency
-that was shown on Section \ref{subsec:theoreticalAnalysis}. The use of
-the memory allocated to arrays $e^{\prime}$, $m^{\prime}$,
-$M^{\prime}$ and $n^{\prime}$ to save the partial excess values was an
-important feature of our algorithm, since {\tt psta} could use the
-same amount of memory than its sequential version. In the experiments,
-we always assume 16 bits per excess value, which is the reason why
-{\tt psta} uses more memory than the baselines. If we use a
-simplification of the Algorithm \ref{algo:PSTA1} to calculate the
-depth $d$ of the input sequence (the maximum excess value), we could
-use it to allocated just $\log d$ bits per excess value, saving memory
-and improving performance, since it should reduce memory transfers. We
-leave this for a future release of our code\Leo{I don't understand
-  this para. :(}.
+Table \ref{tbl:memory_consumption} shows memory consumption for the
+same corpora in Table \ref{tbl:speedup}. To measure memory , we
+monitored how much memory was allocated with \emph{malloc} and
+released with \emph{free} at execution time, recording the peak of
+consumption. We only consider memory allocated during construction,
+but not memory allocated to store the parentheses sequence. We only
+report memory consumption of {\tt psta} with $p=1$, because the
+consumption associated to thread scheduling was negligible. Even
+though {\tt psta} consumes more memory than the baseline algorithms,
+it is still a constant factor with respect to the other two
+implementations. The use of the memory allocated to arrays
+$e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ to save the
+partial excess values was an important feature of our algorithm, since
+{\tt psta} could use the same amount of memory than its sequential
+version. In other words, memory consumption does not grow as a
+function of $p$.
+
+In the experiments, {\tt psta} uses more memory than the baselines
+because we assume 16 bits per excess value. If we use a simplification
+of Algorithm \ref{algo:PSTA1} to calculate the depth $d$ of the input
+sequence (the maximum excess value), we could use it to allocate just
+$\log d$ bits per excess value, saving memory and improving
+performance, and thus reducing memory transfers.
 
 
 
