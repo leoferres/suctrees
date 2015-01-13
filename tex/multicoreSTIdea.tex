@@ -89,7 +89,7 @@ has a complexity of $O(\sqrt{2^{w}}poly(w))$ time according to
 universal tables in $\displaystyle O(\frac{\sqrt{2^{w}}poly(w)}{p})$,
 using $p$ processors.
 
-To reduce the space used by the {\tt RMMT}, Sadakane and Navarro used
+To reduce the space used by the {\tt RMMT}, Sadakane and Nava\-rro used
 the results of \cite{Patrascu:2008:SUC:1470582.1470670}. They
 represented the {\tt RMMT} as a \emph{aB-tree}, which is a complete
 tree. As the {\tt RMMT} is also a complete, we can apply a
@@ -115,8 +115,8 @@ Finally, we can modify Theorem 4 of
   of \cite{Navarro:2014:FFS:2620785.2601073} in $O(c)$ time, with data
   structure depending on $P$ that uses $N+2$ bits, and universal
   tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$
-  bits. The preprocessing time is $O(\frac{N}{p} + \log p)$, using $p$
-  processors, and its working space is $O(N\log N)$ bits.
+  bits. The preprocessing time is $O(\frac{N}{p} + \lg p)$, using $p$
+  processors, and its working space is $O(N\lg N)$ bits.
 \end{theorem}
 				
 When we talk about a $w$-bit word RAM, we mean a model that supports

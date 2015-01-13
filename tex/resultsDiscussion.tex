@@ -130,7 +130,7 @@ In the experiments, {\tt psta} uses more memory than the baselines
 because we assume 16 bits per excess value. If we use a simplification
 of Algorithm \ref{algo:PSTA1} to calculate the depth $d$ of the input
 sequence (the maximum excess value), we could use it to allocate just
-$\log d$ bits per excess value, saving memory and improving
+$\lg (d)$ bits per excess value, saving memory and improving
 performance, and thus reducing memory transfers.
 
 

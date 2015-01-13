@@ -5,7 +5,42 @@ aspect of everyday computing from the XML/HTML processing of web
 browsers to ASTs in compilers. Still, with the advent of very large
 amounts of hierarchical data, dealing with huge trees, particularly
 their construction for in-memory querying, has become a processing
-bottleneck. To solve this, succinct trees...
+bottleneck. To solve this, succinct trees represent trees with least
+space while support a set of primitive operations in constant time.
+More precisely, succinct trees represent the topology of a tree with 
+$n$ nodes using only $2n-\Theta(\lg n)$\footnote{We use $\lg x = \log_{2}x$. Otherwise, we make explicit the base of the logarithm.} bits, which is close to the
+information-theoretic lower bound needed to represent a tree with $n$
+nodes. In this manner, huge trees that cannot be maintained in main
+memory with traditional representations, as ``pointer-linked'' trees,
+may be maintained in main memory with a succinct representation, with good
+query times.
 
-In this paper, we garner the power of multicore processors to help
-with succinct tree construction.
+However, succinct trees in particular and succinct data structures in general
+have a weak point: their construction time. The construction time of succinct
+data structures is generally quite slow compared to the construction time of
+traditional ``pointer-linked'' data structures. We have been working
+on improving construction time for succinct data structures, in particular
+for wavalet trees, which are a component on representing text indexes
+\cite{Fuentes2014}. In that paper, two practical multicore algorithms
+for wavelet tree construction were introduced. Both algorithms run
+have $O(n\lg \sigma)$ {\em work} time and $O(n)$ {\em span}, where $n$
+is the input size and $\sigma$ is the alphabet size. In
+\cite{DBLP:journals/corr/Shun14}, Shun introduced 3 new algorithms to
+construct wavelet trees in parallel. The best algorithm, in practice,
+has $O(n\lg \sigma)$ {\em work} time and $O(\lg n\lg \sigma)$ {\em
+span}. Shun also explain how to parallelize the construction of
+rank/select structures, taking $O(n)$ {\em work} time and $O(1)$ {\em
+span} for rank structures and $O(n)$ {\em work} time and $O(\lg n)$
+{\em span} for select structures.
+
+To the best of our knowledge, there are not more work about parallel
+construction of other succinct data structures. In this paper, we garner
+the power of multicore processors to help with succinct tree construction.
+We present an algorithm to construct succinct representations of ordinal
+trees in parallel. Our algorithm is a practical algorithm. We implement
+our algorithm and tested it on a multicore machine. We give an overview
+of our algorithm in Section \ref{subsec:idea}. A more detailed description,
+near to implementation is given in Section \ref{subsec:multicoreSTAlgorithm}.
+The corresponding theoretical analysis is in Section \ref{subsec:theoreticalAnalysis}.
+We show that our proposal has a good performance in Section \ref{sec:conclusion}. Future
+applications are discussed in Section \ref{sec:exps}.
