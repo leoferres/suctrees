@@ -68,7 +68,7 @@ support queries in constant time.
   }
   \BlankLine
   \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
-		$e^{\prime}[(t+1)*ct]$ += $e^{\prime}[t*ct-1]$\;
+		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
   }
   \BlankLine
   \PFor{$t\leftarrow 1$ \KwTo $num\_threads$}{

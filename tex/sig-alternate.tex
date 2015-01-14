@@ -145,7 +145,23 @@ Norbert Zhe\\
 
 \maketitle
 \begin{abstract}
-
+	Succinct trees have appeared in the last years to provide
+	an elegant solution to manipulate trees that does not fit
+	in main memory. They represent trees in a reduced space,
+	supporting constant time queries. However, the construction
+	time of succinct trees is a weak point of them. This paper
+	introduce a practical parallel algorithm that improve the
+	state of the art in succinct trees construction. The proposed algorithm
+	can construct a succinct tree in $O(\frac{N}{p}+\lg p)$ time,
+	supporting operations in $O(\lg N)$ time, where $N$ is the size
+	of parentheses sequence that represent the tree and $p$ is the
+	number of available processors. This algorithm was tested
+	in a 32 core machine, with different tree sizes, reaching up to
+	19 of speedup. In order to support constant time queries, we 
+	propose a second algorithm of $O(\frac{N\lg p}{p})$ time. To
+	complement our algorithms, we also present an algorithm to compute
+	the parentheses sequence of a tree with $n$ nodes in $O(\frac{n}{p})$
+	time.
 \end{abstract}
 
 \category{D.1.3}{Programming Techniques}{Concurrent Programming}[Parallel programming]
