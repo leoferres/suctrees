@@ -2,8 +2,8 @@ We propose a parallel algorithm based in the construct of the
 \emph{Range Min-Max Tree}, {\tt
   RMMT}\cite{Navarro:2014:FFS:2620785.2601073}. Our algorithm, called
 \emph{Parallel Succinct Tree Algorithm}, {\tt PSTA}, has as input a
-possibly non-balanced parentheses sequence $P$, of moderate size
-$|P|\leq N = w^{c}$, where $w$ is the length of the machine word and
+possibly non-balanced parentheses sequence $P$, of size
+$|P| = w^{c}$, where $w=\Theta(\lg n)$ is the length of the machine word and
 $c\geq 1$ any constant.
 
 The {\tt RMMT} is constructed over $P$, partitioning $P$ in disjoint
@@ -42,11 +42,10 @@ this context, computing $e^{\prime}$ in $O(\frac{|P|}{p})$ time, using
 $p$ threads. Note that we do not need to compute more elements of
 $e^{\prime}$ to the internal nodes of the {\tt RMMT}. The final size
 of $e^{\prime}$ and the memory used in construction time are bounded
-by $O(\frac{nc\lg(w)}{w})$ bits, where $c\geqslant 1$ and $w$ is the
-word size in the RAM model.
+by $O(\frac{|P|c\lg(w)}{w})$ bits.
 
 To compute $m^{\prime}$, let's assume, without loss of generality,
-that $p = k^{i}$, where $k = \Theta(\frac{w}{c\lg(w)})$ is the arity
+that $p = k^{i}$, where $k$ is the arity
 of the internal nodes in the {\tt RMMT} and $i > 0$. {\tt PSTA}
 assigns one thread per sub-tree of size $O(\frac{|P|}{sp})$, at level
 $i$. So, it is possible to compute the $m^{\prime}$ values in all
@@ -54,7 +53,7 @@ sub-trees, in parallel, in $O(\frac{|P|}{sp}k)$ time. Then, for the
 rest $O(p)$ nodes in the top of the tree, we compute the corresponding
 minimum values in $O(k\lg_{k} p)$ time, computing each level in $O(k)$
 time, just looking the $k$ values on the previous level using one
-thread per vertex. If we consider $k$ as a constant, we can compute
+thread per vertex. If we consider $s$ and $k$ as constants, we can compute
 $m^{\prime}$ in
 $O(\frac{|P|}{sp}k + \lg p) = O(\frac{|P|}{p\lg(w)}+\lg p)$ time,
 using $O(\frac{|P|c\lg(w)}{w})$ bits in construction time and in the
@@ -75,7 +74,7 @@ the computation of \emph{universal tables}. The universal tables are
 used to support \emph{fwd\_search}($\bullet$),
 \emph{bwd\_search}($\bullet$), \emph{rmqi}($\bullet$),
 \emph{RMQi}($\bullet$), \emph{degree}($\bullet$) and
-\emph{child}($\bullet$) queries in constant time. We can divide
+\emph{child}($\bullet$) queries. We can divide
 universal tables into two types: those that depend on the leaves of
 the {\tt RMMT} and those that depend on the internal nodes. In the
 first case, we can compute each universal table in parallel assigning
@@ -91,7 +90,7 @@ using $p$ processors.
 
 To reduce the space used by the {\tt RMMT}, Sadakane and Nava\-rro used
 the results of \cite{Patrascu:2008:SUC:1470582.1470670}. They
-represented the {\tt RMMT} as a \emph{aB-tree}, which is a complete
+represente the {\tt RMMT} as a \emph{aB-tree}, which is a complete
 tree. As the {\tt RMMT} is also a complete, we can apply a
 construction as that shown in Figure \ref{fig:min-max-array} to
 construct the aB-tree. With respect to the universal tables needed in
@@ -104,26 +103,39 @@ the {\tt RMMT} do not implement this part either.
 
 Finally, we can modify Theorem 4 of
 \cite{Navarro:2014:FFS:2620785.2601073} as follows:
-			
+
 \newtheorem{theorem}{Threorem}
 \begin{theorem}
   {\sc (modified from Thm. 4 in
     \cite{Navarro:2014:FFS:2620785.2601073})} On a $w$-bit word RAM,
-  for any constant $c>\frac{3}{2}$, we can represent a sequence $P$ of
-  $N=B^{c}$ parentheses, for sufficiently small
-  $B=\Theta(\frac{w}{c\lg(w)})$, computing all operations of Table 1
-  of \cite{Navarro:2014:FFS:2620785.2601073} in $O(c)$ time, with data
-  structure depending on $P$ that uses $N+2$ bits, and universal
+  for any constant $c>1$, we can represent a sequence $P$ of
+  $|P|=w^{c}$ parentheses, computing all operations of Table 1
+  of \cite{Navarro:2014:FFS:2620785.2601073} in $O(\lg |P|)$ time, with a data
+  structure depending on $P$ that uses $|P|+2$ bits, and universal
   tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$
-  bits. The preprocessing time is $O(\frac{N}{p} + \lg p)$, using $p$
-  processors, and its working space is $O(N\lg N)$ bits.
+  bits. The preprocessing time is $O(\frac{|P|}{p} + \lg p)$, using $p$
+  processors, and its working space is $O(|P|\lg |P|)$ bits.
 \end{theorem}
+			
+%\newtheorem{theorem}{Threorem}
+%\begin{theorem}
+%  {\sc (modified from Thm. 4 in
+%    \cite{Navarro:2014:FFS:2620785.2601073})} On a $w$-bit word RAM,
+%  for any constant $c>\frac{3}{2}$, we can represent a sequence $P$ of
+%  $N=B^{c}$ parentheses, for sufficiently small
+%  $B=\Theta(\frac{w}{c\lg(w)})$, computing all operations of Table 1
+%  of \cite{Navarro:2014:FFS:2620785.2601073} in $O(c)$ time, with data
+%  structure depending on $P$ that uses $N+2$ bits, and universal
+%  tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$
+%  bits. The preprocessing time is $O(\frac{N}{p} + \lg p)$, using $p$
+%  processors, and its working space is $O(N\lg N)$ bits.
+%\end{theorem}
 				
 When we talk about a $w$-bit word RAM, we mean a model that supports
 parallelism and can manipulate $w$ bits in $O(1)$. DYM meets these
 criteria. Additionally, we consider that the overhead (in space and
 time) imposed by the scheduling of processors is negligible. This is
-reflected in the assumption $ N\gg p$ and in the results of
+reflected in the assumption $ |P|\gg p$ and in the results of
 \cite{Blumofe:1999:SMC:324133.324234}.
 
 As we mentioned above, the input to {\tt RMMT} consists of a
