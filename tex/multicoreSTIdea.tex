@@ -2,9 +2,7 @@ We propose a parallel algorithm based in the construct of the
 \emph{Range Min-Max Tree}, {\tt
   RMMT}\cite{Navarro:2014:FFS:2620785.2601073}. Our algorithm, called
 \emph{Parallel Succinct Tree Algorithm}, {\tt PSTA}, has as input a
-possibly non-balanced parentheses sequence $P$, of size
-$|P| = w^{c}$, where $w=\Theta(\lg n)$ is the length of the machine word and
-$c\geq 1$ any constant.
+possibly non-balanced parentheses sequence $P$ of size $|P|$.
 
 The {\tt RMMT} is constructed over $P$, partitioning $P$ in disjoint
 chunks of size $s$. Considering those chunks, the construction of the
@@ -42,7 +40,7 @@ this context, computing $e^{\prime}$ in $O(\frac{|P|}{p})$ time, using
 $p$ threads. Note that we do not need to compute more elements of
 $e^{\prime}$ to the internal nodes of the {\tt RMMT}. The final size
 of $e^{\prime}$ and the memory used in construction time are bounded
-by $O(\frac{|P|c\lg(w)}{w})$ bits.
+by $O(|P|\lg(|P|))$ bits, since $-|P|\leq e^{\prime}[i]\leq |P|$, for any $i$.
 
 To compute $m^{\prime}$, let's assume, without loss of generality,
 that $p = k^{i}$, where $k$ is the arity
@@ -55,8 +53,8 @@ minimum values in $O(k\lg_{k} p)$ time, computing each level in $O(k)$
 time, just looking the $k$ values on the previous level using one
 thread per vertex. If we consider $s$ and $k$ as constants, we can compute
 $m^{\prime}$ in
-$O(\frac{|P|}{sp}k + \lg p) = O(\frac{|P|}{p\lg(w)}+\lg p)$ time,
-using $O(\frac{|P|c\lg(w)}{w})$ bits in construction time and in the
+$O(\frac{|P|}{sp}k + \lg p) = O(\frac{|P|}{p}+\lg p)$ time,
+using $O(|P|\lg(|P|))$ bits in construction time and in the
 final array. Note that this solution makes sense considering that
 $p\ll |P|$. Figure \ref{fig:min-max-array} illustrates the solution
 explained here. We can compute $M^{\prime}$ and $n^{\prime}$ in the
@@ -84,7 +82,7 @@ can assign one processor per internal node. Such processor computes
 the section corresponding to that internal node in the universal
 table. In that way, since computing the universal tables sequentially
 has a complexity of $O(\sqrt{2^{w}}poly(w))$ time according to
-\cite{Navarro:2014:FFS:2620785.2601073}, we can compute those
+\cite{Navarro:2014:FFS:2620785.2601073}, with $w$ the length of the RAM model word, we can compute those
 universal tables in $\displaystyle O(\frac{\sqrt{2^{w}}poly(w)}{p})$,
 using $p$ processors.
 
@@ -104,20 +102,19 @@ the {\tt RMMT} do not implement this part either.
 Finally, we can modify Theorem 4 of
 \cite{Navarro:2014:FFS:2620785.2601073} as follows:
 
-\newtheorem{theorem}{Threorem}
+\newtheorem{theorem}{Theorem}
 \begin{theorem}
-  {\sc (modified from Thm. 4 in
-    \cite{Navarro:2014:FFS:2620785.2601073})} On a $w$-bit word RAM,
-  for any constant $c>1$, we can represent a sequence $P$ of
-  $|P|=w^{c}$ parentheses, computing all operations of Table 1
-  of \cite{Navarro:2014:FFS:2620785.2601073} in $O(\lg |P|)$ time, with a data
+  We can represent a parentheses sequence $P$, computing all
+  operations of Table 1 of \cite{Navarro:2014:FFS:2620785.2601073}
+  in $O(\lg |P|)$ time, with a data
   structure depending on $P$ that uses $|P|+2$ bits, and universal
   tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}})$
-  bits. The preprocessing time is $O(\frac{|P|}{p} + \lg p)$, using $p$
+  bits, where $w$ is the word size of the RAM model. The preprocessing
+  time is $O(\frac{|P|}{p} + \lg p)$, using $p$
   processors, and its working space is $O(|P|\lg |P|)$ bits.
 \end{theorem}
 			
-%\newtheorem{theorem}{Threorem}
+%\newtheorem{theorem}{Theorem}
 %\begin{theorem}
 %  {\sc (modified from Thm. 4 in
 %    \cite{Navarro:2014:FFS:2620785.2601073})} On a $w$-bit word RAM,
@@ -138,27 +135,3 @@ time) imposed by the scheduling of processors is negligible. This is
 reflected in the assumption $ |P|\gg p$ and in the results of
 \cite{Blumofe:1999:SMC:324133.324234}.
 
-As we mentioned above, the input to {\tt RMMT} consists of a
-parentheses sequence $P$. However, sometimes $P$ is not available,
-instead we have un ordinal tree, $T$. The construction of $P$ from $T$
-has not been considered in previous implementations of the {\tt
-  RMMT}. Here, we proposed an algorithm to compute $P$ in parallel,
-complementing the {\tt PSTA} algorithm. We will call this algorithm
-\emph{Parallel Folklore Enconding Algorithm}, {\tt PFEA}. The key
-observation to obtain $P$ is that each parenthesis associated to an
-edge $(u,v)$, ``('' or ``)'', is followed in the enconding by a
-parenthesis associated to the edge $(parent(u), v)$, $(v, first(v))$
-or $(u, next(u,v))$. All of them at distance of 1 of the edge
-$(u,v)$. In the observation, $parent(u)$ is the parent node $u$,
-$first(v)$ is the first child of $v$ and $next(u,v)$ is the child of
-$u$ that succeeds the node $v$ in the array or children. With this
-observation in mind, the core of {\tt PFEA} works as follows: Let
-$(u,v)$ be an edge of $T$, where $u$ is parent of $v$ and let
-$(u,v)_{0}$ ($(u,v)_{1}$) the opened (closed) parenthesis associated
-to $(u,v)$. First, if $v$ is a leaf, then $(u,v)_{0}$ is followed by
-$(u,v)_{1}$. If $v$ is not a leaf, then $(u,v)_{0}$ is followed by
-$(v,first(v))_{0}$. If $v$ is not the last child of $u$,then
-$(u,v)_{1}$ is followed by $(u,next(u,v))_{0}$. Finally, if $v$ is the
-last child of $u$, then $(u,v)_{1}$ is followed by
-$(u,parent(u))_{1}$. In the next section we will give more details of
-{\tt PFEA} algorithm.
