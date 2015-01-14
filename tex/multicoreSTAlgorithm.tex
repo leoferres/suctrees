@@ -9,10 +9,10 @@ sequential {\bf for} instructions. The algorithm takes a parentheses
 sequence $P$ as input, the arity $k$ of the internal nodes in the {\tt
   RMMT}, the size of each chunk $s$ and the total numbers of available
 threads. In the sequence $P$, opened-parenthesis and
-closed-parenthesis are coded by a $1$ and a $0$, respectively. The
+closed-parenthesis are coded by a $0$ and a $1$, respectively. The
 output is the {\tt RMMT} represented by its arrays $e^{\prime}$,
-$m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables, used to
-support queries in constant time.
+$m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables to
+support queries in $O(\lg|P|)$ time.
 
 \begin{algorithm}[t]
 \small
@@ -67,9 +67,10 @@ support queries in constant time.
 	  }
   }
   \BlankLine
-  \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
-		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
-  }
+  $parallel\_list\_ranking(e^{\prime}, ct)$\;
+%  \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
+%		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
+ % }
   \BlankLine
   \PFor{$t\leftarrow 1$ \KwTo $num\_threads$}{
 	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
@@ -111,10 +112,12 @@ $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ (lines 23 to
 26). After a thread finishes processing its chunks, it is necessary to
 complement its local excess values considering the local values of
 previous threads. To do that, we first update the final excess value
-of each thread sequentially (lines 27 and 28). Those excess values do
-not need to be modified again. Due to the updated final excess value,
+of each thread using a parallel list ranking algorithm (line 27). 
+Those excess values do not need to be modified again. Observe that
+the list ranking algorithm only need to consider $p$ values, at positions
+$i*ct-1$, with $1\leq i \leq p-1$. Due to the updated final excess value,
 each thread can update the other excess, minimum and maximum values in
-parallel (lines 29 to 34) \Leo{Check with Pepe}. At this point, {\tt
+parallel (lines 28 to 33). At this point, {\tt
   PSTA} has computed all the leaves of the {\tt RMMT} in parallel.
 
 \begin{algorithm}[t]
