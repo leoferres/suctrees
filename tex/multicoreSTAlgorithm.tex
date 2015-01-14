@@ -257,27 +257,3 @@ universal tables. To simplify the explanation, Algorithm
 $near\_fwd\_pos$. The same algorithm can be applied to the other
 tables. All of these tables do not depend on the input, except for the
 number of available threads.
-
-
-\begin{algorithm}[t]
-\small
-\SetVlineSkip{-2cm}
-  % keywords
-  \SetKwInOut{Input}{Input}
-  \SetKwInOut{output}{output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  % I/o
-  \Input{Ordinal tree $T$}
-  \output{Folklore encoding $P$}
-  \BlankLine% \SetAlgoNoLine
-  % algorithm
-
-  \caption{{\tt PFEA}}
-  \label{algo:PFEA}
-\end{algorithm}
-\normalsize
-
-Finally, Algorithm \ref{algo:PFEA} shows the computation of the parentheses sequence $P$. This algorithm assumes as input an ordinal tree $T$
