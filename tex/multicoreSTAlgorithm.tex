@@ -5,14 +5,14 @@ shows the computation of the leaves of the {\tt RMMT}, Algorithm
 {\tt RMMT} and finally Algorithm \ref{algo:PSTA3} shows the
 computation of the universal tables. The sequential version of {\tt
   PSTA} can be obtained by replacing {\bf parfor} instruction with
-sequential {\bf for} instructions. The algorithm takes a parentheses
-sequence $P$ as input, the arity $k$ of the internal nodes in the {\tt
+sequential {\bf for} instructions. The algorithm takes as input a parentheses
+sequence $P$ of size $N$, the arity $k$ of the internal nodes in the {\tt
   RMMT}, the size of each chunk $s$ and the total numbers of available
 threads. In the sequence $P$, opened-parenthesis and
 closed-parenthesis are coded by a $0$ and a $1$, respectively. The
 output is the {\tt RMMT} represented by its arrays $e^{\prime}$,
 $m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables to
-support queries in $O(\lg|P|)$ time.
+support queries in $O(\lg N)$ time.
 
 \begin{algorithm}[t]
 \small
@@ -29,10 +29,10 @@ support queries in $O(\lg|P|)$ time.
   \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
   \BlankLine% \SetAlgoNoLine
   % algorithm
-  $o$ = $\frac{\lceil |P|/s \rceil-1}{k-1}$\tcp*[h]{Internal nodes of the RMMT}\;
-  $e^{\prime}$ = array of size $\lceil |P|/s \rceil$\;
-  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil |P|/s \rceil + o$\;
-  $ct$ = $\lceil |P|/s \rceil/num\_threads$\tcp*[h]{Chunks per thread}\;
+  $o$ = $\frac{\lceil N/s \rceil-1}{k-1}$\tcp*[h]{Internal nodes of the RMMT}\;
+  $e^{\prime}$ = array of size $\lceil N/s \rceil$\;
+  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil N/s \rceil + o$\;
+  $ct$ = $\lceil N/s \rceil/num\_threads$\tcp*[h]{Chunks per thread}\;
   \PFor{$t\leftarrow 0$ \KwTo $num\_threads-1$}{
 	  $partial\_excess, local\_min$ = $0$\;
 	  $local\_max, num\_mins$ = $0$\;
@@ -96,8 +96,8 @@ the size of the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and
 $n^{\prime}$. The size of array $e^{\prime}$ is the number of leaves
 in the {\tt RMMT} (line 2). The size of arrays $m^{\prime}$,
 $M^{\prime}$ and $n^{\prime}$ is equal to the total number of nodes in
-the {\tt RMMT}; that is, $\frac{\lceil |P|/s \rceil-1}{k-1} + \lceil
-|P|/s \rceil$ (lines 1 and 3). Lines 4 to 26 shows the computation of
+the {\tt RMMT}; that is, $\frac{\lceil N/s \rceil-1}{k-1} + \lceil
+N/s \rceil$ (lines 1 and 3). Lines 4 to 26 shows the computation of
 partial excess values in parallel. The first step is to compute the
 number of chunks that each thread has to process (line 4). Then, in
 parallel, each thread computes the excess value of $ct$ consecutive
@@ -138,7 +138,7 @@ parallel (lines 28 to 33). At this point, {\tt
 
   $level$ = $\lceil \log_{k}num\_threads \rceil$\;
   \PFor{$subtree\leftarrow 0$ \KwTo $k^{level}$}{
-	  \For{$l\leftarrow \lceil\log_{k}(|P|/s)\rceil-1$ \KwTo $level$}{
+	  \For{$l\leftarrow \lceil\log_{k}(N/s)\rceil-1$ \KwTo $level$}{
 		  \For{$node\leftarrow 0$ \KwTo $k^{l-level}$}{
 		  	$pos$ = $node + k^{l} - 1 +subtree*k^{l-level}$\;
 			\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{

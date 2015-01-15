@@ -11,7 +11,7 @@ the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is, $O(\sqrt{2^{
 O(\frac{N}{p}+\lg p+\frac{\sqrt{2^{w}}poly(w)}{p})$, considering $s$ and $k$ constants. Now, if we consider that we have enough amount of processors, the span of {\tt PSTA} is $T_{\infty}=O(\lg N)$. Here, the span of the whole algorithm is the maximum span of all its parts. The span of Algorithm \ref{algo:PSTA1} is $O(\lg N)$, since all the computation is done in the parallel list ranking algorithm (line 27). In Algorithm \ref{algo:PSTA2} all the computation is centered in the second half, with span $O(k\lg_{k}N)$. In Algorithm \ref{algo:PSTA3}, since each cell of the universal tables can be computed independently of the rest, the span if $O(1)$. Note that the overhead implicit in each {\bf parfor} does not affect the previous complexities.
 
 Since we have the three metrics provided by the DYM model, we can
-compute speedup and parallelism. The speedup of our algorithm is $T_1/T_P$ =
+compute speedup and parallelism. The speedup of our algorithm is $T_1/T_p$ =
 $O(\frac{p(N+\sqrt{2^{w}}poly(w))}{N+\sqrt{2^{w}}poly(w)+p\lg p})$. As we can see,
 under the assumption of $p\ll N$, the speedup tends to $O(p)$. The assumption
 $p\ll N$ is realistic, especially considering current SMP-like
