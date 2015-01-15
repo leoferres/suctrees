@@ -3,24 +3,13 @@ parentheses sequence $P$. However, sometimes $P$ is not available,
 instead we have un ordinal tree, $T$. The construction of $P$ from $T$
 has not been considered in previous implementations of the {\tt
   RMMT}. Here, we proposed an algorithm to compute $P$ in parallel,
-complementing the {\tt PSTA} algorithm. We will call this algorithm
-\emph{Parallel Folklore Enconding Algorithm}, {\tt PFEA}. The key
+complementing our previous algorithms. We will call this algorithm
+\emph{Parallel Folklore Encoding Algorithm}, {\tt PFEA}. The key
 observation to obtain $P$ is that each parenthesis associated to an
-edge $(u,v)$, ``('' or ``)'', is followed in the enconding by a
-parenthesis associated to the edge $(parent(u), v)$, $(v, first(v))$
-or $(u, next(u,v))$. All of them at distance of 1 of the edge
-$(u,v)$. In the observation, $parent(u)$ is the parent node $u$,
-$first(v)$ is the first child of $v$ and $next(u,v)$ is the child of
-$u$ that succeeds the node $v$ in the array or children. With this
-observation in mind, the core of {\tt PFEA} works as follows: Let
-$(u,v)$ be an edge of $T$, where $u$ is parent of $v$ and let
-$(u,v)_{0}$ ($(u,v)_{1}$) the opened (closed) parenthesis associated
-to $(u,v)$. First, if $v$ is a leaf, then $(u,v)_{0}$ is followed by
-$(u,v)_{1}$. If $v$ is not a leaf, then $(u,v)_{0}$ is followed by
-$(v,first(v))_{0}$. If $v$ is not the last child of $u$,then
-$(u,v)_{1}$ is followed by $(u,next(u,v))_{0}$. Finally, if $v$ is the
-last child of $u$, then $(u,v)_{1}$ is followed by
-$(u,parent(u))_{1}$. 
+edge $(u,v)$, ``('' or ``)'', is followed in the encoding by a
+parenthesis associated to an edge at distance 1 of the edge
+$(u,v)$. Considering this observation, we can assign each edge to a task
+that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm.
 
 \begin{algorithm}[t]
 \small
@@ -37,35 +26,90 @@ $(u,parent(u))_{1}$.
   \output{Parentheses sequence representation of $T$}
   \BlankLine% \SetAlgoNoLine
   % algorithm
-  $ET, P$ = arrays of size $2|E|$\;
+  $ET, P$ = arrays of size $2*|E|$\;
   \PFor{$i\leftarrow 0$ \KwTo $|E|-1$}{
-  	$orig = E[i].origin$,
-  	$dest = E[i].destiny$\;
-  	$ET[2i].value = 0$\tcp*[h]{(}\;
-  	$ET[2i+1].value = 1$\tcp*[h]{)}\;
+  	$ET[2*i].value = 0$\tcp*[h]{(}\;
+  	$ET[2*i+1].value = 1$\tcp*[h]{)}\;
   	
-  	\eIf{$dest.node$ is a $leaf$}{
-  		$ET[2i].succ = ET[2i+1]$\;
+  	\eIf{$E[i].destiny$ is a $leaf$}{
+  		$ET[2*i].succ = ET[2*i+1]$\;
 	}
 	{
-  		$ET[2i].succ = ET[2*next(dest.node,dest.index)]$\;
+  		$ET[2*i].succ = ET[2*next(E[i].destiny)]$\;
     }
   \BlankLine
-  	\eIf{$orig$ is a last incident egde}{
-  		$ET[2i+1].succ = ET[2*parent(orig.node)+1]$\;
+  	\eIf{$E[i].origin$ is a last incident egde}{
+  		$ET[2*i+1].succ = ET[2*parent(E[i].origin)+1]$\;
 	}
 	{
-  		$ET[2i+1].succ = ET[2*next(orig.node,orig.index)]$\;
+  		$ET[2*i+1].succ = ET[2*next(E[i].origin)]$\;
     }
   }
   \BlankLine
   $parallel\_list\_ranking(ET)$\;
   \BlankLine
-  \PFor{$i\leftarrow 0$ \KwTo $2|E|-1$}{
+  \PFor{$i\leftarrow 0$ \KwTo $2*|E|-1$}{
   	$P[ET[i].rank] = ET[i].value$
   }
+
+%  $ET, P$ = arrays of size $2|E|$\;
+%  \PFor{$i\leftarrow 0$ \KwTo $|E|-1$}{
+%  	$orig = E[i].origin$,
+%  	$dest = E[i].destiny$\;
+%  	$ET[2i].value = 0$\tcp*[h]{(}\;
+%  	$ET[2i+1].value = 1$\tcp*[h]{)}\;
+%  	
+%  	\eIf{$dest.node$ is a $leaf$}{
+%  		$ET[2i].succ = ET[2i+1]$\;
+%	}
+%	{
+%  		$ET[2i].succ = ET[2*next(dest.node,dest.index)]$\;
+%    }
+%  \BlankLine
+%  	\eIf{$orig$ is a last incident egde}{
+%  		$ET[2i+1].succ = ET[2*parent(orig.node)+1]$\;
+%	}
+%	{
+%  		$ET[2i+1].succ = ET[2*next(orig.node,orig.index)]$\;
+%    }
+%  }
+%  \BlankLine
+%  $parallel\_list\_ranking(ET)$\;
+%  \BlankLine
+%  \PFor{$i\leftarrow 0$ \KwTo $2|E|-1$}{
+%  	$P[ET[i].rank] = ET[i].value$
+%  }
   \caption{{\tt PFEA}}
   \label{algo:PFEA}
 \end{algorithm}
 \normalsize
+
+The algorithm assumes has input an \emph{ordinal tree} $T$ which is represented by an array of nodes, $V$, and an array of edges, $E$. Each node $v$ in $V$ contains an adjacency list with all incident edges of $v$ sorted in counterclockwise order. Each element in the adyacency list points to its corresponding edge in $E$. Each edge $e=(u,v)$ in $E$ points to the corresponding entries, of its endpoints, in $V$. In the Algorithm \ref{algo:PFEA}, we refer to $u$ as $e.origin$ and to $v$ as $e.destiny$. Besides, we assume that each endpoint of $e$ maintains a reference its position in the corresponding adjacency list. The output will be the folklore encoding, $P$, representation of $T$.
+
+Given this representation, the algorithm works as follows: 
+First of all, the algorithm create two arrays, $ET$ and $P$, both of size $2*|E|$. Array $ET$ will be used as an auxiliar array, meanwhile $P$ will save the folklore encoding. Each entry in the array $ET$ contains three elements: $value$ which saves the symbol, $``("$ or $``)"$, $succ$ a pointer the next symbol in the encoding and $rank$ which is the final position of the symbol in the array $P$. In lines 2 to 12 of the Algorithm \ref{algo:PFEA}, the algorithm process each edge in parallel. For the $ith$ edge, the corresponding thread writes an $``("$ in $ET$ at position $2*i$ and a $``)"$ at position $2*i+1$. Then, the thread constructs pointers to the successors of both parentheses, in lines 5 to 8, for $``("$, and lines 9 to 12, for $``)"$. In the algorithm, $next(E[i].destiny)$ returns the position in $E$ of the next sibbling of $E[i].destiny$, in counterclockwise order, and $parent(E[i].origin)$ returns the position in $E$ of the edge that connects the node $E[i].origin$ with it parent. As convention, we assume that for any node $v$, the first entry of its adjacency list points to its parent. Note that, when finish this part, $ET$ will correspond to the \emph{Euler Tour} of $T$.
+With the first part done, the next step is compute the ranks of each parenthesis in $ET$. To do that, the algorithm uses an standard parallel list ranking algorithm, as \cite{Helman2001265} or \cite{Reif1993} (line 13). We assume that the computed ranks are saved in the $rank$ fields of the $ET$ entries. Finally, the algorithm writes in parallel the parentheses in their final positions in $P$, using the ranks computed recently (lines 14 and 15).
+
+Considering the first part of {\tt PFEA} algorithm (lines 2 to 12), $T_1 = O(|E|)$, since it traverses the array $E$, $T_p = O(\frac{|E|}{p})$, since each thread, on average, processes $\frac{|E|}{p}$ edges, and $T_{\infty} = O(1)$. The complexities of the second part (line 13) are $T_1=O(|E|)$, $T_p=O(\frac{|E|}{p}+\lg p)$ and $T_{\infty}=O(\lg |E|)$, which is the complexities of parallel algorithms of list ranking. The third part (lines 14 and 15) has the same complexities of the first part, since both contains a {\bf parfor} and each iteration is $O(1)$. Therefore, complexities of {\tt PFEA} algorithm are
+$T_1=O(|E|)$, $T_p=O(\frac{|E|}{p}+\lg p)$ and $T_{\infty}=O(\lg |E|)$. The speedup, $T_1/T_p$, is $O(\frac{p|E|}{|E|+p\lg p})$ and the parallelism is $T_1/T_{\infty} = O(\frac{|E|}{\lg |E|})$.
+
+If we consider this algorithm as the initial step of {\tt PSTA} algorithm, the time complexities of {\tt PSTA} do not change.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

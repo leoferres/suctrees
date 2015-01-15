@@ -89,7 +89,7 @@ There is also some ``degrading'' of the speedup after 16 threads, not
 predicted by the model. We believe that this may be due to the
 architectural characteristics of the experimental machine. The Opteron
 has 4 physical processors with 8 cores each, arranged in a grid
-topology \Leo{Drepper}. Thus, when the code starts executing, up until
+topology\cite{Drepper2007}. Thus, when the code starts executing, up until
 the first 8 threads, multicore execution time will be best. After the
 first 8 cores have been used up, the code will recruit the next 8
 cores from the processor that is closest to it, with only a minimal
