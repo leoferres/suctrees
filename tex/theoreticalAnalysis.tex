@@ -1,39 +1,68 @@
 The sequential version of {\tt PSTA} takes $O(N+\sqrt{2^{w}}poly(w))$,
 the same complexity reported in
 \cite{Navarro:2014:FFS:2620785.2601073}. The amount of work of {\tt
-PSTA}, $T_1$, is the aggregation of the amount of work of Algorithms \ref{algo:PSTA1},
-\ref{algo:PSTA2} and \ref{algo:PSTA2}. The work of Algorithm \ref{algo:PSTA1} is $O(N)$,
-since that it behaves as a sequential list ranking algorithm (all the computation is
-done in lines 8 to 26). The work of Algorithm \ref{algo:PSTA2} is $O(\frac{N}{s})$. Here,
-all the computation is done in the first part (lines 1 to 18), having only one
-subtree which contains all internal nodes of the {\tt RMMT}. The work of Algorithm \ref{algo:PSTA3} is equivalent to compute all universal tables sequentially, mantaining
-the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is, $O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA} is $T_{1}=O(N+\sqrt{2^{w}}poly(w))$. Considering $p$ processors, the first part of Algorithm \ref{algo:PSTA1} (lines 5 to 26) as a complexity of $O(\frac{N}{p})$. Meanwhile, the second part (line 27) has a complexity of $O(\lg p)$ if we use the parallel list ranking algorithm in \cite{Reif1993}. Finally, the third part of Algorithm \ref{algo:PSTA1} (lines 28 to 33) has a complexity of $O(\frac{N}{sp})$. On the other hand, the first half of Algorithm \ref{algo:PSTA2} (lines 1 to 18) has a complexity of $O(\frac{Nk}{sp})$ and the second half (lines 19 to 34) has a complexity of $O(k\lg_{k}p)$. Algorithm \ref{algo:PSTA3} has a complexity of $O(\frac{\sqrt{2^{w}}poly(w)}{p})$. Therefore, the complexity of {\tt PSTA} with $p$ available processors is $T_p =
-O(\frac{N}{p}+\lg p+\frac{\sqrt{2^{w}}poly(w)}{p})$, considering $s$ and $k$ constants. Now, if we consider that we have enough amount of processors, the span of {\tt PSTA} is $T_{\infty}=O(\lg N)$. Here, the span of the whole algorithm is the maximum span of all its parts. The span of Algorithm \ref{algo:PSTA1} is $O(\lg N)$, since all the computation is done in the parallel list ranking algorithm (line 27). In Algorithm \ref{algo:PSTA2} all the computation is centered in the second half, with span $O(k\lg_{k}N)$. In Algorithm \ref{algo:PSTA3}, since each cell of the universal tables can be computed independently of the rest, the span if $O(1)$. Note that the overhead implicit in each {\bf parfor} does not affect the previous complexities.
+PSTA}, $T_1$, is the aggregation of the amount of work of Algorithms
+\ref{algo:PSTA1}, \ref{algo:PSTA2} and \ref{algo:PSTA2}. The work of
+Algorithm \ref{algo:PSTA1} is $O(N)$, since that it behaves as a
+sequential list ranking algorithm (all the computation is done in
+lines 8 to 26). The work of Algorithm \ref{algo:PSTA2} is
+$O(\frac{N}{s})$. Here, all the computation is done in the first part
+(lines 1 to 18), having only one subtree which contains all internal
+nodes of the {\tt RMMT}. The work of Algorithm \ref{algo:PSTA3} is
+equivalent to compute all universal tables sequentially, mantaining
+the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is,
+$O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA}
+is $T_{1}=O(N+\sqrt{2^{w}}poly(w))$. Considering $p$ processors, the
+first part of Algorithm \ref{algo:PSTA1} (lines 5 to 26) as a
+complexity of $O(\frac{N}{p})$. Meanwhile, the second part (line 27)
+has a complexity of $O(\lg p)$ if we use the parallel list ranking
+algorithm in \cite{Reif1993}. Finally, the third part of Algorithm
+\ref{algo:PSTA1} (lines 28 to 33) has a complexity of
+$O(\frac{N}{sp})$. On the other hand, the first half of Algorithm
+\ref{algo:PSTA2} (lines 1 to 18) has a complexity of
+$O(\frac{Nk}{sp})$ and the second half (lines 19 to 34) has a
+complexity of $O(k\lg_{k}p)$. Algorithm \ref{algo:PSTA3} has a
+complexity of $O(\frac{\sqrt{2^{w}}poly(w)}{p})$. Therefore, the
+complexity of {\tt PSTA} with $p$ available processors is $T_p =
+O(\frac{N}{p}+\lg p+\frac{\sqrt{2^{w}}poly(w)}{p})$, considering $s$
+and $k$ constants. Now, if we consider that we have enough amount of
+processors, the span of {\tt PSTA} is $T_{\infty}=O(\lg N)$. Here, the
+span of the whole algorithm is the maximum span of all its parts. The
+span of Algorithm \ref{algo:PSTA1} is $O(\lg N)$, since all the
+computation is done in the parallel list ranking algorithm (line
+27). In Algorithm \ref{algo:PSTA2} all the computation is centered in
+the second half, with span $O(k\lg_{k}N)$. In Algorithm
+\ref{algo:PSTA3}, since each cell of the universal tables can be
+computed independently of the rest, the span if $O(1)$. Note that the
+overhead implicit in each {\bf parfor} does not affect the previous
+complexities.
 
-Since we have the three metrics provided by the DYM model, we can
-compute speedup and parallelism. The speedup of our algorithm is $T_1/T_p$ =
-$O(\frac{p(N+\sqrt{2^{w}}poly(w))}{N+\sqrt{2^{w}}poly(w)+p\lg p})$. As we can see,
-under the assumption of $p\ll N$, the speedup tends to $O(p)$. The assumption
-$p\ll N$ is realistic, especially considering current SMP-like
-systems, where the amount of available processing units is much less than the
-input, $N$ in this case. The parallelism of {\tt PSTA} is $T_1/T_{\infty}$ =
-$\frac{N+\sqrt{2^{w}}poly(w)}{\lg N}$. Remember that the parallelism indicates the maximum theoretical speedup; in this case, when the input grows, the maximum speedup grows, too.
+Given the DYM model, the speedup of our algorithm is $T_1/T_p$ =
+$O(\frac{p(N+\sqrt{2^{w}}poly(w))}{N+\sqrt{2^{w}}poly(w)+p\lg
+p})$. Under the assumption of $p\ll N$, the speedup tends to
+$O(p)$. The assumption $p\ll N$ is realistic, especially considering
+current SMP-like systems, where the number of available processing
+units is generally much lower than the input $N$. In turn, the
+parallelism $T_1/T_{\infty}$ (the maximum theoretical speedup) of {\tt
+PSTA} is $\frac{N+\sqrt{2^{w}}poly(w)}{\lg N}$.
 
 An important advantage of our algorithm is its working space. The {\tt
-PSTA} algorithm does not need any extra memory related to the usage of
-threads. Indeed, it just needs a working space proportional to the
-input size and the space needed to schedule the threads. A
-work-stealing scheduler, as that used by the DYM model, exhibit at
-most a linear expansion space, that is, $O(S_1p)$, where $S_1$ is the
-minimum amount of space used by the scheduler for any execution of a
+PSTA} algorithm does not need any extra memory related to the use of
+threads. Indeed, it just needs space proportional to the input size
+and the space needed to schedule the threads. A work-stealing
+scheduler, like the one used by the DYM model, exhibits at most a
+linear expansion space, that is, $O(S_1p)$, where $S_1$ is the minimum
+amount of space used by the scheduler for any execution of a
 multithreaded computation using one processor. This upper bound is
 optimal to within a constant factor
 \cite{Blumofe:1999:SMC:324133.324234}. In summary, the working space
 needed by our algorithm is $O(N\lg N+S_1p)$. Thus, since in modern
-machines is normal that $p\ll N$, the scheduling space is negligible and the working space is dominated by the input size.
+machines it is usual that $p\ll N$, the scheduling space is negligible
+and the working space is dominated by the input size.
 
-\Jose{The algorithm reaches its optimal behavior when the work of building
-each subtree in parallel (lines 2 to 18 of Algorithm \ref{algo:PSTA2})
-is the same as the work needed to create the top part of the {\tt
-RMMT} (lines 19 to 32 of Algorithm \ref{algo:PSTA2}). This point is
-reached when the $p\log_{k}p=N/s$. REVIEW THIS PART}
+% \Jose{The algorithm reaches its optimal behavior when the work of
+% building each subtree in parallel (lines 2 to 18 of Algorithm
+% \ref{algo:PSTA2}) is the same as the work needed to create the top
+% part of the {\tt RMMT} (lines 19 to 32 of Algorithm
+% \ref{algo:PSTA2}). This point is reached when the
+% $p\log_{k}p=N/s$. REVIEW THIS PART}

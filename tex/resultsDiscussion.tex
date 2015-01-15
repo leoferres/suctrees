@@ -16,6 +16,7 @@
  12  &  7.58 &  76.38 & 4.63 &  7.83 & 83.19  & 5.01 &  7.97  & 82.59  & 4.87 &  9.56  &  97.62  &  5.88  & 10.54 & 122.26 & 7.24  \\
  14  &  8.28 &  83.36 & 5.05 &  8.39 & 89.18  & 5.37 &  8.74  & 90.63  & 5.34 &  9.36  &  95.64  &  5.76  & 11.94 & 138.47 & 8.20  \\
  16  &  7.08 &  71.34 & 4.32 &  8.41 & 89.39  & 5.38 &  7.52  & 77.90  & 4.59 &  8.48  &  86.57  &  5.21  & 14.20 & 164.75 & 9.75  \\
+\hline\hline
  18  &  7.23 &  72.77 & 4.41 &  5.76 & 61.23  & 3.69 &  10.19 & 105.59 & 6.22 &  9.36  &  95.61  &  5.76  & 14.91 & 172.99 & 10.24\\
  20  &  7.18 &  72.30 & 4.38 &  8.41 & 89.37  & 5.38 &  8.30  & 85.99  & 5.07 &  11.86 &  121.10 &  7.29  & 15.93 & 184.85 & 10.94\\
  22  &  7.43 &  74.84 & 4.53 &  7.69 & 81.72  & 4.92 &  7.98  & 82.75  & 4.88 &  7.83  &  79.99  &  4.82  & 17.20 & 199.60 & 11.82\\
@@ -82,10 +83,20 @@ strategy degrades the performance a little, the threads are always
 working, which is a good feature on parallel processing. Since the
 machine where we run our experiments has 32 physical cores and other
 processes were running, such as, the operating system, the speedup
-near the 32nd thread does not reach a linear behavior\footnote{We
-  could not test the ``breakeven'' characteristic of our algorithm
-  because we do not have a machine with enough physical cores.}. 
+near the 32nd thread does not reach a linear behavior. 
 
+There is also some ``degrading'' of the speedup after 16 threads, not
+predicted by the model. We believe that this may be due to the
+architectural characteristics of the experimental machine. The Opteron
+has 4 physical processors with 8 cores each, arranged in a grid
+topology \Leo{Drepper}. Thus, when the code starts executing, up until
+the first 8 threads, multicore execution time will be best. After the
+first 8 cores have been used up, the code will recruit the next 8
+cores from the processor that is closest to it, with only a minimal
+cost in communication. After the 16th core has been recruited, then
+the next two processors (the ones farthest away in the topology) will
+be recruited, with much higher communication costs. \Leo{Review
+  Drepper's explanation of this}.
 
 Since {\tt psta} generates tasks that work on different memory
 regions, the generated cache misses \Leo{false sharing is misses} do
@@ -132,17 +143,3 @@ of Algorithm \ref{algo:PSTA1} to calculate the depth $d$ of the input
 sequence (the maximum excess value), we could use it to allocate just
 $\lg (d)$ bits per excess value, saving memory and improving
 performance, and thus reducing memory transfers.
-
-
-
-
-
-
-
-
-
-
-
-
-
-

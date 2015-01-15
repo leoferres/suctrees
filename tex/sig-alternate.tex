@@ -114,13 +114,13 @@
 %
 % 1st. author
 \alignauthor Leo Ferres\\
-       \affaddr{Department of Computer Science}\\
+       \affaddr{Dept. of Computer Science}\\
        \affaddr{Universidad de Concepci\'on}\\
        \affaddr{Concepci\'on, Chile}\\
        \email{lferres@udec.cl}
 % 2nd. author
 \alignauthor Jos\'e Fuentes-Sep\'ulveda\\
-       \affaddr{Department of Computer Science}\\
+       \affaddr{Dept. of Computer Science}\\
        \affaddr{Universidad de Concepci\'on}\\
        \affaddr{Concepci\'on, Chile}\\
        \email{jfuentess@udec.cl}
@@ -141,16 +141,26 @@
 
 \maketitle
 \begin{abstract}
-Succinct representations of trees have been an elegant solution to make large trees fit in main memory while still supporting
-navigational operations in constant time. However, the construction time of succinct trees remains a computational bottleneck. This
-paper introduces a practical parallel algorithm that improves the state-of-the-art in succinct tree construction. Given a tree on
-$n$ nodes stored as a sequence of balanced parentheses, the proposed algorithm can build a succinct tree representation in
-$O(\frac{n}{p}+\lg p)$ time, where $p$ is the number of available processors. The constructed representation occupies $2n + o(n)$
-bits of storage, and supports a rich set of navigational operations in $O(\lg n)$ time. The algorithm was tested on a $32$-core
-machine, with different tree sizes, reaching good practical speedup. In order to support navigational operations in constant time,
-we	further introduce an algorithm that constructs a more complex succinct tree representation in $O(\frac{n\lg p}{p})$ time.
-Finally, as both succinct tree representations considered in our work are built upon the balance parenthesis sequence of the given
-tree, we also introduce an algorithm to compute this parenthesis sequence in $O(\frac{n}{p})$ time.
+  Succinct representations of trees have been an elegant solution to
+  make large trees fit in main memory while still supporting
+  navigational operations in constant time. However, the construction
+  time of succinct trees remains a computational bottleneck. This
+  paper introduces a practical parallel algorithm that improves the
+  state-of-the-art in succinct tree construction. Given a tree on $n$
+  nodes stored as a sequence of balanced parentheses, the proposed
+  algorithm can build a succinct tree representation in
+  $O(\frac{n}{p}+\lg p)$ time, where $p$ is the number of available
+  processors. The constructed representation occupies $2n + o(n)$ bits
+  of storage, and supports a rich set of navigational operations in
+  $O(\lg n)$ time. The algorithm was tested on a $32$-core machine,
+  with different tree sizes, reaching good practical speedup. In order
+  to support navigational operations in constant time, we further
+  introduce an algorithm that constructs a more complex succinct tree
+  representation in $O(\frac{n\lg p}{p})$ time.  Finally, as both
+  succinct tree representations considered in our work are built upon
+  the balance parenthesis sequence of the given tree, we also
+  introduce an algorithm to compute this parenthesis sequence in
+  $O(\frac{n}{p})$ time.
 \end{abstract}
 
 \category{D.1.3}{Programming Techniques}{Concurrent Programming}[Parallel programming]
