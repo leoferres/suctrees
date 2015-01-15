@@ -17,7 +17,7 @@ under the assumption of $p\ll N$, the speedup tends to $O(p)$. The assumption
 $p\ll N$ is realistic, especially considering current SMP-like
 systems, where the amount of available processing units is much less than the
 input, $N$ in this case. The parallelism of {\tt PSTA} is $T_1/T_{\infty}$ =
-$\frac{N+\sqrt{2^{w}}poly(w)}{\lg N}$ \Jose{...}
+$\frac{N+\sqrt{2^{w}}poly(w)}{\lg N}$. Remember that the parallelism indicates the maximum theoretical speedup; in this case, when the input grows, the maximum speedup grows, too.
 
 An important advantage of our algorithm is its working space. The {\tt
 PSTA} algorithm does not need any extra memory related to the usage of
@@ -29,12 +29,11 @@ minimum amount of space used by the scheduler for any execution of a
 multithreaded computation using one processor. This upper bound is
 optimal to within a constant factor
 \cite{Blumofe:1999:SMC:324133.324234}. In summary, the working space
-needed by our algorithm is $O(N+S_1p)$. Thus, considering the
-assumption $p\ll N$, the working space is dominated by the input
-size. The scheduling space is negligible.
+needed by our algorithm is $O(N\lg N+S_1p)$. Thus, since in modern
+machines is normal that $p\ll N$, the scheduling space is negligible and the working space is dominated by the input size.
 
-The algorithm reaches its optimal behavior when the work of building
+\Jose{The algorithm reaches its optimal behavior when the work of building
 each subtree in parallel (lines 2 to 18 of Algorithm \ref{algo:PSTA2})
 is the same as the work needed to create the top part of the {\tt
 RMMT} (lines 19 to 32 of Algorithm \ref{algo:PSTA2}). This point is
-reached when the $p\log_{k}p=N/s$. 
+reached when the $p\log_{k}p=N/s$. REVIEW THIS PART}
