@@ -1,8 +1,18 @@
 The sequential version of {\tt PSTA} takes $O(N+\sqrt{2^{w}}poly(w))$,
 the same complexity reported in
 \cite{Navarro:2014:FFS:2620785.2601073}. The amount of work of {\tt
-PSTA}, $T_1$, is also $O(N+\sqrt{2^{w}}poly(w))$, dominated mainly by
-Part I of Algorithm (\ref{algo:PSTA1}). The complexity of {\tt PSTA},
+PSTA}, $T_1$, is the aggregation of the amount of work of Algorithms \ref{algo:PSTA1},
+\ref{algo:PSTA2} and \ref{algo:PSTA2}. The work of Algorithm \ref{algo:PSTA1} is $O(N)$,
+since that it behaves as a sequential list ranking algorithm (all the computation is
+done in lines 8 to 26). The work of Algorithm \ref{algo:PSTA2} is $O(\frac{N}{s})$. Here,
+all the computation is done in the first part (lines 1 to 18), having only one
+subtree which contains all internal nodes of the {\tt RMMT}. The work of Algorithm \ref{algo:PSTA3} is equivalent to compute all universal tables sequentially, mantaining
+the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is, $O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA} is also
+$O(N+\sqrt{2^{w}}poly(w))$.
+
+\Jose{Rephrase this part}
+
+ The complexity of {\tt PSTA},
 considering $p$ processors, is $T_p =
 O(\frac{N}{p}+p+\frac{\sqrt{2^{w}}poly(w)}{p})$. Now, the complexity
 with enough amount of processors, $T_\infty$, is $O(N)$. The speedup

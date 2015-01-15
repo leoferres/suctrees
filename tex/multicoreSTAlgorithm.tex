@@ -72,7 +72,7 @@ support queries in $O(\lg|P|)$ time.
 %		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
  % }
   \BlankLine
-  \PFor{$t\leftarrow 1$ \KwTo $num\_threads$}{
+  \PFor{$t\leftarrow 1$ \KwTo $num\_threads-1$}{
 	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
 	  	\If{$t == num\_threads-1$ OR $chunk < ct-1$}{
 	  	  $e^{\prime}[t*ct+chunk]$ += $e^{\prime}[t*ct-1]$\;

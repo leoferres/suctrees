@@ -1,0 +1,46 @@
+As we mentioned above, the input to {\tt RMMT} consists of a
+parentheses sequence $P$. However, sometimes $P$ is not available,
+instead we have un ordinal tree, $T$. The construction of $P$ from $T$
+has not been considered in previous implementations of the {\tt
+  RMMT}. Here, we proposed an algorithm to compute $P$ in parallel,
+complementing the {\tt PSTA} algorithm. We will call this algorithm
+\emph{Parallel Folklore Enconding Algorithm}, {\tt PFEA}. The key
+observation to obtain $P$ is that each parenthesis associated to an
+edge $(u,v)$, ``('' or ``)'', is followed in the enconding by a
+parenthesis associated to the edge $(parent(u), v)$, $(v, first(v))$
+or $(u, next(u,v))$. All of them at distance of 1 of the edge
+$(u,v)$. In the observation, $parent(u)$ is the parent node $u$,
+$first(v)$ is the first child of $v$ and $next(u,v)$ is the child of
+$u$ that succeeds the node $v$ in the array or children. With this
+observation in mind, the core of {\tt PFEA} works as follows: Let
+$(u,v)$ be an edge of $T$, where $u$ is parent of $v$ and let
+$(u,v)_{0}$ ($(u,v)_{1}$) the opened (closed) parenthesis associated
+to $(u,v)$. First, if $v$ is a leaf, then $(u,v)_{0}$ is followed by
+$(u,v)_{1}$. If $v$ is not a leaf, then $(u,v)_{0}$ is followed by
+$(v,first(v))_{0}$. If $v$ is not the last child of $u$,then
+$(u,v)_{1}$ is followed by $(u,next(u,v))_{0}$. Finally, if $v$ is the
+last child of $u$, then $(u,v)_{1}$ is followed by
+$(u,parent(u))_{1}$. In the next section we will give more details of
+{\tt PFEA} algorithm.
+
+\begin{algorithm}[t]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+  \Input{Ordinal tree $T$}
+  \output{Folklore encoding $P$}
+  \BlankLine% \SetAlgoNoLine
+  % algorithm
+
+  \caption{{\tt PFEA}}
+  \label{algo:PFEA}
+\end{algorithm}
+\normalsize
+
