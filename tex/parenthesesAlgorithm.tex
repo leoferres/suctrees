@@ -20,8 +20,7 @@ $(u,v)_{1}$. If $v$ is not a leaf, then $(u,v)_{0}$ is followed by
 $(v,first(v))_{0}$. If $v$ is not the last child of $u$,then
 $(u,v)_{1}$ is followed by $(u,next(u,v))_{0}$. Finally, if $v$ is the
 last child of $u$, then $(u,v)_{1}$ is followed by
-$(u,parent(u))_{1}$. In the next section we will give more details of
-{\tt PFEA} algorithm.
+$(u,parent(u))_{1}$. 
 
 \begin{algorithm}[t]
 \small
@@ -34,11 +33,37 @@ $(u,parent(u))_{1}$. In the next section we will give more details of
   \SetAlgoNoEnd
   \DontPrintSemicolon
   % I/o
-  \Input{Ordinal tree $T$}
-  \output{Folklore encoding $P$}
+  \Input{Arrays $V$ and $E$ representing the ordinal tree $T$}
+  \output{Parentheses sequence representation of $T$}
   \BlankLine% \SetAlgoNoLine
   % algorithm
-
+  $ET, P$ = arrays of size $2|E|$\;
+  \PFor{$i\leftarrow 0$ \KwTo $|E|-1$}{
+  	$orig = E[i].origin$,
+  	$dest = E[i].destiny$\;
+  	$ET[2i].value = 0$\tcp*[h]{(}\;
+  	$ET[2i+1].value = 1$\tcp*[h]{)}\;
+  	
+  	\eIf{$dest.node$ is a $leaf$}{
+  		$ET[2i].succ = ET[2i+1]$\;
+	}
+	{
+  		$ET[2i].succ = ET[2*next(dest.node,dest.index)]$\;
+    }
+  \BlankLine
+  	\eIf{$orig$ is a last incident egde}{
+  		$ET[2i+1].succ = ET[2*parent(orig.node)+1]$\;
+	}
+	{
+  		$ET[2i+1].succ = ET[2*next(orig.node,orig.index)]$\;
+    }
+  }
+  \BlankLine
+  $parallel\_list\_ranking(ET)$\;
+  \BlankLine
+  \PFor{$i\leftarrow 0$ \KwTo $2|E|-1$}{
+  	$P[ET[i].rank] = ET[i].value$
+  }
   \caption{{\tt PFEA}}
   \label{algo:PFEA}
 \end{algorithm}

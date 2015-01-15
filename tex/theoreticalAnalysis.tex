@@ -7,30 +7,17 @@ since that it behaves as a sequential list ranking algorithm (all the computatio
 done in lines 8 to 26). The work of Algorithm \ref{algo:PSTA2} is $O(\frac{N}{s})$. Here,
 all the computation is done in the first part (lines 1 to 18), having only one
 subtree which contains all internal nodes of the {\tt RMMT}. The work of Algorithm \ref{algo:PSTA3} is equivalent to compute all universal tables sequentially, mantaining
-the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is, $O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA} is also
-$O(N+\sqrt{2^{w}}poly(w))$.
+the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is, $O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA} is $T_{1}=O(N+\sqrt{2^{w}}poly(w))$. Considering $p$ processors, the first part of Algorithm \ref{algo:PSTA1} (lines 5 to 26) as a complexity of $O(\frac{N}{p})$. Meanwhile, the second part (line 27) has a complexity of $O(\lg p)$ if we use the parallel list ranking algorithm in \cite{Reif1993}. Finally, the third part of Algorithm \ref{algo:PSTA1} (lines 28 to 33) has a complexity of $O(\frac{N}{sp})$. On the other hand, the first half of Algorithm \ref{algo:PSTA2} (lines 1 to 18) has a complexity of $O(\frac{Nk}{sp})$ and the second half (lines 19 to 34) has a complexity of $O(k\lg_{k}p)$. Algorithm \ref{algo:PSTA3} has a complexity of $O(\frac{\sqrt{2^{w}}poly(w)}{p})$. Therefore, the complexity of {\tt PSTA} with $p$ available processors is $T_p =
+O(\frac{N}{p}+\lg p+\frac{\sqrt{2^{w}}poly(w)}{p})$, considering $s$ and $k$ constants. Now, if we consider that we have enough amount of processors, the span of {\tt PSTA} is $T_{\infty}=O(\lg N)$. Here, the span of the whole algorithm is the maximum span of all its parts. The span of Algorithm \ref{algo:PSTA1} is $O(\lg N)$, since all the computation is done in the parallel list ranking algorithm (line 27). In Algorithm \ref{algo:PSTA2} all the computation is centered in the second half, with span $O(k\lg_{k}N)$. In Algorithm \ref{algo:PSTA3}, since each cell of the universal tables can be computed independently of the rest, the span if $O(1)$. Note that the overhead implicit in each {\bf parfor} does not affect the previous complexities.
 
-\Jose{Rephrase this part}
-
- The complexity of {\tt PSTA},
-considering $p$ processors, is $T_p =
-O(\frac{N}{p}+p+\frac{\sqrt{2^{w}}poly(w)}{p})$. Now, the complexity
-with enough amount of processors, $T_\infty$, is $O(N)$. The speedup
-of our algorithm is $T_1/T_P$ =
-$O(\frac{N+\sqrt{2^{w}}poly(w)}{\frac{N+\sqrt{2^{w}}poly(w)}{p}+p})$
-\Leo{should we put these long formulas in a new line?}. As we can see,
-when $p$ is small, the speedup tends to $O(p)$, which meets our
-assumption of $p\ll N$. However, when $p$ tends to $N$, the speedup
-tends to decrease. This last observation is more evident in the
-analysis of parallelism, $T_1/T_{\infty}$ =
-$\frac{N+\sqrt{2^{w}}poly(w)}{N}$, which tends to $1$. The assumption
+Since we have the three metrics provided by the DYM model, we can
+compute speedup and parallelism. The speedup of our algorithm is $T_1/T_P$ =
+$O(\frac{p(N+\sqrt{2^{w}}poly(w))}{N+\sqrt{2^{w}}poly(w)+p\lg p})$. As we can see,
+under the assumption of $p\ll N$, the speedup tends to $O(p)$. The assumption
 $p\ll N$ is realistic, especially considering current SMP-like
-systems, where the amount of available processing units, even though
-they have increased in the past few years, is much less than the
-input, $N$ in this case. Moreover, trees have become extremely large,
-several-million-node trees, such as suffix trees of text collections
-and XML collections are not difficult to find. \Leo{which are how big
-exactly, for example?}.
+systems, where the amount of available processing units is much less than the
+input, $N$ in this case. The parallelism of {\tt PSTA} is $T_1/T_{\infty}$ =
+$\frac{N+\sqrt{2^{w}}poly(w)}{\lg N}$ \Jose{...}
 
 An important advantage of our algorithm is its working space. The {\tt
 PSTA} algorithm does not need any extra memory related to the usage of

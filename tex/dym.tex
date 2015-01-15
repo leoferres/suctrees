@@ -31,8 +31,8 @@ of 2 away from optimal performance
 To measure the efficiency of our parallel algorithm, we
 will use three metrics: the {\em work}, the {\em span} and the number
 of processors. In accordance to the parallel literature, we will
-subscript running times by $P$, so $T_P$ is the running time of an
-algorithm on $P$ processors. The {\em work} is the total running time
+subscript running times by $p$, so $T_p$ is the running time of an
+algorithm on $p$ processors. The {\em work} is the total running time
 taken by all (unit-time) strands when executing on a {\em single}
 processor (i.e., $T_1$),\footnote{Notice, again, that analyzing the
   work amounts to finding the running time of the serial algorithm
@@ -40,7 +40,7 @@ processor (i.e., $T_1$),\footnote{Notice, again, that analyzing the
 is the {\em critical path} (the longest path) of $G$. In this work,
 we are interested in speeding up the succinct tree construction and finding
 out the upper bounds of this speedup. To measure this, we will define
-{\em speedup} as $T_1/T_P = O(P)$, where linear speedup $T_1/T_P =
-\Theta(P)$, is the goal. We also define {\em parallelism} as the ratio
+{\em speedup} as $T_1/T_p = O(p)$, where linear speedup $T_1/T_p =
+\Theta(p)$, is the goal. We also define {\em parallelism} as the ratio
 $T_1/T_{\infty}$, the maximum theoretical speedup that can be achieved
 on {\em any} number of processors.
