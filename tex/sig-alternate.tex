@@ -151,13 +151,13 @@ machine and on inputs of different sizes.
 In these experiments, it achieved good parallel speedup. The second result in this paper shows how to construct a more complex tree representation that supports navigational operations in constant time.
 The constructing of this representation takes $O((n/p)\lg p)$ time.
 Finally, as both succinct tree representations considered in our work are built upon the balanced parenthesis representation of the given
-tree, we also introduce an algorithm to compute this parenthesis representation in $O(n/p)$ time.
+tree, we also introduce an algorithm to compute this parenthesis representation in $O(n/p)$ time.\Norbert{Why do we ignore the $\lg p$ term here but not before?}
 \end{abstract}
 
 \category{D.1.3}{Programming Techniques}{Concurrent Programming}[Parallel programming]
 \category{E.1}{Data Structures}{Trees}
 
-\terms{Algorithms, Performance}
+\terms{Algorithms, Performance\Norbert{I'm not sure ``performance'' is a useful general term.  Is it?}}
 
 \keywords{Range min-max tree, succinct data structures, multicore data structures, SMP systems}
 
