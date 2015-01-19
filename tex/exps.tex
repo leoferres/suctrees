@@ -1,3 +1,18 @@
-To compare the implementation of our {\tt PSTA} algorithm, we use has baselines {\tt libcds}\footnote{\url{http://libcds.recoded.cl}. We thank Diego Arroyuelo
-for the conversations about the implementation of succinct
-trees} and {\tt sdsl}\footnote{\url{https://github.com/simongog/sdsl-lite}} libraries. Both libraries implement the {\tt RMMT} which supports navigational operations in $O(\lg N)$ time. They also assume as input a tree represented as a parentheses sequence. For simplicity, we implement the parallel prefix sum algorithm needed in Algorithm \ref{algo:PSTA1} (line 27) has a sequential algorithm. Since that, on current machines, $ p \ll N$, change the term $\lg p$ into $p$ is not an issue.
+To evaluate the performance of our {\tt PSTA} algorithm, we compare it against
+{\tt libcds}~\cite{libcds}\Norbert{The original URL of libcds.recoded.cl seems
+  to be dead.
+  Is this the same as the one I put into the reference now?} and {\tt
+  sdsl}~\cite{sdsl}.
+Both libraries implement the {\tt RMMT} that\Norbert{If there is only one RMMT
+  variant, with $O(\lg n)$ query time, then this should be ``, which''.}
+supports navigational operations in $O(\lg N)$ time.
+They also assume that the input tree is given as a parenthesis sequence, as we
+do here.
+Our implementation of the {\tt PSTA} algorithm deviates from the description in
+Section~\ref{subsec:multicoreSTAlgorithm} in that the prefix sum computation in
+line~27 of the algorithm is done sequentially in our implementation.
+This changes the running time of the algorithm to $O(N/p + p)$ but simplifies the
+implementation.
+Since $p \ll N/p$ for the input sizes we are interested in and the numbers of
+processors available on current multicore systems, this simplification has an
+insignificant impact on the running time of our algorithm.

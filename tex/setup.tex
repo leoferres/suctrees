@@ -1,25 +1,22 @@
-The {\tt PSTA} algorithm was implemented in the C programming language
-and compiled using GCC 4.9 using the -O2 and -ffast-math flags. The
-GCC Cilk branch (not the Cilk merged into the main GCC branch) was
-used to compile the parallel code. The same flags were used to compile
-{\tt libcds} and {\tt sdsl}, both written in C++. The experiments were
-carried out on a quad-core AMD Opteron\texttrademark{} Processor 6278
-with eight cores per processor, for a total of 32 physical cores
-running at 2.40GHz. The computer runs Linux 3.11.0-26-generic in
-64-bit mode. This machine has a per-core L1 and L2 caches of sizes
-64KB and 2048KB, respectively and a per-processor shared L3 cache of
-6MB, with a 189GB DDR RAM memory. AMD processors have a NUMA
-architecture based on HyperTransport, whereby certain parts of the
-code may be ``closer'' in memory than others. However, we assume the
-worst case (code is farthest away) for all experiments\footnote{We
-would like to thank Roberto As\'in at UCSC in Concepci\'on, Chile, for
-letting us use his machine.}. Algorithms were compared in terms of
-running times using the usual high-resolution (nanosecond) C functions
-in {\tt <time.h>}.\footnote{This is a reproducible-research-friendly
-paper, everything needed to replicate these results, including more
-results, is available at
-\url{http://www.inf.udec.cl/~josefuentes/spaa2015}.} In turn, to measure
-memory consumption, we use the tools provided by
-\verb+malloc_count+\footnote{\url{http://panthema.net/2013/malloc_count/}}.
+We implemented the {\tt PSTA} algorithm in C and compiled it using GCC 4.9 with
+optimization level -O2 and using the \mbox{-ffast-math flag}.\footnote{The code
+  and data needed to replicate our results are available at
+  \url{http://www.inf.udec.cl/~josefuentes/spaa2015}.}
+All parallel code was compiled using the GCC Cilk branch.
+The same flags were used to compile {\tt libcds} and {\tt sdsl}, which were
+written in C++.
 
-To run experiments, the values of $s$ and $k$ were 256 and 2, respectively.
+The experiments were carried out on a machine with four AMD
+Opteron\texttrademark{} 6278 processors clocked at 2.4GHz,
+with 8 cores per processor, 64KB of L1 cache per core, 2MB of L2 cache per core,
+and 6MB of shared L3 cache.
+In total, we had 32 cores at our disposal.
+The machine had 189GB of DDR\Norbert{What kind?  Clock speed?} RAM.
+
+The running times of the algorithms were measured using
+the high-resolution (nanosecond) C functions in {\tt <time.h>}.
+Memory consumption was measured using the tools provided by
+{\tt malloc\_count} \cite{malloc-count}.
+
+In our experiments, the chunk size $s$ and the arity $k$ were fixed at 256 and
+2, respectively.
