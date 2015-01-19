@@ -1,0 +1,69 @@
+%* Commands and Environments:  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%** Macros from JeffreyScottVitter
+% Write multichar identifier names using \id in either mathmode or text;
+% For ex, $\id{high}(x)$ is an expression using the \id{high} function.
+% Use ``\ '' if a space is desired, as in math mode.
+\def\id#1{\ensuremath{\mathit{#1}}}
+\let\idit=\id
+\def\idbf#1{\ensuremath{\mathbf{#1}}}
+\def\idrm#1{\ensuremath{\mathrm{#1}}}
+\def\idtt#1{\ensuremath{\mathtt{#1}}}
+\def\idsf#1{\ensuremath{\mathsf{#1}}}
+\def\idcal#1{\ensuremath{\mathcal{#1}}}  % Use with capital letter args only
+
+
+\def\poly{\idtt{poly}}
+
+\def\access{\idtt{access}}
+\def\findopen{\idtt{find\_open}}
+\def\findclose{\idtt{find\_close}}
+\def\enclose{\idtt{enclose}}
+\def\selectopen{\idtt{select\_open}}
+\def\selectclose{\idtt{select\_close}}
+\def\rankopen{\idtt{rank\_open}}
+\def\rankclose{\idtt{rank\_close}}
+\def\rmqi{\idtt{rmqi}}
+\def\RMQi{\idtt{RMQi}}
+\def\child{\idtt{child}}
+\def\childrank{\idtt{child\_rank}}
+\def\depth{\idtt{depth}}
+\def\levelanc{\idtt{level\_anc}}
+\def\subtreesize{\idtt{subtree\_size}}
+\def\degree{\idtt{degree}}
+\def\height{\idtt{height}}
+\def\deepestnode{\idtt{deepest\_node}}
+\def\lca{\idtt{LCA}}
+\def\lmostleaf{\idtt{lmost\_leaf}}
+\def\rmostleaf{\idtt{rmost\_leaf}}
+\def\leafrank{\idtt{leaf\_rank}}
+\def\leafselect{\idtt{leaf\_select}}
+\def\prerank{\idtt{pre\_rank}}
+\def\postrank{\idtt{post\_select}}
+\def\preselect{\idtt{pre\_select}}
+\def\postselect{\idtt{post\_select}}
+\def\nodeselect{\idtt{node\_select}}
+\def\levellmost{\idtt{level\_lmost}}
+\def\levelrmost{\idtt{level\_rmost}}
+\def\levelsucc{\idtt{level\_succ}}
+\def\levelpred{\idtt{level\_pred}}
+\def\sumop{\idtt{sum}}
+\def\fwdsearch{\idtt{fwd\_search}}
+\def\bwdsearch{\idtt{bwd\_search}}
+\def\rmq{\idtt{rmq}}
+\def\RMQ{\idtt{RMQ}}
+
+
+\def\rankop{\idtt{rank}}
+\def\selop{\idtt{select}}
+
+\newenvironment{myitemize}%
+  {\begin{itemize}%
+    \setlength{\itemindent}{-.1in}
+    \setlength{\itemsep}{\baselineskip}%
+    \setlength{\parskip}{-\baselineskip}}%
+  {\end{itemize}}
+
+\DeclareMathOperator*{\argmin}{arg\!\min}
+\DeclareMathOperator*{\argmax}{arg\!\max}
+\newtheorem{lemma}{Lemma}
+
