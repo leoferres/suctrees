@@ -1,11 +1,7 @@
 To evaluate the performance of our {\tt PSTA} algorithm, we compare it against
-{\tt libcds}~\cite{libcds}\Norbert{The original URL of libcds.recoded.cl seems
-  to be dead.
-  Is this the same as the one I put into the reference now?} and {\tt
+{\tt libcds}~\cite{libcds} and {\tt
   sdsl}~\cite{sdsl}.
-Both libraries implement the {\tt RMMT} that\Norbert{If there is only one RMMT
-  variant, with $O(\lg n)$ query time, then this should be ``, which''.}
-supports navigational operations in $O(\lg N)$ time.
+Both libraries implement the {\tt RMMT} which supports navigational operations in $O(\lg n)$ time.
 They also assume that the input tree is given as a parenthesis sequence, as we
 do here.
 Our implementation of the {\tt PSTA} algorithm deviates from the description in
@@ -15,4 +11,11 @@ This changes the running time of the algorithm to $O(N/p + p)$ but simplifies th
 implementation.
 Since $p \ll N/p$ for the input sizes we are interested in and the numbers of
 processors available on current multicore systems, this simplification has an
-insignificant impact on the running time of our algorithm.
+insignificant impact on the running time of our algorithm. Besides, the results of
+Patrascu explained in section \ref{subsec:idea} were not implemented, because they
+are not practical. Available implementations of
+the {\tt RMMT} do not implement this part either. There exist slight differences between
+our implementation and {\tt libcds} implementation. For each chunk, {\tt libcds} stores
+the \emph{local} excess value, that is, the excess value considering only the chunk, but not
+the excess values before the chunk. Meanwhile, our implementation consider the global excess
+value, as was introduced in Section \ref{subsec:suctrees}.\Jose{What about {\tt sdsl}?}
