@@ -1,0 +1,156 @@
+% This is LLNCS.DEM the demonstration file of
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.4 for LaTeX2e as of 16. April 2010
+%
+\documentclass[runningheads]{llncs}
+%\usepackage{graphicx}
+%\usepackage{bm}
+%\usepackage{url}
+%\usepackage{epstopdf}
+\usepackage{url}
+\usepackage[usenames]{xcolor}
+\usepackage[vlined]{algorithm2e}
+\usepackage{multirow}
+\usepackage{rotating}
+
+\newcommand{\Jose}[1]{{\color{red} [[JOSE:: #1]]}}
+\newcommand{\Leo}[1]{{\color{blue} [[LEO:: #1]]}}
+\newcommand{\Meng}[1]{{\color{green} [[MENG:: #1]]}}
+\newcommand{\Norbert}[1]{{\color{orange} [[NORBERT:: #1]]}}
+ 
+\input{preamble}
+
+\begin{document}
+
+
+\title{Parallel Construction of Succinct Trees\thanks{This work was supported in part by Jos\'e Fuentes-Sepúlveda's scholarship, granted by Government of Canada.}}
+\titlerunning{Parallel Construction of Succinct Trees}
+
+\author{Leo Ferres\inst{1} \and Jos\'e Fuentes-Sep\'ulveda\inst{1} \and Meng He\inst{2} \and Norbert Zeh\inst{2}}
+
+\authorrunning{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh} % abbreviated author list (for running head)
+%
+%%%% list of authors for the TOC (use if author list has to be modified)
+\tocauthor{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
+%
+\institute{Department of Computer Science, Universidad de Concepci\'on, Chile,\\
+\email{\{lferres,jfuentess\}@udec.cl},
+\and
+Faculty of Computer Science, Dalhousie University, Canada,\\
+\email{\{mhe,nzeh\}@cs.dal.ca}}
+  
+
+\maketitle              % typeset the title of the contribution
+
+\begin{abstract}
+Succinct representations of trees have been an elegant solution to make large trees fit in main memory while still supporting
+navigational operations in constant time. However, the construction time of succinct trees remains a computational bottleneck. In this
+paper, we introduce a practical parallel algorithm that improves the state-of-the-art in succinct tree construction. Given a tree on
+$n$ nodes stored as a sequence of balanced parentheses, the proposed algorithm can build a succinct tree representation in
+$O(n/p+\lg p)$ time, where $p$ is the number of available processors. The constructed representation occupies $2n + o(n)$
+bits of storage and supports a rich set of navigational operations in $O(\lg n)$ time. We tested the algorithm on a $32$-core
+machine and on inputs of different sizes.
+In these experiments, it achieved good parallel speedup. The second result in this paper shows how to construct a more complex tree representation that supports navigational operations in constant time.
+The constructing of this representation takes $O((n/p)\lg p)$ time.
+Finally, as both succinct tree representations considered in our work are built upon the balanced parenthesis representation of the given
+tree, we also introduce an algorithm to compute this parenthesis representation in $O(n/p+\lg p)$ time.
+\end{abstract}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% INTRODUCTION %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+\label{sec:introduction}
+\input{introduction}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% PRELIMINARIES %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Preliminaries}
+\label{sec:relwork}
+\input{relwork}
+
+\subsection{Succinct Trees}
+\label{subsec:suctrees}
+\input{suctrees}
+
+\subsection{Dynamic Multithreading Model}
+\label{subsec:dym}
+\input{dym}
+
+%\subsection{Multicore succinct data structures}
+%\label{subsec:multicoreSDS}
+%\input{multicoreSDS}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% MULTICORE SUCCINCT TREE %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Multicore Succinct Tree}
+\label{sec:multicoreST}
+\input{multicoreST}
+
+\subsection{Parallel Succinct Tree}
+\label{sec:PST}
+
+\subsubsection{The idea}
+\label{subsec:idea}
+\input{multicoreSTIdea}
+
+\subsubsection{Parallel Succinct Tree Algorithm}
+\label{subsec:multicoreSTAlgorithm}
+\input{multicoreSTAlgorithm}
+
+\subsubsection{Theoretical Analysis}
+\label{subsec:theoreticalAnalysis}
+\input{theoreticalAnalysis}
+
+%\subsection{Parallel Succinct Tree for Large Trees}
+%\label{subsec:parallelLargeTrees}
+%\input{parallelLargeTrees}
+
+\subsection{Parallel Folklore Encoding Algorithm}
+\label{subsec:parenthesesAlgorithm}
+\input{parenthesesAlgorithm}
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% EXPERIMENTS %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Experimental Results}
+\label{sec:exps}
+\input{exps}
+
+\subsection{Experimental Setup}
+\label{subsec:experimentalSetup}
+\input{setup}
+
+\subsection{Results and Discussion}
+\label{subsec:resultsDiscussion}
+\input{resultsDiscussion}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%% CONCLUSION %%%%%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+\input{conclusion}
+
+\section*{Acknowledgements}
+
+We would like to thank Diego Arroyuelo for discussions about the
+implementation of succinct trees, Roberto As\'{i}n for letting us use
+his machines to run our experiments, and finally Rodrigo C\'{a}novas
+for helping us with reusing their data in
+\cite{Navarro:2014:FFS:2620785.2601073}.
+
+\bibliographystyle{splncs03}
+\bibliography{sigproc}
+
+\end{document}
+

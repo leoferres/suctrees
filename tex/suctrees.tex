@@ -50,12 +50,30 @@ Thus the length of $P$ is $2n$.
 For the ordinal tree in Figure~\ref{figure:bp}, its parenthesis sequence is $P = ((())((()())(()(())))()())$. 
 Table~\ref{tbl:operations} also includes a set of operations over a balanced parenthesis sequence.%, in which the excess value of position $i$ is defined to be the number of opneing parenthesis minums the number of closing parenthesis in $P[1..i]$. 
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{images/bp.pdf}
-\caption{An ordinal tree used as an example.}
-\label{figure:bp}
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{.38\textwidth}
+  \centering
+  \includegraphics[scale=0.5]{images/bp.pdf}
+  \caption{An ordinal tree used as an example.}
+  \label{figure:bp}
+\end{minipage}%
+\hspace{2mm}
+  \begin{minipage}{.58\textwidth}
+  \centering
+  \includegraphics[scale=0.16]{./images/Range-min-max-tree.png}
+  \caption{Range min-max tree}
+  \label{fig:RangeMinMaxTree} 
+\end{minipage}
 \end{figure}
+
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.5]{images/bp.pdf}
+%\caption{An ordinal tree used as an example.}
+%\label{figure:bp}
+%\end{figure}
 
 The fully function representation is not the first structure that makes use of balanced parentheses to represent trees. 
 Munro and Raman~\cite{mr1997} first designed succinct representations of balanced parentheses, and they further used them to represent ordinal trees succinctly, by reducing a set of navigational operations over trees to operations over balanced parentheses. 
@@ -105,12 +123,12 @@ For the values stored for each internal node and each leaf of the {\tt RMMT}, se
 As the {\tt RMMT} is a complete tree, we do not store its structure explicitly. 
 Instead, we can simply store the $e$/$m$/$M$/$n^*$ values of its (internal and leaf) nodes in four arrays $e'$/$m'$/$M'$/$n'$, like a heap. 
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[scale=0.18]{./images/Range-min-max-tree.png}
-  \caption{Range min-max tree}
-  \label{fig:RangeMinMaxTree} 
-\end{figure}
+%\begin{figure}[ht]
+%  \centering
+%  \includegraphics[scale=0.18]{./images/Range-min-max-tree.png}
+%  \caption{Range min-max tree}
+%  \label{fig:RangeMinMaxTree} 
+%\end{figure}
 
 Combined with a standard succinct data structure technique called {\em table lookup}, a {\tt RMMT} can support the primitive operations for $\pi$, as well as $\degree$, $\child$ and $\childrank$. 
 Take the support for $\fwdsearch(P,\pi,i,d)$ for example. 
