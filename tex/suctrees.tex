@@ -1,4 +1,4 @@
-Jacobson~\cite{j1989} first proposed to design succinct data structures. Under the bit probe model, he showed how to represent an ordinal trees on $n$ nodes using $2n+o(n)$ bits, to support the computation of the first child, the next sibling and the parent of any given node in $O(\lg n)$ time. 
+Jacobson~\cite{j1989} first proposed to design succinct data structures. Under the bit probe model, he showed how to represent an ordinal tree on $n$ nodes using $2n+o(n)$ bits, to support the computation of the first child, the next sibling and the parent of any given node in $O(\lg n)$ time. 
 Under the word RAM model with $\Theta(\lg n)$ word size, Clark and Munro~\cite{cm1996} showed how to support these operations in constant time. 
 Since then, a lot of work has been done on succinct tree representations, to support more navigational operations in trees, to achieve compression, to provide support for update operations, and so on~\cite{mr1997,bdmr1999,grr2004,jss2007,ly2008,hms2012,fm2014,Navarro:2014:FFS:2620785.2601073}. 
 All this work created several different ways of representing trees succinctly, and we refer to the article by Raman and Rao~\cite{rr2013} for a thorough survey.
@@ -7,66 +7,51 @@ Among the different approaches of representing trees succinctly, we choose to de
 First, their work is the first that achieves a {\em redundancy} of $O(n/\lg^c n)$ bits for any positive constant $c$. 
 In succinct data structures, redundancy is defined to be the difference between the actual space cost of the data structure and the information theoretical lower bound, and this quality is of both theoretical and practical importance. 
 While all the work mentioned here has a redundancy of $o(n)$ bits, all but the fully functional representation requires a redundancy of $\Omega(n \lg\lg n / \lg n)$ bits. 
-Second, the fully functional representation supports a large number of navigational operations in trees. Only the work in \cite{hms2012,fm2014} supports two more operations. 
-Table~\ref{tbl:operations} gives the list of operations supported in constant time by the fully functional representation, in which the first group of operators are navigational operators in trees. 
+Second, the fully functional representation supports a large number of navigational operations in trees. Only the work in \cite{hms2012,fm2014} supports two more operations. To a complete list of operations review~\cite{Navarro:2014:FFS:2620785.2601073}.
+%
+%Table~\ref{tbl:operations} gives the list of operations supported in constant time by the fully functional representation, in which the first group of operators are navigational operators in trees. 
+%
 Finally, the most recent experimental studies on succinct trees~\cite{ACNSalenex10} showed an implementation of the fully function representation indeed uses less space than the existing implementations of other succinct tree representations in most cases, and provides faster support for most operations. Thus it is more suitable for most practical applications. 
 
-\begin{table}[t]
-\begin{center}
-\begin{tabular} {|p{2.4cm}|p{5.2cm}|} \hline
-operator name                             &descriptions        \\ \hline
-%$\rmqi(i,j)$ /$RMQi(i,j)$             &Position of the minimum/maximum excess value in $P[i..j]$ \\ \hline
-$\child(x,i)$                         & $i$th child of node $x$\\
-$\child\_rank(x)$                     & Number of left siblings of node $x$\\
-$\degree(x)$                          &Degree of node $x$\\
-$\depth(x)$                           & Depth of node $x$\\
-$\levelanc(x,i)$                      &Ancestor of node $x$ that is $i$ levels above node $x$ \\
-$\subtreesize(x)$                     &Number of nodes in the subtree rooted at node $x$ \\
-$\height(x)$                          &Height of the subtree rooted at $x$ \\
-$\deepestnode(x)$                     &Deepest node in the subtree rooted at node $x$\\
-$\lca(x,y)$                           &Lowest common ancestor of nodes $x$ and $y$ \\
-$\lmostleaf(x)$ /$\rmostleaf(x)$      &Leftmost/rightmost leaf of the subtree rooted at node $x$\\
-$\leafrank(x)$                        &Number of leaves before node $x$ in preorder\\
-$\leafselect(i)$                      &$i$th leaf from left to right\\
-$\prerank(x)$ /$\postrank(x)$             &Number of nodes preceding node $x$ in preorder/postorder\\
-$\preselect$ /$\postselect(i)$            &$i$th node in preorder/postorder\\       
-$\levellmost(i)$ /$\levelrmost(i)$       &Leftmost/rightmost node among all the nodes with depth $i$ \\
-$\levelsucc(x)$ /$\levelpred(x)$        &Node immediately to the left/right of node $x$ among nodes with depth $i$\\ \hline
-$\access(i)$                           &$P[i]$        \\ 
-$\findopen(i)$ /$\findclose(i)$       &The matching parenthesis of $P[i]$ \\
-$\enclose(i)$                           &Closest enclosing matching parenthesis pair for $P[i]$ \\
-$\rankopen(i)$ /$\rankclose(i)$       &Number of opening/closing parentheses in $P[1..i]$\\
-$\selectopen(i)$ /$\selectclose(i)$   &The $i$th opening/closing parenthesis\\ \hline
-\end{tabular}
-\caption{Operations supported by the fully functional representation~\cite{Navarro:2014:FFS:2620785.2601073}, including operations over the corresponding balanced parenthesis sequence.}
-\label{tbl:operations}
-\end{center}
-\end{table}
+%\begin{table}[t]
+%\begin{center}
+%\begin{tabular} {|p{2.4cm}|p{5.2cm}|} \hline
+%operator name                             &descriptions        \\ \hline
+%%$\rmqi(i,j)$ /$RMQi(i,j)$             &Position of the minimum/maximum excess value in $P[i..j]$ \\ \hline
+%$\child(x,i)$                         & $i$th child of node $x$\\
+%$\child\_rank(x)$                     & Number of left siblings of node $x$\\
+%$\degree(x)$                          &Degree of node $x$\\
+%$\depth(x)$                           & Depth of node $x$\\
+%$\levelanc(x,i)$                      &Ancestor of node $x$ that is $i$ levels above node $x$ \\
+%$\subtreesize(x)$                     &Number of nodes in the subtree rooted at node $x$ \\
+%$\height(x)$                          &Height of the subtree rooted at $x$ \\
+%$\deepestnode(x)$                     &Deepest node in the subtree rooted at node $x$\\
+%$\lca(x,y)$                           &Lowest common ancestor of nodes $x$ and $y$ \\
+%$\lmostleaf(x)$ /$\rmostleaf(x)$      &Leftmost/rightmost leaf of the subtree rooted at node $x$\\
+%$\leafrank(x)$                        &Number of leaves before node $x$ in preorder\\
+%$\leafselect(i)$                      &$i$th leaf from left to right\\
+%$\prerank(x)$ /$\postrank(x)$             &Number of nodes preceding node $x$ in preorder/postorder\\
+%$\preselect$ /$\postselect(i)$            &$i$th node in preorder/postorder\\       
+%$\levellmost(i)$ /$\levelrmost(i)$       &Leftmost/rightmost node among all the nodes with depth $i$ \\
+%$\levelsucc(x)$ /$\levelpred(x)$        &Node immediately to the left/right of node $x$ among nodes with depth $i$\\ \hline
+%$\access(i)$                           &$P[i]$        \\ 
+%$\findopen(i)$ /$\findclose(i)$       &The matching parenthesis of $P[i]$ \\
+%$\enclose(i)$                           &Closest enclosing matching parenthesis pair for $P[i]$ \\
+%$\rankopen(i)$ /$\rankclose(i)$       &Number of opening/closing parentheses in $P[1..i]$\\
+%$\selectopen(i)$ /$\selectclose(i)$   &The $i$th opening/closing parenthesis\\ \hline
+%\end{tabular}
+%\caption{Operations supported by the fully functional representation~\cite{Navarro:2014:FFS:2620785.2601073}, including operations over the corresponding balanced parenthesis sequence.}
+%\label{tbl:operations}
+%\end{center}
+%\end{table}
 
 The fully functional representation is essentially a novel way of representing the balanced parentheses sequence corresponding to a given tree. 
 Give a tree $T$ on $n$ nodes, we can generate its corresponding balanced parentheses sequence, $P$, by performing a preorder traversal of $T$. 
-During this traversal, we write down an opening parenthesis the first time we visit a node, and a closing parenthesis after visiting all its descendants. 
-Thus the length of $P$ is $2n$. 
-For the ordinal tree in Figure~\ref{figure:bp}, its parenthesis sequence is $P = ((())((()())(()(())))()())$. 
-Table~\ref{tbl:operations} also includes a set of operations over a balanced parenthesis sequence.%, in which the excess value of position $i$ is defined to be the number of opneing parenthesis minums the number of closing parenthesis in $P[1..i]$. 
+During this traversal, we write down an opening parenthesis the first time we visit a node, and a closing parenthesis after visiting all its descendants. Thus the length of $P$ is $2n$.
 
+%For the ordinal tree in Figure~\ref{figure:bp}, its parenthesis sequence is $P = ((())((()())(()(())))()())$. 
+%Table~\ref{tbl:operations} also includes a set of operations over a balanced parenthesis sequence.%, in which the excess value of position $i$ is defined to be the number of opneing parenthesis minums the number of closing parenthesis in $P[1..i]$. 
 
-\begin{figure}[t]
-  \centering
-  \begin{minipage}{.38\textwidth}
-  \centering
-  \includegraphics[scale=0.5]{images/bp.pdf}
-  \caption{An ordinal tree used as an example.}
-  \label{figure:bp}
-\end{minipage}%
-\hspace{2mm}
-  \begin{minipage}{.58\textwidth}
-  \centering
-  \includegraphics[scale=0.16]{./images/Range-min-max-tree.png}
-  \caption{Range min-max tree}
-  \label{fig:RangeMinMaxTree} 
-\end{minipage}
-\end{figure}
 
 %\begin{figure}
 %\centering
@@ -77,27 +62,27 @@ Table~\ref{tbl:operations} also includes a set of operations over a balanced par
 
 The fully function representation is not the first structure that makes use of balanced parentheses to represent trees. 
 Munro and Raman~\cite{mr1997} first designed succinct representations of balanced parentheses, and they further used them to represent ordinal trees succinctly, by reducing a set of navigational operations over trees to operations over balanced parentheses. 
-They only support a subset of the operations listed in Table~\ref{tbl:operations}. 
+They only support a subset of the operations supported by the fully functional representation.
 To support more operations, researchers designed more auxiliary data structures~\cite{ly2008}. 
-Thus, to support the operations in Table~\ref{tbl:operations}, many auxiliary data structures are required, which make the overall data structure overtly complex in both theory and practice. 
-The main novelty of Navarro and Sadakane's work~\cite{Navarro:2014:FFS:2620785.2601073} lies in their key strategy of reducing a large set of operations over trees and balanced parentheses to a small set of primitive operations. 
-To define these operations, they treated $P$ as a bit vector, by storing a $1$ bit for each opening parenthesis, and a $0$ bit for a closing parenthesis. 
-Let $g(\cdot)$ be a function on $[0,1]$. Then, they defined the following primitive operations:
-
-\begin{myitemize}
-\item $\sumop(P,g,i,j)\triangleq \sum_{k=i}^jg(P[k])$
-\item $\fwdsearch(P,g,i,d)\triangleq \min\{j | j \ge i, \sumop(P,g,i,j) = d\}$
-\item $\bwdsearch(P,g,i,d)\triangleq \max\{j | j \le i, \sumop(P,g,j,i) = d\}$
-\item $\rmq(P,g,i,j)\triangleq \min\{\sumop(P,g,i,k)| i\le k\le j\}$
-\item $\RMQ(P,g,i,j)\triangleq \max\{\sumop(P,g,i,k)| i\le k\le j\}$
-\item $\rmqi(P,g,i,j)\triangleq \argmin_{k\in[i,j]}\{\sumop(P,g,i,k)\}$
-\item $\RMQi(P,g,i,j)\triangleq \argmax_{k\in[i,j]}\{\sumop(P,g,i,k)\}$
-\end{myitemize}
-
-Navarro and Sadakane defined three functions on $[0,1]$: function $\pi$ such that $\pi(1) = 1$ and $\pi(0) = -1$, function $\phi$ such that $\phi(1) = 1$ and $\phi(0) = 0$, and function $\psi$ such that $\psi(1) = 0$ and $\psi(0) = 1$. 
-Most of the operations in Table~\ref{tbl:operations} can then be supported using the primitive operations when setting $g(\cdot)$ to be $\pi$, $\phi$ and $\psi$. For example, $\findclose(i)$ can be computed using $\fwdsearch(P,\pi,i,0)$. 
-Thus it suffices to support these primitive operations when $g(\cdot) = \pi$, $\phi$ or $\psi$, and a few  navigational operations in trees that can not supported by these primitive operations, which are $\degree$, $\child$, $\childrank$ and the four operations related to leaf nodes in Table~\ref{tbl:operations}. 
-To support these operations, a simple data structure called \emph{Range Min-Max tree} ({\tt RMMT}) was designed, supporting operations in logarithmic time when used to represent the entire sequence $P$. 
+Thus, to support a complete set of operations, as supported by~\cite{Navarro:2014:FFS:2620785.2601073},  many auxiliary data structures are required, which make the overall data structure overtly complex in both theory and practice. 
+The main novelty of Navarro and Sadakane's work lies in their key strategy of reducing a large set of operations over trees and balanced parentheses to a small set of primitive operations. 
+To define these operations, they treated $P$ as a bit vector, by storing a $1$ bit for each opening parenthesis, and a $0$ bit for a closing parenthesis. \Jose{Is it necessary to define the primitive operations? For now, I assumed that it isn't necessary}
+%Let $g(\cdot)$ be a function on $[0,1]$. Then, they defined the following primitive operations:
+%
+%\begin{myitemize}
+%\item $\sumop(P,g,i,j)\triangleq \sum_{k=i}^jg(P[k])$
+%\item $\fwdsearch(P,g,i,d)\triangleq \min\{j | j \ge i, \sumop(P,g,i,j) = d\}$
+%\item $\bwdsearch(P,g,i,d)\triangleq \max\{j | j \le i, \sumop(P,g,j,i) = d\}$
+%\item $\rmq(P,g,i,j)\triangleq \min\{\sumop(P,g,i,k)| i\le k\le j\}$
+%\item $\RMQ(P,g,i,j)\triangleq \max\{\sumop(P,g,i,k)| i\le k\le j\}$
+%\item $\rmqi(P,g,i,j)\triangleq \argmin_{k\in[i,j]}\{\sumop(P,g,i,k)\}$
+%\item $\RMQi(P,g,i,j)\triangleq \argmax_{k\in[i,j]}\{\sumop(P,g,i,k)\}$
+%\end{myitemize}
+%
+%Navarro and Sadakane defined three functions on $[0,1]$: function $\pi$ such that $\pi(1) = 1$ and $\pi(0) = -1$, function $\phi$ such that $\phi(1) = 1$ and $\phi(0) = 0$, and function $\psi$ such that $\psi(1) = 0$ and $\psi(0) = 1$. 
+%Most of the operations in Table~\ref{tbl:operations} can then be supported using the primitive operations when setting $g(\cdot)$ to be $\pi$, $\phi$ and $\psi$. For example, $\findclose(i)$ can be computed using $\fwdsearch(P,\pi,i,0)$. 
+%Thus it suffices to support these primitive operations when $g(\cdot) = \pi$, $\phi$ or $\psi$, and a few  navigational operations in trees that can not supported by these primitive operations, which are $\degree$, $\child$, $\childrank$ and the four operations related to leaf nodes in Table~\ref{tbl:operations}. 
+To support these primite operations, a simple data structure called \emph{Range Min-Max tree} ({\tt RMMT}) was designed, supporting operations in logarithmic time when used to represent the entire sequence $P$. 
 Then, to achieve constant-time support for operations, $P$ is further partitioned into chunks, each of which is represented by a {\tt RMMT}, which can support operations inside a chunk in constant time when the size of each chunk is small enough. Additional data structures are further constructed to support operations in constant time over the entire sequence $P$. 
 % for trees of small size, which is further used to design a representation of large trees. 
 %, which can support operations in logarthimic time if used to represent the entire sequence $P$. 
@@ -123,12 +108,12 @@ For the values stored for each internal node and each leaf of the {\tt RMMT}, se
 As the {\tt RMMT} is a complete tree, we do not store its structure explicitly. 
 Instead, we can simply store the $e$/$m$/$M$/$n^*$ values of its (internal and leaf) nodes in four arrays $e'$/$m'$/$M'$/$n'$, like a heap. 
 
-%\begin{figure}[ht]
-%  \centering
-%  \includegraphics[scale=0.18]{./images/Range-min-max-tree.png}
-%  \caption{Range min-max tree}
-%  \label{fig:RangeMinMaxTree} 
-%\end{figure}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.18]{./images/Range-min-max-tree.png}
+  \caption{Range min-max tree}
+  \label{fig:RangeMinMaxTree} 
+\end{figure}
 
 Combined with a standard succinct data structure technique called {\em table lookup}, a {\tt RMMT} can support the primitive operations for $\pi$, as well as $\degree$, $\child$ and $\childrank$. 
 Take the support for $\fwdsearch(P,\pi,i,d)$ for example. 
@@ -172,17 +157,17 @@ When constructed to store $P$, $e'$, $m'$, $M'$ and $n'$, an aB-tree stores $B$ 
 Thus the height of the tree is $c$, the time required to support operations in Table~\ref{tbl:operations} is $O(c) = O(1)$, and the space usage is $2n+2$ bits only. 
 Note that universal tables are still required, but if we construct them for all possible bit vectors of length $B$, then their space costs are reduced to $\sqrt{2^w}$ bits. 
 
-\subsubsection{Representing Large Trees}
-
-To support operations in constant time for trees of arbitrary sizes, Navarro and Sadakane partition $P$ into {\em blocks} of length $w^c$. 
-Each block may not necessarily store a balanced sequence, but it can still be represented using a {\tt RMMT} in $w^c + 2$ bits.  
-The universal tables constructed for different blocks store the same content, so one set of these tables are sufficient. 
-The overall space of storing the {\tt RMMT}'s of all these blocks and one set of universal tables is thus $2n + O(n/w^c) + \sqrt{2^w}$ bits. 
-
-2d min-heap
-
-weighted ancestor
-
-rmq
-
-rest
+%\subsubsection{Representing Large Trees}
+%
+%To support operations in constant time for trees of arbitrary sizes, Navarro and Sadakane partition $P$ into {\em blocks} of length $w^c$. 
+%Each block may not necessarily store a balanced sequence, but it can still be represented using a {\tt RMMT} in $w^c + 2$ bits.  
+%The universal tables constructed for different blocks store the same content, so one set of these tables are sufficient. 
+%The overall space of storing the {\tt RMMT}'s of all these blocks and one set of universal tables is thus $2n + O(n/w^c) + \sqrt{2^w}$ bits. 
+%
+%2d min-heap
+%
+%weighted ancestor
+%
+%rmq
+%
+%rest

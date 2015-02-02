@@ -30,21 +30,21 @@ paper, two practical multicore algorithms for Wavelet tree
 construction were introduced. Both algorithms perform $O(n\lg \sigma)$
 work and have span $O(n)$, where $n$ is the input size and $\sigma$ is
 the alphabet size. In \cite{DBLP:journals/corr/Shun14}, Shun
-introduced 3 new algorithms to construct wavelet trees in
-parallel. The in practice best algorithm performs $O(n\lg \sigma)$
+introduced three new algorithms to construct wavelet trees in
+parallel. The, in practice, best algorithm performs $O(n\lg \sigma)$
 work and has span $O(\lg n\lg \sigma)$.  Shun also explained how to
 parallelize the construction of rank/select structures so they require
 $O(n)$ work and span $O(1)$ for rank structures, and $O(n)$ work and
 span $O(\lg n)$ for select structures.
 
 To the best of our knowledge, this is the only previous work on
-parallel construction of succinct data structures. In this paper, we
-present two algorithms that exploit multicore parallelism to speed up
-the construction of succinct trees.  For the simpler of these two
-algorithms, which takes $O(n/p + \lg p)$ time to construct a tree
+parallel construction of succinct trees. In this paper, we
+present an algorithm that exploits multicore parallelism to speed up
+the construction of succinct trees.  For our algorithm, which takes $O(n/p + \lg p)$
+time to construct a tree
 representation of size $2n - \Theta(\lg n)$ that supports basic
 navigational operations in $O(\lg n)$ time, we verified experimentally
-that it achieves good speed-up on up to 32 cores.  \Norbert{Didn't
+that it achieves good speed-up on up to 64 cores.  \Norbert{Didn't
 touch the following because it seems work in progress.}  We give an
 overview of our algorithm in Section \ref{subsec:idea}. A more
 detailed description, near to implementation is given in Section
