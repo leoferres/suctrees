@@ -1,10 +1,10 @@
 # -*- makefile -*-
 
-.PHONY: all sig-alternate.pdf.once sig-alternate.pdf.atleastonce sig-alternate.pdf.recursive sig-alternate.bbl.once sig-alternate.bbl.maybe
+.PHONY: all sea2015.pdf.once sea2015.pdf.atleastonce sea2015.pdf.recursive sea2015.bbl.once sea2015.bbl.maybe
 
 SHELL=zsh
 
-MAIN_MASTER=sig-alternate.tex
+MAIN_MASTER=sea2015.tex
 
 MAIN_OTHER_SOURCES=introduction.tex \
 		   relwork.tex \
@@ -24,37 +24,37 @@ MAIN_FIGURES=images/Range-min-max-tree.png \
 	     images/Min-Max-array.png \
 	     images/Speedup.png
 
-all: sig-alternate.pdf
+all: sea2015.pdf
 
-sig-alternate.pdf: $(MAIN_MASTER) $(MAIN_OTHER_SOURCES) $(MAIN_FIGURES) sig-alternate.bbl
+sea2015.pdf: $(MAIN_MASTER) $(MAIN_OTHER_SOURCES) $(MAIN_FIGURES) sea2015.bbl
 	$(MAKE) $(@).once
 	$(MAKE) $(@:.pdf=.bbl.maybe)
 	$(MAKE) $(@).recursive
 	-killall -HUP mupdf
 
-sig-alternate.pdf.atleastonce:
+sea2015.pdf.atleastonce:
 	$(MAKE) $(@:.atleastonce=.once)
 	$(MAKE) $(@:.atleastonce=.recursive)
 
-sig-alternate.pdf.once:
+sea2015.pdf.once:
 	echo "LATEX  $(@:.once=)"
 	pdflatex "\\batchmode \\input{$(MAIN_MASTER)}" > /dev/null
 
-sig-alternate.pdf.recursive:
+sea2015.pdf.recursive:
 	grep "Rerun to get cross-references right" $(@:.pdf.recursive=.log) > /dev/null 2>&1; \
 	if [[ $${?} == 0 ]]; then                                                             \
 	  $(MAKE) $(@:.recursive=.once);                                                      \
 	  $(MAKE) $(@);                                                                       \
 	fi
 
-sig-alternate.bbl: sigproc.bib
+sea2015.bbl: sigproc.bib
 	$(MAKE) $(@).once
 
-sig-alternate.bbl.once:
+sea2015.bbl.once:
 	echo "BIBTEX $(@:.once=)"
 	bibtex $(@:.bbl.once=.aux) > /dev/null
 
-sig-alternate.bbl.maybe:
+sea2015.bbl.maybe:
 	if [[ -f $(@:.bbl.maybe=.refs) ]]; then                                   \
 	  mv $(@:.bbl.maybe=.refs) $(@:.bbl.maybe=.oldrefs);                      \
 	fi

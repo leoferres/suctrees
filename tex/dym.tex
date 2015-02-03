@@ -1,46 +1,58 @@
 {\em Dynamic multithreading} (DYM) \cite[Chapter 27]{Cormen2009} is a
 model of parallel computation which is faithful to several industry standards
-such as Intel's CilkPlus (\url{cilkplus.org}) and OpenMP Tasks
+such as Intel's CilkPlus (\url{cilkplus.org}), OpenMP Tasks
 (\url{openmp.org/wp}), and Threading Building
-Blocks (\url{threadingbuildingblocks.org}).
+Blocks\break (\url{threadingbuildingblocks.org}).
 
-We will define a {\em multithreaded computation} as a directed acyclic
-graph (DAG) $G=(V,E)$, where the set of vertices $V$ are instructions
-and $(u,v) \in E$ are dependencies between instructions; whereby in
-this case, $u$ must be executed before $v$.\footnote{Notice that the
+In this model, a {\em multithreaded computation} is modelled as a directed
+acyclic graph (DAG) $G=(V,E)$ where the set of vertices $V$ are instructions
+and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{Notice that the
   RAM model is a subset of the DYM model where the outdegree of every
-  vertex $v \in V$ is $\leq 1$.} In order to signal parallel
-execution, we will augment sequential pseudocode with three keywords,
-{\bf spawn}, {\bf sync} and {\bf parfor}. The {\bf spawn} keyword
-signals that the procedure call that it precedes {\em may be} executed
-in parallel with the next instruction in the instance that executes
-the {\bf spawn}. In turn, the {\bf sync} keyword signals that all
-spawned procedures must finish before proceeding with the next
-instruction in the stream. Finally, {\bf parfor} is simply ``syntactic
-sugar'' for {\bf spawn}'ing and {\bf sync}'ing ranges of a loop
-iteration, adding an overhead which is logarithmic in the number of
-iterations. If a stream of instructions does not contain one of the
-above keywords, or a {\bf return} (which implicitly {\bf sync}'s) from
-a procedure, we will group these instruction into a single {\em
-  strand}. Strands are scheduled onto processors using a {\em
-  work-stealing} scheduler, which does the load-balancing of the
-computations. Work-stealing schedulers have been proved to be a factor
-of 2 away from optimal performance
-\cite{Blumofe:1999:SMC:324133.324234}.
+  vertex $v \in V$ is $\leq 1$.\Norbert{Why ``$\le$''?  Doesn't the strictly
+    sequential nature of the RAM model mean that everybody except the first and
+    last vertices has exactly one in-neighbour and one out-neighbour?}}
+The time $T_p$ needed to execute the computation on $p$ processors depends on
+two parameters of the computation: its {\em work} $T_1$ and its {\em span}
+$T_\infty$.
+Assuming each instruction takes constant time, the work is simpy the number of
+nodes (i.e., instructions) in $G$.
+Since each instruction takes constant time, it clearly takes $\Theta(T_1)$ time
+to execute $G$ on a single processor.
+More generally, $p$ processors can execute only $p$ instructions at a time, so
+$T_p = \Omega(T_1/p)$.
+The span is the length of the longest path in $G$.
+Since the instructions on this path need to be executed one after another, no
+matter how many processors we have at our disposal, we also have
+$T_p = \Omega(T_\infty)$.
+Together, these two lower bounds give $T_p = \Omega(T_\infty + T_1/p)$ and
+work-stealing schedulers match this lower bound to within a constant factor
+(to within a factor 2 from the optimal
+performance)~\cite{Blumofe:1999:SMC:324133.324234}.
+The degree to which an algorithm can take advantage of the presence of $p > 1$
+processors is then captured by its {\em speed-up} $T_1 / T_p$ and its
+{\em parallelism} $T_1 / T_\infty$.
+In the absence of cache effects, the best speed-up one can hope for is $p$,
+also known as {\em linear speed-up}.
+The parallelism provides an upper bound on the achievable speed-up independent
+of the number of available processors.
 
-To measure the efficiency of our parallel algorithm, we
-will use three metrics: the {\em work}, the {\em span} and the number
-of processors. In accordance to the parallel literature, we will
-subscript running times by $p$, so $T_p$ is the running time of an
-algorithm on $p$ processors. The {\em work} is the total running time
-taken by all (unit-time) strands when executing on a {\em single}
-processor (i.e., $T_1$),\footnote{Notice, again, that analyzing the
-  work amounts to finding the running time of the serial algorithm
-  using the RAM model.} while the {\em span}, denoted as $T_\infty$,
-is the {\em critical path} (the longest path) of $G$. In this work,
-we are interested in speeding up the succinct tree construction and finding
-out the upper bounds of this speedup. To measure this, we will define
-{\em speedup} as $T_1/T_p = O(p)$, where linear speedup $T_1/T_p =
-\Theta(p)$, is the goal. We also define {\em parallelism} as the ratio
-$T_1/T_{\infty}$, the maximum theoretical speedup that can be achieved
-on {\em any} number of processors.
+In order to describe parallel algorithms in the DYM model, we augment sequential
+pseudocode with three special keywords.
+The {\bf spawn} keyword, followed by a procedure call, indicates that the
+procedure should run in its own thread and {\em may} thus be executed in parallel
+to the thread that spawned the procedure call.
+The {\bf sync} keyword indicates that the current thread must wait for all the
+threads it has spawned to terminate before proceeding.
+It thus provides a simple barrier-style synchronization mechanism.
+Finally, {\bf parfor} is ``syntactic sugar'' for {\bf spawn}ing one thread per
+iteration in a for loop, thereby allowing these iterations to run in parallel,
+followed by a {\bf sync} operation that waits for all iterations to complete.
+In practice, the overhead is logarithmic in the number of iterations.
+If a procedure exits, either implicitly or explicitly using a {\bf return}
+statement, it implicitly performs a {\bf sync} to ensure all threads it spawned
+finish first.
+\Norbert{Got rid of the ``strand'' stuff.
+  It seems a technicality relevant only to the operation of work-stealing
+  schedulers.
+  If we actually use it in the analysis of the algorithm in Section 3, we
+  may have to bring it back.}
