@@ -1,30 +1,23 @@
 Trees are ubiquitous in Computer Science.
-We can find them in every aspect of everyday computing from XML/HTML processing
-to abstract syntax trees (AST) in compilers, phylogenetic trees in computational
-genomics or shortest path trees in path planning.
+They have applications in every aspect of computing from XML/HTML
+processing to abstract syntax trees (AST) in compilers, phylogenetic trees in
+computational genomics or shortest path trees in path planning.
 The ever increasing amounts of structured, hierarchical data processed in
 many applications have turned the processing of the corresponding large tree
-structures into a bottleneck.
-The query time of these structures becomes a particular bottleneck once they
-do not fit in memory any more.
-To address this bottleneck, by significantly increasing the size of trees
-that \emph{do} fit in memory, succinct tree representations aim to store trees
-in as few bits as possible while still supporting important primitive operations
-in constant time.
-More precisely, there exist such representations that use only
+structures into a bottleneck, particularly when they do not fit in memory.
+Succinct tree representations store trees using as few bits as possible and
+thereby significantly increase the size of trees that fit in memory while
+still supporting important primitive operations in constant time.
+There exist such representations that use only
 $2n - \Theta(\lg n)$ bits\footnote{We use $\lg x$ to mean
   $\log_{2}x$ throughout this paper.} to store the topology of a tree with $n$
-nodes, which is close to the information-theoretic lower bound.
-This allows very large trees to be stored in memory and queried efficiently,
-something that is not possible using traditional pointer-based representations.
+nodes, which is close to the information-theoretic lower bound and much less
+than the space used by traditional pointer-based representations.
 
-Succinct trees, and succinct data structures in general, have a weak point,
-however: their construction time.
-The construction of succinct data structures is generally quite slow compared to
-the construction of the corresponding pointer-based data structures.
-One strategy to improve the construction time of succinct data structures
-on modern computers is to exploit multicore parallelism.
-Not much work has been done in this direction so far.
+Alas, the construction of succinct trees is quite slow compared to the
+construction of pointer-based representations.
+Multicore parallelism offers one possible tool to speed up the construction
+of succinct trees, but little work has been done in this direction so far.
 The only results we are aware of focus on the construction of Wavelet trees,
 which are used in representations of text indexes.
 In \cite{Fuentes2014}, two practical multicore algorithms
@@ -36,40 +29,30 @@ construct Wavelet trees in parallel.
 The in practice best algorithm performs $O(n\lg \sigma)$ work and has span
 $O(\lg n\lg \sigma)$.
 Shun also explained how to parallelize the construction of
-rank/select structures so they require $O(n)$ work and span $O(1)$ for rank
-structures, and $O(n)$ work and span $O(\lg n)$ for select structures.
+rank/select structures so it requires $O(n)$ work and $O(1)$ span for rank
+structures, and $O(n)$ work and $O(\lg n)$ span for select structures.
 
-The contribution of this paper is to provide an efficient parallel algorithm
-for constructing a succinct representation of arbitrary ordinal trees that
-supports a rich set of basic operations on these trees.
-In particular, we discuss how to construct the {\tt RMMT} structure of
-Navarro and Sadakane~\cite{Navarro:2014:FFS:2620785.2601073} in
-$O(n/p + \lg p)$ time using $p$ processors.
-While operations on this structure take $O(\lg n)$ time, it is simple enough
-to be practical and has been verified experimentally to be very small and
-support fast queries in practice~\cite{ACNSalenex10}.
-Thus, combined with the fast parallel construction algorithm presented in this
+In this paper, we provide a parallel algorithm that constructs the {\tt RMMT}
+tree representation of Navarro and
+Sadakane~\cite{Navarro:2014:FFS:2620785.2601073} in $O(n/p + \lg p)$ time using
+$p$ processors.
+This structure uses $2n + o(n)$ bits to store an ordinal tree with $n$ nodes
+and supports a rich set of basic operations on these trees in $O(\lg n)$ time.
+While this query time is theoretically suboptimal, the {\tt RMMT} structure is
+simple enough to be practical and has been verified experimentally to be very
+small and support fast queries in practice~\cite{ACNSalenex10}.
+Combined with the fast parallel construction algorithm presented in this
 paper, it provides an excellent tool for manipulating very large trees in
 many applications.
-Using the {\tt RMMT} structure as only a component of a more complicated
-structure, Navarro and Sadakane did achieve constant-time operations but,
-similar to most other succinct tree representations with constant-time
-operations, it is less space-efficient than the {\tt RMMT} structure by itself
-and complicated to implement, too complicated to be practical.
 
 We implemented our algorithm and tested its performance on a number of
 real-world input trees having billions of nodes.
 Our experiments showed that our algorithm achieves good speed-up on up to
-64 cores and likely beyond, assuming the inputs are large enough.
-In earlier experiments not discussed in detail in this paper, we tested our
-algorithm on smaller inputs with a few million nodes.
-In these experiments, we observed poor speed-up simply because for these
-trees, even a sequential construction takes less than a second, that is, there
-is simply too little work to parallelize.
+64 cores and likely beyond.
 
 The remainder of this paper is organized as follows:
 Section~\ref{sec:relwork} gives a brief overview of the {\tt RMMT} structure,
-to clearly define its structure and illustrate how it can be used how to support
+to clearly define its structure and illustrate how it can be used to support
 basic operations on trees efficiently.
 It also briefly discusses other previous work on succinct tree representations
 and reviews the dynamic multithreading model, which we use to analyze the
