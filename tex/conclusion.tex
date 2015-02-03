@@ -3,9 +3,7 @@ trees, exploiting current multicore architectures. We introduce a practical algo
 achieves $O(n/p+\lg p)$ construction time, to a tree with $n$ nodes and $p$
 threads, while supports a rich set of navigational operations in $O(\lg n)$ time. This
 practical algorithm was tested against state-of-the-art libraries, reaching good speedup.
-We also proposed other algorithm to a more complex succinct tree representation, with
-$O(n\lg p/p)$ construction time, which supports navegational operations in
-constant time. Since our algorithms need, as input, a tree stored as a parentheses
+Since our algorithm needs, as input, a tree stored as a parentheses
 sequence, we presented an algorithm to compute such parentheses sequence in parallel in
 $O(n/p+\lg p)$ time.
 

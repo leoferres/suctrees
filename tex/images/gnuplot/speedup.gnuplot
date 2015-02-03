@@ -36,8 +36,8 @@ set tmargin -1
 # Details for this particular plot
 set key at 8,33 # legend to the left (bottom is also an option)
 #unset logscale y  #set for logarithmic scale y (add x for log x)
-set xlabel "\# of processors" # XAxis title
-set ylabel "Speedup" # YAxis title
+set xlabel "{/Times=15 \# of cores }" # XAxis title
+set ylabel "{/Times=15 Speedup}" # YAxis title
 set border 3 lw 0.5
 set xtics nomirror
 set ytics nomirror
@@ -46,7 +46,7 @@ show key
 
 # data usually in .dat files
 # using syntax: <column number>:<column number>
-plot "speedup.csv" using 2:xticlabel(1) title '{/Times=11 psta-ctree}' with linespoints lt 1 pt 3, \
-     "speedup.csv" using 4 title '{/Times=11 psta-osm }' with linespoints lt 1 pt 9, \
-     "speedup.csv" using 3 title '{/Times=11 sdsl-ctree}' with linespoints lt 3 pt 3, \
-     "speedup.csv" using 5 title '{/Times=11 sdsl-osm }' with linespoints ls 3 pt 9
+plot "speedup.csv" using 2:xticlabel(1) title '{/Times=13 psta-ctree}' with linespoints lt 1 pt 3, \
+     "speedup.csv" using 4 title '{/Times=13 psta-osm }' with linespoints lt 1 pt 9, \
+     "speedup.csv" using 3 title '{/Times=13 sdsl-ctree}' with linespoints lt 3 pt 3, \
+     "speedup.csv" using 5 title '{/Times=13 sdsl-osm }' with linespoints ls 3 pt 9
