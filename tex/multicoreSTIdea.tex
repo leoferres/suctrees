@@ -53,19 +53,19 @@ minimum values in $O(k\lg_{k} p)$ time, computing each level in $O(k)$
 time, just looking the $k$ values on the previous level using one
 thread per vertex. If we consider $s$ and $k$ as constants, we can compute
 $m^{\prime}$ in
-$O(\frac{n}{sp}k + \lg p) = O(\frac{n}{p}+\lg p)$ \Jose{$s$ and $k$ constants?}time,
+$O(\frac{n}{sp}k + \lg p) = O(\frac{n}{p}+\lg p)$ time,
 using $O(n\lg(n))$ bits in construction time and in the
 final array. Note that this solution makes sense considering that
 $p\ll N$. Figure \ref{fig:min-max-array} illustrates the solution
 explained here. We can compute $M^{\prime}$ and $n^{\prime}$ in the
 same way, obtaining the same complexity.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[scale=0.28]{./images/Min-Max-array.png}
-  \caption{Computation of $m^{\prime}$ and $M^{\prime}$}
-  \label{fig:min-max-array} 
-\end{figure}
+%\begin{figure}[t]
+%  \centering
+%  \includegraphics[scale=0.28]{./images/Min-Max-array.png}
+%  \caption{Computation of $m^{\prime}$ and $M^{\prime}$}
+%  \label{fig:min-max-array} 
+%\end{figure}
 
 In addition to the arrays, the construction of the {\tt RMMT} involves
 the computation of \emph{universal tables}.
@@ -85,7 +85,7 @@ the section corresponding to that internal node in the universal
 table. In that way, since computing the universal tables sequentially
 has a complexity of $O(\sqrt{2^{w}}poly(w))$ time according to
 \cite{Navarro:2014:FFS:2620785.2601073}, we can compute those
-universal tables in $\displaystyle O(\frac{\sqrt{2^{w}}poly(w)}{p})$,
+universal tables in $\displaystyle O(\sqrt{2^{w}}poly(w)/p)$,
 using $p$ processors.
 
 To reduce the space used by the {\tt RMMT}, Sadakane and Nava\-rro used
@@ -102,12 +102,12 @@ Finally, we can modify Theorem 4 of
 %\newtheorem{theorem}{Theorem}
 \begin{theorem}
   We can represent a parentheses sequence $P$ of size $2n$, computing all
-  operations of Table \ref{tbl:operations}
+  operations of Table 1 of~\cite{Navarro:2014:FFS:2620785.2601073}
   in $O(\lg n)$ time, with a data
   structure depending on $P$ that uses $2n+o(n)$ bits, and universal
   tables (i.e., not depending on $P$) that use $O(\sqrt{2^{w}}poly(w))$
   bits, where $w$ is the word size of the RAM model. The preprocessing
-  time is $O(\frac{n}{p} + \lg p)$, using $p$
+  time is $O(n/p + \lg p)$, using $p$
   processors, and its working space is $O(n\lg n)$ bits.
 \end{theorem}
 			

@@ -1,7 +1,17 @@
 \stepcounter{footnote}\newcounter{pizzachili}\setcounter{pizzachili}{\value{footnote}}
 \stepcounter{footnote}\newcounter{xmldata}\setcounter{xmldata}{\value{footnote}}
+Table~\ref{tbl:speedup} shows the wall-clock time results obtained by
+our {\tt psta} algorithm compared to \verb+libcds+ and \verb+sdls+.
+We repeated each experiment three times and recorded the minimum
+running time, assuming that slightly larger values of any given
+experiment are just ``noise'' from external processes such as
+operating system and networking tasks.\Norbert{One can often argue
+  that the opposite is the case: When the cache is already primed, you
+  often see better performance than on an unprimed cache.  So the
+  right way of doing this is to run each experiment 3 times, but not 3
+  times in a row, to avoid cache priming.}
 
-\begin{table}[H]
+\begin{table}[t]
 \centering
 \makebox[0pt][c]{\parbox{1.0\textwidth}{%
     \begin{minipage}[b]{0.48\hsize}\centering
@@ -66,19 +76,6 @@
     \end{minipage}
 }}
 \end{table}
-
-
-Table~\ref{tbl:speedup} shows the wall-clock time results obtained by
-our {\tt psta} algorithm compared to \verb+libcds+ and \verb+sdls+.
-We repeated each experiment three times and recorded the minimum
-running time, assuming that slightly larger values of any given
-experiment are just ``noise'' from external processes such as
-operating system and networking tasks.\Norbert{One can often argue
-  that the opposite is the case: When the cache is already primed, you
-  often see better performance than on an unprimed cache.  So the
-  right way of doing this is to run each experiment 3 times, but not 3
-  times in a row, to avoid cache priming.}
-
 
 First note that {\tt psta} outperformed {\tt libcds} by an order of
 magnitude even on a single core. There are two reasons for this:
