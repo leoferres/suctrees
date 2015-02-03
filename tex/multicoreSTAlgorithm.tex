@@ -14,7 +14,10 @@ output is the {\tt RMMT} represented by its arrays $e^{\prime}$,
 $m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables to
 support queries in $O(\lg n)$ time.
 
-\begin{algorithm}[t]
+
+\begin{minipage}[t]{.55\textwidth}
+  \vspace{0pt}  
+  \begin{algorithm}[H]
 \small
 \SetVlineSkip{-2cm}
   % keywords
@@ -86,41 +89,11 @@ support queries in $O(\lg n)$ time.
 %  \Return{$WT$}\;
 
   \caption{{\tt PSTA} (part I)}
-  \label{algo:PSTA1}
-\end{algorithm}
-\normalsize
-
-Let's first analyze Algorithm \ref{algo:PSTA1}. Since the {\tt RMMT}
-can be seen as a complete tree of arity $k$, it is easy to calculate
-the size of the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and
-$n^{\prime}$. The size of array $e^{\prime}$ is the number of leaves
-in the {\tt RMMT} (line 2). The size of arrays $m^{\prime}$,
-$M^{\prime}$ and $n^{\prime}$ is equal to the total number of nodes in
-the {\tt RMMT}; that is, $\frac{\lceil 2n/s \rceil-1}{k-1} + \lceil
-2n/s \rceil$ (lines 1 and 3). Lines 4 to 26 shows the computation of
-partial excess values in parallel. The first step is to compute the
-number of chunks that each thread has to process (line 4). Then, in
-parallel, each thread computes the excess value of $ct$ consecutive
-chunks, following the equation to compute excess values. In each chunk, the
-thread increases by one the partial excess value each time that an
-open parenthesis appears, and decreases by one in the other case
-(lines 12 to 15). Immediately after the partial excess changes, it is
-necessary to verify if the maximum, minimum and number of minimum
-values also change (lines 16 to 22). When a chunk is completed, the
-local excess and its associated values are stored in the arrays
-$e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ (lines 23 to
-26). After a thread finishes processing its chunks, it is necessary to
-complement its local excess values considering the local values of
-previous threads. To do that, we first update the final excess value
-of each thread using a parallel prefix sum algorithm (line 27). 
-Those excess values do not need to be modified again. Observe that
-the prefix sum algorithm only needs to consider $p$ values, at positions
-$i*ct-1$, with $1\leq i \leq p-1$. Due to the updated final excess value,
-each thread can update the other excess, minimum and maximum values in
-parallel (lines 28 to 33). At this point, {\tt
-  PSTA} has computed all the leaves of the {\tt RMMT} in parallel.
-
-\begin{algorithm}[t]
+  \label{algo:PSTA1}  \end{algorithm}
+\end{minipage}%
+\begin{minipage}[t]{.55\textwidth}
+  \vspace{0pt}
+  \begin{algorithm}[H]
 \small
 \SetVlineSkip{-2cm}
   % keywords
@@ -192,8 +165,43 @@ parallel (lines 28 to 33). At this point, {\tt
   }
   \caption{{\tt PSTA} (part II)}
   \label{algo:PSTA2}
-\end{algorithm}
-\normalsize
+  \end{algorithm}
+\end{minipage}
+
+
+
+
+
+Let's first analyze Algorithm \ref{algo:PSTA1}. Since the {\tt RMMT}
+can be seen as a complete tree of arity $k$, it is easy to calculate
+the size of the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and
+$n^{\prime}$. The size of array $e^{\prime}$ is the number of leaves
+in the {\tt RMMT} (line 2). The size of arrays $m^{\prime}$,
+$M^{\prime}$ and $n^{\prime}$ is equal to the total number of nodes in
+the {\tt RMMT}; that is, $\frac{\lceil 2n/s \rceil-1}{k-1} + \lceil
+2n/s \rceil$ (lines 1 and 3). Lines 4 to 26 shows the computation of
+partial excess values in parallel. The first step is to compute the
+number of chunks that each thread has to process (line 4). Then, in
+parallel, each thread computes the excess value of $ct$ consecutive
+chunks, following the equation to compute excess values. In each chunk, the
+thread increases by one the partial excess value each time that an
+open parenthesis appears, and decreases by one in the other case
+(lines 12 to 15). Immediately after the partial excess changes, it is
+necessary to verify if the maximum, minimum and number of minimum
+values also change (lines 16 to 22). When a chunk is completed, the
+local excess and its associated values are stored in the arrays
+$e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ (lines 23 to
+26). After a thread finishes processing its chunks, it is necessary to
+complement its local excess values considering the local values of
+previous threads. To do that, we first update the final excess value
+of each thread using a parallel prefix sum algorithm (line 27). 
+Those excess values do not need to be modified again. Observe that
+the prefix sum algorithm only needs to consider $p$ values, at positions
+$i*ct-1$, with $1\leq i \leq p-1$. Due to the updated final excess value,
+each thread can update the other excess, minimum and maximum values in
+parallel (lines 28 to 33). At this point, {\tt
+  PSTA} has computed all the leaves of the {\tt RMMT} in parallel.
+
 
 Algorithm \ref{algo:PSTA2} shows the computation of the internal
 nodes, which has two substeps: The first substep computes $O(p)$
