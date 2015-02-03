@@ -6,7 +6,7 @@ PSTA}, $T_1$, is the aggregation of the amount of work of Algorithms
 Algorithm \ref{algo:PSTA1} is $O(n)$, since that it behaves as a
 sequential prefix sum algorithm (all the computation is done in
 lines 8 to 26). The work of Algorithm \ref{algo:PSTA2} is
-$O(\frac{n}{s})$. Here, all the computation is done in the first part
+$O(n/s)$. Here, all the computation is done in the first part
 (lines 1 to 18), having only one subtree which contains all internal
 nodes of the {\tt RMMT}. The work of Algorithm \ref{algo:PSTA3} is
 equivalent to compute all universal tables sequentially, maintaining
@@ -14,18 +14,17 @@ the complexity in \cite{Navarro:2014:FFS:2620785.2601073}, that is,
 $O(\sqrt{2^{w}}poly(w))$. Therefore, the amount of work of {\tt PSTA}
 is $T_{1}=O(n+\sqrt{2^{w}}poly(w))$. Considering $p$ processors, the
 first part of Algorithm \ref{algo:PSTA1} (lines 5 to 26) as a
-complexity of $O(\frac{n}{p})$. Meanwhile, the second part (line 27)
+complexity of $O(n/p)$. Meanwhile, the second part (line 27)
 has a complexity of $O(\lg p)$ if we use the parallel prefix sum
 algorithm in \cite{Reif1993}. Finally, the third part of Algorithm
 \ref{algo:PSTA1} (lines 28 to 33) has a complexity of
-$O(\frac{n}{sp})$. On the other hand, the first half of Algorithm
+$O(n/sp)$. On the other hand, the first half of Algorithm
 \ref{algo:PSTA2} (lines 1 to 18) has a complexity of
-$O(\frac{nk}{sp})$ and the second half (lines 19 to 34) has a
+$O(nk/sp)$ and the second half (lines 19 to 34) has a
 complexity of $O(k\lg_{k}p)$. Algorithm \ref{algo:PSTA3} has a
-complexity of $O(\frac{\sqrt{2^{w}}poly(w)}{p})$. Therefore, the
+complexity of $O(\sqrt{2^{w}}poly(w)/p)$. Therefore, the
 complexity of {\tt PSTA} with $p$ available processors is $T_p =
-O(\frac{n}{p}+\lg p+\frac{\sqrt{2^{w}}poly(w)}{p})$, considering $s$
-and $k$ constants\Jose{?}. Now, if we consider that we have enough amount of
+O(n/p+\lg p+\sqrt{2^{w}}poly(w)/p)$. Now, if we consider that we have enough amount of
 processors, the span of {\tt PSTA} is $T_{\infty}=O(\lg n)$. Here, the
 span of the whole algorithm is the maximum span of all its parts. The
 span of Algorithm \ref{algo:PSTA1} is $O(\lg n)$, since all the

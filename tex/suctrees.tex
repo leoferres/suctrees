@@ -7,7 +7,7 @@ constant time in the word RAM model with word size $\Theta(\lg n)$.
 Since then, a lot of work has been done on succinct tree representations, to
 support more navigational operations, to achieve compression, to provide support
 for update operations, and so
-on~\cite{mr1997,bdmr1999,grr2004,jss2007,ly2008,hms2012,fm2014,Navarro:2014:FFS:2620785.2601073}. 
+on~\cite{mr1997,bdmr1999,grr2004,jss2007,ly2008,hms2012,fm2014,Navarro:2014:FFS:2620785.2601073}.
 Raman and Rao~\cite{rr2013} give a thorough survey of the state of the art.
 
 In this paper, we present a parallel algorithm to construct the succinct tree
@@ -132,8 +132,6 @@ Each chunk is represented using a {\tt RMMT}, which can support primitive
 operations inside the chunk in constant time if the chunk is small enough.
 Additional data structures are used to support operations on the entire sequence
 $P$ in constant time.
-
-\subsubsection{The Range Min-Max Tree}
 
 Let $w$ denote the number of bits in a word.
 The range min-max tree ({\tt RMMT}) is designed to support the primitive

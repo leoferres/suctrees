@@ -14,164 +14,6 @@ output is the {\tt RMMT} represented by its arrays $e^{\prime}$,
 $m^{\prime}$, $M^{\prime}$, $n^{\prime}$ and universal tables to
 support queries in $O(\lg n)$ time.
 
-
-\begin{minipage}[t]{.55\textwidth}
-  \vspace{0pt}  
-  \begin{algorithm}[H]
-\small
-\SetVlineSkip{-2cm}
-  % keywords
-  \SetKwInOut{Input}{Input}
-  \SetKwInOut{output}{output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  % I/o
-  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
-  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
-  \BlankLine% \SetAlgoNoLine
-  % algorithm
-  $o$ = $\frac{\lceil 2n/s \rceil-1}{k-1}$\tcp*[h]{Internal nodes of the RMMT}\;
-  $e^{\prime}$ = array of size $\lceil 2n/s \rceil$\;
-  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil 2n/s \rceil + o$\;
-  $ct$ = $\lceil 2n/s \rceil/num\_threads$\tcp*[h]{Chunks per thread}\;
-  \PFor{$t\leftarrow 0$ \KwTo $num\_threads-1$}{
-	  $partial\_excess, local\_min$ = $0$\;
-	  $local\_max, num\_mins$ = $0$\;
-	  
-	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
-		  $llimit$ = $t*ct*s+chunk*s$\;
-		  $ulimit$ = $llimit+s$\;
-	  	
-		  \For{$par \leftarrow llimit$ \KwTo $ulimit$}{
-		  	\eIf{$P[par]$ is $closed$}{
-		  		$partial\_excess$ -= $1$\;
-		  	}
-		    {
-		  		$partial\_excess$ += $1$\;
-		    }
-		    
-		    \uIf{$partial\_excess < local\_min$}{
-				$local\_min$ = $partial\_excess$\;
-				$num\_mins$ = $1$
-			}
-			\uElseIf{$partial\_excess == local\_min$}{
-				$num\_mins$ += $1$\;
-			}
-			\uElseIf{$partial\_excess > local\_max$}{
-				$local\_max$ = $partial\_excess$\;
-			}
-		  }
-		  $e^{\prime}[t*ct+chunk]$ = $local\_excess$\;
-		  $m^{\prime}[t*ct+chunk+o]$ = $local\_min$\;
-		  $M^{\prime}[t*ct+chunk+o]$ = $local\_max$\;
-		  $n^{\prime}[t*ct+chunk+o]$ = $num\_mins$\;		  
-	  }
-  }
-  \BlankLine
-  $parallel\_prefix\_sum(e^{\prime}, ct)$\;
-%  \For{$t \leftarrow 1$ \KwTo $num\_threads-1$}{
-%		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
- % }
-  \BlankLine
-  \PFor{$t\leftarrow 1$ \KwTo $num\_threads-1$}{
-	  \For{$chunk \leftarrow 0$ \KwTo $ct$}{
-	  	\If{$t == num\_threads-1$ OR $chunk < ct-1$}{
-	  	  $e^{\prime}[t*ct+chunk]$ += $e^{\prime}[t*ct-1]$\;
-	  	}
-  	  	$m^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
-  	  	$M^{\prime}[t*ct+chunk+o]$ += $e^{\prime}[t*ct-1]$\;
-	  }
-  }
-
-
-%  \Return{$WT$}\;
-
-  \caption{{\tt PSTA} (part I)}
-  \label{algo:PSTA1}  \end{algorithm}
-\end{minipage}%
-\begin{minipage}[t]{.55\textwidth}
-  \vspace{0pt}
-  \begin{algorithm}[H]
-\small
-\SetVlineSkip{-2cm}
-  % keywords
-  \SetKwInOut{Input}{Input}
-  \SetKwInOut{output}{output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  % I/o
-  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
-  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
-  \BlankLine% \SetAlgoNoLine
-  % algorithm
-
-  $level$ = $\lceil \log_{k}num\_threads \rceil$\;
-  \PFor{$subtree\leftarrow 0$ \KwTo $k^{level}$}{
-	  \For{$l\leftarrow \lceil\log_{k}(2n/s)\rceil-1$ \KwTo $level$}{
-		  \For{$node\leftarrow 0$ \KwTo $k^{l-level}$}{
-		  	$pos$ = $node + k^{l} - 1 +subtree*k^{l-level}$\;
-			\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
-				\tcp*[h]{first time}\;
-			  	\eIf{$child == pos*k+1$}{
-				  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
-				  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
-				  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
-			  	}
-			    	{
-				    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
-						$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
-						$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
-					}
-					\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
-						$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
-					}
-					\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
-						$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
-					}
-		    		}
-			}		  	
-		  }
-	  }
-  }
-  \BlankLine
-  \For{$l\leftarrow level-1$ \KwTo $0$}{
-	  \PFor{$node\leftarrow 0$ \KwTo $k^{l}$}{
-	  	$pos$ = $node + \frac{k^{l}-1}{k-1}$\;
-		\For{$child\leftarrow pos*k+1$ \KwTo $(pos+1)*k$}{
-			\tcp*[h]{first time}\;
-		  	\eIf{$child == pos*k+1$}{
-			  $m^{\prime}[pos]$ = $m^{\prime}[child]$\;
-			  $M^{\prime}[pos]$ = $M^{\prime}[child]$\;
-			  $n^{\prime}[pos]$ = $n^{\prime}[child]$\;					
-		  	}
-		    	{
-			    \uIf{$m^{\prime}[child] < m^{\prime}[pos]$}{
-					$m^{\prime}[pos]$ = $m^{\prime}[child]$\;
-					$n^{\prime}[pos]$ = $n^{\prime}[child]$\;
-				}
-				\uElseIf{$m^{\prime}[child] == m^{\prime}[pos]$}{
-					$n^{\prime}[pos]$ += $n^{\prime}[child]$\;
-				}
-				\uElseIf{$M^{\prime}[child] > M^{\prime}[pos]$}{
-					$M^{\prime}[pos]$ = $M^{\prime}[child]$\;
-				}
-	    		}
-		}		  	
-	  }
-  }
-  \caption{{\tt PSTA} (part II)}
-  \label{algo:PSTA2}
-  \end{algorithm}
-\end{minipage}
-
-
-
-
-
 Let's first analyze Algorithm \ref{algo:PSTA1}. Since the {\tt RMMT}
 can be seen as a complete tree of arity $k$, it is easy to calculate
 the size of the arrays $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and
@@ -184,7 +26,7 @@ partial excess values in parallel. The first step is to compute the
 number of chunks that each thread has to process (line 4). Then, in
 parallel, each thread computes the excess value of $ct$ consecutive
 chunks, following the equation to compute excess values. In each chunk, the
-thread increases by one the partial excess value each time that an
+thread increases by one its partial excess value each time that an
 open parenthesis appears, and decreases by one in the other case
 (lines 12 to 15). Immediately after the partial excess changes, it is
 necessary to verify if the maximum, minimum and number of minimum
@@ -199,9 +41,8 @@ Those excess values do not need to be modified again. Observe that
 the prefix sum algorithm only needs to consider $p$ values, at positions
 $i*ct-1$, with $1\leq i \leq p-1$. Due to the updated final excess value,
 each thread can update the other excess, minimum and maximum values in
-parallel (lines 28 to 33). At this point, {\tt
-  PSTA} has computed all the leaves of the {\tt RMMT} in parallel.
-
+parallel (lines 28 to 33). At this point, {\tt PSTA} has computed all
+the leaves of the {\tt RMMT} in parallel.
 
 Algorithm \ref{algo:PSTA2} shows the computation of the internal
 nodes, which has two substeps: The first substep computes $O(p)$
@@ -220,8 +61,15 @@ threads have a similar workload. In the second substep, the $O(\lceil
 parallel. The {\tt PSTA} algorithm assigns one node per thread,
 computing each level in $O(k)$ time.
 
-
-\begin{algorithm}[t]
+In the last step of {\tt PSTA}, Algorithm \ref{algo:PSTA3} shows the computation of
+universal tables. To simplify the explanation, Algorithm
+\ref{algo:PSTA3} just shows the computation of one universal table,
+$near\_fwd\_pos$, used to compute the \emph{fwd\_ search} operation. The same algorithm can be applied to the other
+tables. All of these tables do not depend on the input, except for the
+number of available threads.
+\begin{minipage}[t]{.50\textwidth}
+  \vspace{0pt}  
+  \begin{algorithm}[H]
 \small
 \SetVlineSkip{-2cm}
   % keywords
@@ -232,36 +80,212 @@ computing each level in $O(k)$ time.
   \SetAlgoNoEnd
   \DontPrintSemicolon
   % I/o
-  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
+  \Input{$P$, $k$, $s$, $threads$}
   \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
   \BlankLine% \SetAlgoNoLine
   % algorithm
-
-  \PFor{$x\leftarrow -w$ \KwTo $w$}{
-      \PFor{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}$}{
-          $i\leftarrow ((x+w) << w)$ OR $w$\;
-          $near\_fwd\_pos[i] = w$\;
-          $p=0$\;
-          $excess=0$\;
-          \Repeat{$p\geq w$}{
-              $excess$ += $1-2*((y$ AND $(1 << p)) == 0)$\;
-              \If{$excess == x$}{
-                  $near\_fwd\_pos[i] = p$\;
-                  $break$\;
-              }
-              $p$ += $1$\;
-          }                 
-      }
+  $o$ = $\frac{\lceil 2n/s \rceil-1}{k-1}$\tcp*[h]{\# internal nodes}\;
+  $e^{\prime}$ = array of size $\lceil 2n/s \rceil$\;
+  $m^{\prime}, M^{\prime}, n^{\prime}$ = arrays of size $\lceil 2n/s \rceil + o$\;
+  $ct$ = $\lceil 2n/s \rceil/threads$\;%\tcp*[h]{Chunks per thread}\;
+  \PFor{$t\leftarrow 0$ \KwTo $threads-1$}{
+	  $e^{\prime}_t, m^{\prime}_t, M^{\prime}_t, n^{\prime}_t$ = $0$\;
+	  
+	  \For{$chk \leftarrow 0$ \KwTo $ct$}{
+		  $low$ = $t*ct*s+chk*s$\;
+		  $up$ = $low+s$\;
+	  	
+		  \For{$par \leftarrow low$ \KwTo $up$}{
+		  	\eIf{$P[par]$ is $closed$}{
+		  		$e^{\prime}_t$ -= $1$\;
+		  	}
+		    {
+		  		$e^{\prime}_t$ += $1$\;
+		    }
+		    
+		    \uIf{$e^{\prime}_t < m^{\prime}_t$}{
+				$m^{\prime}_t$ = $e^{\prime}_t$\;
+				$n^{\prime}_t$ = $1$
+			}
+			\uElseIf{$e^{\prime}_t == m^{\prime}_t$}{
+				$n^{\prime}_t$ += $1$\;
+			}
+			\uElseIf{$e^{\prime}_t > M^{\prime}_t$}{
+				$M^{\prime}_t$ = $e^{\prime}_t$\;
+			}
+		  }
+		  $e^{\prime}[t*ct+chk]$ = $e^{\prime}_t$\;
+		  $m^{\prime}[t*ct+chk+o]$ = $m^{\prime}_t$\;
+		  $M^{\prime}[t*ct+chk+o]$ = $M^{\prime}_t$\;
+		  $n^{\prime}[t*ct+chk+o]$ = $n^{\prime}_t$\;		  
+	  }
   }
-
-  \caption{{\tt PSTA} (part III)}
-  \label{algo:PSTA3}
-\end{algorithm}
-\normalsize
-
-In the last step of {\tt PSTA}, Algorithm \ref{algo:PSTA3} shows the computation of
-universal tables. To simplify the explanation, Algorithm
-\ref{algo:PSTA3} just shows the computation of one universal table,
-$near\_fwd\_pos$, used to compute the \emph{fwd\_ search} operation. The same algorithm can be applied to the other
-tables. All of these tables do not depend on the input, except for the
-number of available threads.
+  \BlankLine
+  $parallel\_prefix\_sum(e^{\prime}, ct)$\;
+%  \For{$t \leftarrow 1$ \KwTo $threads-1$}{
+%		$e^{\prime}[(t+1)*ct-1]$ += $e^{\prime}[t*ct-1]$\;
+ % }
+  \BlankLine
+  \PFor{$t\leftarrow 1$ \KwTo $threads-1$}{
+	  \For{$chk \leftarrow 0$ \KwTo $ct$}{
+	  	\If{$t == threads-1$ OR $chk < ct-1$}{
+	  	  $e^{\prime}[t*ct+chk]$ += $e^{\prime}[t*ct-1]$\;
+	  	}
+  	  	$m^{\prime}[t*ct+chk+o]$ += $e^{\prime}[t*ct-1]$\;
+  	  	$M^{\prime}[t*ct+chk+o]$ += $e^{\prime}[t*ct-1]$\;
+	  }
+  }
+%  \Return{$WT$}\;
+  \caption{{\tt PSTA} (part I)}
+  \label{algo:PSTA1}
+  \end{algorithm}
+\end{minipage}%
+%hfill
+\begin{minipage}[t]{.51\textwidth}
+  \vspace{0pt}
+  \begin{algorithm}[H]
+\small
+\SetVlineSkip{-2cm}
+  % keywords
+%  \SetKwInOut{Input}{Input}
+%  \SetKwInOut{output}{output}
+  \SetKwFor{PFor}{parfor}{do}{end}
+  \LinesNumbered
+  \SetAlgoNoEnd
+  \DontPrintSemicolon
+  % I/o
+%  \Input{Parentheses sequence $P$, $k$, $s$, $threads$}
+%  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
+%  \BlankLine%
+  \SetAlgoLined
+%\setcounter{AlgoLine}{2}
+%\ShowLn
+  % algorithm
+  \setcounter{AlgoLine}{1}\ShowLn
+  $lvl$ = $\lceil \log_{k}threads \rceil$\;
+  \setcounter{AlgoLine}{2}\ShowLn
+  \PFor{$st\leftarrow 0$ \KwTo $k^{lvl}$}{
+      \setcounter{AlgoLine}{3}\ShowLn
+	  \For{$l\leftarrow \lceil\log_{k}(2n/s)\rceil-1$ \KwTo $lvl$}{
+          \setcounter{AlgoLine}{5}\ShowLn
+		  \For{$d\leftarrow 0$ \KwTo $k^{l-lvl}$}{
+            \setcounter{AlgoLine}{5}\ShowLn
+		  	$i$ = $d + k^{l} - 1 +st*k^{l-lvl}$\;
+            \setcounter{AlgoLine}{6}\ShowLn
+		  	$b$ = $i*k+1$\;
+            \setcounter{AlgoLine}{7}\ShowLn
+			\For{$c\leftarrow b$ \KwTo $b+k-1$}{
+%****
+                \setcounter{AlgoLine}{8}\ShowLn
+			  	\uIf{$c == b$}{
+                  \setcounter{AlgoLine}{9}\ShowLn
+				  $m^{\prime}[i]$ = $m^{\prime}[c]$\;
+                  \setcounter{AlgoLine}{10}\ShowLn
+				  $M^{\prime}[i]$ = $M^{\prime}[c]$\;
+                  \setcounter{AlgoLine}{11}\ShowLn
+				  $n^{\prime}[i]$ = $n^{\prime}[c]$\;					
+			  	}
+                \setcounter{AlgoLine}{12}\ShowLn
+			    \uElseIf{$m^{\prime}[c] < m^{\prime}[i]$}{
+                    \setcounter{AlgoLine}{13}\ShowLn
+					$m^{\prime}[i]$ = $m^{\prime}[c]$\;
+                    \setcounter{AlgoLine}{14}\ShowLn
+					$n^{\prime}[i]$ = $n^{\prime}[c]$\;
+				}
+                \setcounter{AlgoLine}{15}\ShowLn
+				\uElseIf{$m^{\prime}[c] == m^{\prime}[i]$}{
+                    \setcounter{AlgoLine}{16}\ShowLn
+					$n^{\prime}[i]$ += $n^{\prime}[c]$\;
+				}
+                \setcounter{AlgoLine}{17}\ShowLn
+				\uElseIf{$M^{\prime}[c] > M^{\prime}[i]$}{
+                    \setcounter{AlgoLine}{18}\ShowLn
+					$M^{\prime}[i]$ = $M^{\prime}[c]$\;
+				}
+%****
+		    						
+%			  	\eIf{$c == b$}{
+%				  $m^{\prime}[i]$ = $m^{\prime}[c]$\;
+%				  $M^{\prime}[i]$ = $M^{\prime}[c]$\;
+%				  $n^{\prime}[i]$ = $n^{\prime}[c]$\;					
+%			  	}
+%			    	{
+%				    \uIf{$m^{\prime}[c] < m^{\prime}[i]$}{
+%						$m^{\prime}[i]$ = $m^{\prime}[c]$\;
+%						$n^{\prime}[i]$ = $n^{\prime}[c]$\;
+%					}
+%					\uElseIf{$m^{\prime}[c] == m^{\prime}[i]$}{
+%						$n^{\prime}[i]$ += $n^{\prime}[c]$\;
+%					}
+%					\uElseIf{$M^{\prime}[c] > M^{\prime}[i]$}{
+%						$M^{\prime}[i]$ = $M^{\prime}[c]$\;
+%					}
+%		    		}
+			}		  	
+		  }
+	  }
+  }
+  \BlankLine
+  \setcounter{AlgoLine}{19}\ShowLn
+  \For{$l\leftarrow lvl-1$ \KwTo $0$}{
+	  \setcounter{AlgoLine}{20}\ShowLn
+	  \PFor{$d\leftarrow 0$ \KwTo $k^{l}$}{
+        \setcounter{AlgoLine}{21}\ShowLn
+	  	$i$ = $d + (k^{l}-1)/(k-1)$\;
+        \setcounter{AlgoLine}{22}\ShowLn
+	  	$b$ = $i*k+1$\;
+        \setcounter{AlgoLine}{23}\ShowLn
+		\For{$c\leftarrow b$ \KwTo $b+k-1$}{
+%****		
+            \setcounter{AlgoLine}{24}\ShowLn
+		  	\uIf{$ch == b$}{
+              \setcounter{AlgoLine}{25}\ShowLn
+			  $m^{\prime}[i]$ = $m^{\prime}[c]$\;
+              \setcounter{AlgoLine}{26}\ShowLn
+			  $M^{\prime}[i]$ = $M^{\prime}[c]$\;
+              \setcounter{AlgoLine}{27}\ShowLn
+			  $n^{\prime}[i]$ = $n^{\prime}[c]$\;					
+		  	}
+            \setcounter{AlgoLine}{28}\ShowLn
+		    \uElseIf{$m^{\prime}[c] < m^{\prime}[i]$}{
+                \setcounter{AlgoLine}{29}\ShowLn
+				$m^{\prime}[i]$ = $m^{\prime}[c]$\;
+                \setcounter{AlgoLine}{30}\ShowLn
+				$n^{\prime}[i]$ = $n^{\prime}[c]$\;
+			}
+            \setcounter{AlgoLine}{31}\ShowLn
+			\uElseIf{$m^{\prime}[c] == m^{\prime}[i]$}{
+                \setcounter{AlgoLine}{32}\ShowLn
+				$n^{\prime}[i]$ += $n^{\prime}[c]$\;
+			}
+            \setcounter{AlgoLine}{33}\ShowLn
+			\uElseIf{$M^{\prime}[c] > M^{\prime}[i]$}{
+                \setcounter{AlgoLine}{34}\ShowLn
+				$M^{\prime}[i]$ = $M^{\prime}[c]$\;
+			}
+%****		
+	    		
+%		  	\eIf{$ch == b$}{
+%			  $m^{\prime}[i]$ = $m^{\prime}[c]$\;
+%			  $M^{\prime}[i]$ = $M^{\prime}[c]$\;
+%			  $n^{\prime}[i]$ = $n^{\prime}[c]$\;					
+%		  	}
+%		    	{
+%			    \uIf{$m^{\prime}[c] < m^{\prime}[i]$}{
+%					$m^{\prime}[i]$ = $m^{\prime}[c]$\;
+%					$n^{\prime}[i]$ = $n^{\prime}[c]$\;
+%				}
+%				\uElseIf{$m^{\prime}[c] == m^{\prime}[i]$}{
+%					$n^{\prime}[i]$ += $n^{\prime}[c]$\;
+%				}
+%				\uElseIf{$M^{\prime}[c] > M^{\prime}[i]$}{
+%					$M^{\prime}[i]$ = $M^{\prime}[c]$\;
+%				}
+%	    		}
+		}		  	
+	  }
+  }
+  \caption{{\tt PSTA} (part II)}
+  \label{algo:PSTA2}
+	  \end{algorithm}
+\end{minipage}

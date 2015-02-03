@@ -1,13 +1,13 @@
 In this work we shown that it is possible to improve the construction time of succinct
 trees, exploiting current multicore architectures. We introduce a practical algorithm that
-achieves $O(\frac{n}{p}+\lg p)$ construction time, to a tree with $n$ nodes and $p$
+achieves $O(n/p+\lg p)$ construction time, to a tree with $n$ nodes and $p$
 threads, while supports a rich set of navigational operations in $O(\lg n)$ time. This
 practical algorithm was tested against state-of-the-art libraries, reaching good speedup.
 We also proposed other algorithm to a more complex succinct tree representation, with
-$O(\frac{n\lg p}{p})$ construction time, which supports navegational operations in
+$O(n\lg p/p)$ construction time, which supports navegational operations in
 constant time. Since our algorithms need, as input, a tree stored as a parentheses
 sequence, we presented an algorithm to compute such parentheses sequence in parallel in
-$O(\frac{n}{p}+\lg p)$ time.
+$O(n/p+\lg p)$ time.
 
 In this paper we focused on static representation of succinct trees. However, our results
 may be the base to the parallel construction of dynamic succinct trees, as the dynamic
