@@ -67,9 +67,8 @@ following, where $g$ is an arbitrary function on $\{0,1\}$:
 Most operations supported by the NS-representation reduce to these primitives
 by choosing $g$ to be one of the following three functions on $\{0,1\}$:
 \begin{align*}
-  \pi  &: 1 \mapsto 1\quad 0 \mapsto -1\\
-  \phi &: 1 \mapsto 1\quad 0 \mapsto 0\\
-  \psi &: 1 \mapsto 0\quad 0 \mapsto 1
+\pi : 1 &\mapsto 1 &\phi : 1 &\mapsto 1 & \psi : 1 &\mapsto 0\\
+0 &\mapsto -1 & 0 &\mapsto 0 & 0 &\mapsto 1
 \end{align*}
 For example, assuming the $i$th parenthesis in $P$ is an opening parenthesis,
 the matching closing parenthesis can be found using $\fwdsearch(P,\pi,i,0)$.
@@ -99,8 +98,7 @@ Navarro/Sadakane as a simple practical structure), we partition $P[1..2n]$ into
 disjoint chunks of size $s = w \lg n$, where $w$ is the machine word size.
 For simplicity, we assume that the length of $P$ is a multiple of~$s$.
 The {\tt RMMT} is a complete binary tree over the sequence of chunks
-(see Figure~\ref{fig:RangeMinMaxTree}).\Norbert{Should fix figure to match this
-description.}
+(see Figure~\ref{fig:RangeMinMaxTree}).
 Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$ of $P$ that is
 the concatenation of the chunks corresponding to the descendant leaves of $u$.
 Since the {\tt RMMT} is a complete tree, we do not need store its structure
@@ -119,9 +117,9 @@ $P_u$, respectively.
 $n'[i]$ stores the number of positions in $P_u$ that have the minimum excess
 value $m'[i]$.
 
-\begin{figure}[b]
+\begin{figure}[t]
   \centering
-  \includegraphics[scale=0.18]{./images/Range-min-max-tree.png}
+  \includegraphics[scale=0.19]{./images/Range-min-max-tree.png}
   \caption{Range min-max tree}
   \label{fig:RangeMinMaxTree}
 \end{figure}
@@ -157,7 +155,8 @@ $O(\lg n)$ time to determine the position of the query answer inside this leaf's
 chunk.
 Since we spend $O(\lg n)$ time for each of the two leaves inspected by this
 procedure and the tests for any other node in the tree take constant time,
-the total cost of this procedure is $O(\lg n)$.
+the cost is $O(\lg n)$.
+%the total cost of this procedure is $O(\lg n)$.
 
 Supporting operations on the leaves, such as finding the $i$th leaf from the
 left, reduces to $\rankop$ and $\selop$ operations over another bit vector
@@ -165,9 +164,9 @@ $P_1[1..2n]$ where $P_1[i] = 1$ iff $P[i] = 1$ and $P[i+1] = 0$.
 $\rankop$ and $\selop$ operations over $P_1$ in turn reduce to
 $\sumop$ and $\fwdsearch$ operations over $P_1$ and can thus be supported
 by an {\tt RMMT} for $P_1$.
-Note that $P_1$ does not need to be stored explicitly (but its {\tt RMMT} does)
-because $O(w)$ bits of $P_1$ can be computed from $P$ in constant time using
-table lookup.
+Note that $P_1$ does not need to be stored explicitly
+because $O(w)$ bits of $P_1$ can be computed from $P$ %in constant time 
+using table lookup.
 
 To analyze the space usage, observe that storing $P$ requires $2n$ bits, while
 the space needed to store the vectors $e'$, $m'$, $M'$, and $n'$ is

@@ -8,9 +8,7 @@ In this model, a {\em multithreaded computation} is modelled as a directed
 acyclic graph (DAG) $G=(V,E)$ where the set of vertices $V$ are instructions
 and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{Notice that the
   RAM model is a subset of the DYM model where the outdegree of every
-  vertex $v \in V$ is $\leq 1$.\Norbert{Why ``$\le$''?  Doesn't the strictly
-    sequential nature of the RAM model mean that everybody except the first and
-    last vertices has exactly one in-neighbour and one out-neighbour?}}
+  vertex $v \in V$ is $1$, except the last vertex with outdegree $0$.}
 The time $T_p$ needed to execute the computation on $p$ processors depends on
 two parameters of the computation: its {\em work} $T_1$ and its {\em span}
 $T_\infty$.
@@ -32,12 +30,12 @@ The degree to which an algorithm can take advantage of the presence of $p > 1$
 processors is captured by its {\em speed-up} $T_1 / T_p$ and its
 {\em parallelism} $T_1 / T_\infty$.
 In the absence of cache effects, the best speed-up one can hope for is $p$,
-also known as {\em linear speed-up}.
+known as {\em linear speed-up}.
 The parallelism provides an upper bound on the achievable speed-up independent
 of the number of available processors.
 
 In order to describe parallel algorithms in the DYM model, we augment sequential
-pseudocode with three special keywords.
+pseudocode with three keywords.
 The {\bf spawn} keyword, followed by a procedure call, indicates that the
 procedure should run in its own thread and {\em may} thus be executed in
 parallel to the thread that spawned the procedure call.
@@ -51,8 +49,8 @@ In practice, the overhead is logarithmic in the number of iterations.
 If a procedure exits, either implicitly or explicitly using a {\bf return}
 statement, it implicitly performs a {\bf sync} to ensure all threads it spawned
 finish first.
-\Norbert{Got rid of the ``strand'' stuff.
-  It seems a technicality relevant only to the operation of work-stealing
-  schedulers.
-  If we actually use it in the analysis of the algorithm in Section 3, we
-  may have to bring it back.}
+%\Norbert{Got rid of the ``strand'' stuff.
+%  It seems a technicality relevant only to the operation of work-stealing
+%  schedulers.
+%  If we actually use it in the analysis of the algorithm in Section 3, we
+%  may have to bring it back.}
