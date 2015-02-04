@@ -1,26 +1,17 @@
-In this work we shown that it is possible to improve the construction time of succinct
-trees, exploiting current multicore architectures. We introduce a practical algorithm that
-achieves $O(n/p+\lg p)$ construction time, to a tree with $n$ nodes and $p$
-threads, while supports a rich set of navigational operations in $O(\lg n)$ time. This
-practical algorithm was tested against state-of-the-art libraries, reaching good speedup.
-Since our algorithm needs, as input, a tree stored as a parentheses
-sequence, we presented an algorithm to compute such parentheses sequence in parallel in
-$O(n/p+\lg p)$ time.
+In this paper, we demonstrated that it is possible to improve the construction
+time of succinct trees using multicore parallelism.
+We introduced a practical algorithm that takes $O(n/p+\lg p)$ time to construct
+a succinct representation of a tree with $n$ nodes using $p$ threads.
+This representation supports a rich set of navigational operations in $O(\lg n)$
+time.
+Our algorithm substantially outperformed state-of-the-art sequential
+constructions of this data structure, achieved very good speed-up up to 64
+cores, and is to the best of our knowledge the first parallel construction
+algorithm of a succinct tree representation.
 
-In this paper we focused on static representation of succinct trees. However, our results
-may be the base to the parallel construction of dynamic succinct trees, as the dynamic
-succinct trees of \cite{Navarro:2014:FFS:2620785.2601073}. Also, it would be interesting
-to study how to extend our results to succinct representation of \emph{labeled} trees. We
-shall explore the extension of our results to the parallel construction other succinct
-data structures that use succinct trees representations as part of their representations.
-Such is the case of succinct planar graphs. Note that we can use the results of
-\cite{Fuentes2014} to parallelize batches of navigational operations, reaching a good
-pratical speedup. Since that the \emph{range min-max tree}, that our algorithms construct,
-is a complete tree, the strategy underlying our algorithms can be applied to construct
-general complete trees in parallel.
-
-We believe that exploit current multicore architectures to improve the overall performance
-of succinct data structures is a interesting research line. Taking the features of
-succinct data structures and the processing power of multicore architectures allows to
-design practical data structures with competitive querying time, efficient space usage and
-fast/scalable construction time.
+While we focused on representing static trees succinctly in this paper, the
+approach we have taken may also extend to the construction of dynamic succinct
+trees (e.g., \cite{Navarro:2014:FFS:2620785.2601073}), of succinct
+representations of labelled trees, and of other succinct data structures that
+use succinct trees as building blocks (e.g., the succinct representation of
+planar graphs).
