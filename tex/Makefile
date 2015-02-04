@@ -21,8 +21,7 @@ MAIN_OTHER_SOURCES=introduction.tex \
 		   conclusion.tex
 
 MAIN_FIGURES=images/Range-min-max-tree.png \
-	     images/Min-Max-array.png \
-	     images/Speedup.png
+	     images/Min-Max-array.png
 
 all: sea2015.pdf
 

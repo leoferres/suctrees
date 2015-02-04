@@ -1,8 +1,8 @@
-{\em Dynamic multithreading} (DYM) \cite[Chapter 27]{Cormen2009} is a
-model of parallel computation which is faithful to several industry standards
+{\em Dynamic multithreading} (DYM) \cite[Chapter~27]{Cormen2009} is a
+model of parallel computation that is faithful to several industry standards
 such as Intel's CilkPlus (\url{cilkplus.org}), OpenMP Tasks
 (\url{openmp.org/wp}), and Threading Building
-Blocks\break (\url{threadingbuildingblocks.org}).
+Blocks (\url{threadingbuildingblocks.org}).
 
 In this model, a {\em multithreaded computation} is modelled as a directed
 acyclic graph (DAG) $G=(V,E)$ where the set of vertices $V$ are instructions
@@ -29,7 +29,7 @@ work-stealing schedulers match this lower bound to within a constant factor
 (to within a factor 2 from the optimal
 performance)~\cite{Blumofe:1999:SMC:324133.324234}.
 The degree to which an algorithm can take advantage of the presence of $p > 1$
-processors is then captured by its {\em speed-up} $T_1 / T_p$ and its
+processors is captured by its {\em speed-up} $T_1 / T_p$ and its
 {\em parallelism} $T_1 / T_\infty$.
 In the absence of cache effects, the best speed-up one can hope for is $p$,
 also known as {\em linear speed-up}.
@@ -39,10 +39,10 @@ of the number of available processors.
 In order to describe parallel algorithms in the DYM model, we augment sequential
 pseudocode with three special keywords.
 The {\bf spawn} keyword, followed by a procedure call, indicates that the
-procedure should run in its own thread and {\em may} thus be executed in parallel
-to the thread that spawned the procedure call.
-The {\bf sync} keyword indicates that the current thread must wait for all the
-threads it has spawned to terminate before proceeding.
+procedure should run in its own thread and {\em may} thus be executed in
+parallel to the thread that spawned the procedure call.
+The {\bf sync} keyword indicates that the current thread must wait for the
+termination of all the threads it has spawned before proceeding.
 It thus provides a simple barrier-style synchronization mechanism.
 Finally, {\bf parfor} is ``syntactic sugar'' for {\bf spawn}ing one thread per
 iteration in a for loop, thereby allowing these iterations to run in parallel,
