@@ -16,7 +16,7 @@ whereby it builds {\em rank} and {\em select} structures, while
 \verb+psta+ and \verb+sdsl+ do not\footnote{They are actually not part
   of the original proposal by
   \cite{Navarro:2014:FFS:2620785.2601073}.}. This makes the whole
-process costlier \Jose{What about {\tt osm} data set?}. Second, as we allowed {\tt psta} to utilize more
+process costlier. Second, as we allowed {\tt psta} to utilize more
 cores, its advantage over {\tt libcds} only increased because {\tt
   libcds} is a purely sequential program.  {\tt sdsl} was about 1.5
 times faster than {\tt psta} on a single core, but already using two
@@ -36,7 +36,7 @@ program.
        %   $(n)$ & (498,753,915) & (670,721,005) & (1,154,482,174) & (2,147,483,644) & (4,675,776,358)\\
         \hline
         \hline
-        {\tt libcds} & 33.12 & 44.16 & 75.81 & 140.97 & 26.97 \\
+        {\tt libcds} & 33.16 & 44.24 & 75.87 & 140.41 & 339.21 \\
         {\tt sdsl} & 1.93 & 2.66 & 4.57 & 8.35 & 18.10 \\
         \hline
         1 & 2.89 & 4.22 & 7.21 & 12.16 & 30.60 \\
@@ -197,7 +197,7 @@ during construction of the data structure, which does not include the
 memory allocated to store the parenthesis sequence. For lack of space, we only
 report the memory consumption of {\tt ctree} and {\tt osm}. For {\tt ctree}
 the memory consumption was (in MB) 38 for {\tt libcds}, 76 for {\tt sdsl}, 112 for {\tt psta},
-and for {\tt osm}, the consumption was 7 for {\tt libcds}\Jose{Review this value}, 194 for {\tt sdsl}, 331 for {\tt psta}.
+and for {\tt osm}, the consumption was 85 for {\tt libcds}, 194 for {\tt sdsl}, 331 for {\tt psta}.
 Even though {\tt psta} consumes more memory than both {\tt libcds} and {\tt sdsl},
 the difference between {\tt psta} and {\tt sdsl} is a factor of less
 than two. The difference between {\tt psta} and {\tt libcds} is no
