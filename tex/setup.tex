@@ -6,21 +6,29 @@ All parallel code was compiled using the GCC Cilk branch.
 The same flags were used to compile {\tt libcds} and {\tt sdsl}, which were
 written in C++.
 
-The data sets were suffix trees of the DNA ({\tt dna}, 1,154,482,174 parentheses), and
-protein ({\tt prot}, 670,721,006 parentheses) data from the Pizza \& Chili
-corpus\footnote{\url{http://pizzachili.dcc.uchile.cl}}. To obtain the suffix tree,
-we used the implementation provided in \url{http://www.daimi.au.dk/~mailund/suffix_tree.html}.
-Besides, we used the XML trees of the Wikipedia dump\footnote{\url{http://dumps.wikimedia.org/enwiki/20150112/enwiki-20150112-pages-articles.xml.bz2} (January 12, 2015)} ({\tt wiki}, 498,753,914 parentheses) and OpenStreetMap dump\footnote{\url{http://wiki.openstreetmap.org/wiki/Planet.osm} (January 10, 2015)} ({\tt osm}, 4,675,776,358 parentheses). We also include a complete binary tree of depth 30 ({\tt ctree}, 2,147,483,644 parentheses).
+We tested our algorithm on five inputs.
+The first two were suffix trees of the DNA ({\tt dna}, 1,154,482,174
+parentheses), and protein ({\tt prot}, 670,721,006 parentheses) data from the
+Pizza \& Chili corpus\footnote{\url{http://pizzachili.dcc.uchile.cl}}.
+These suffix tree were constructed using code from
+\url{http://www.daimi.au.dk/~mailund/suffix_tree.html}.
+The next two inputs were XML trees of the Wikipedia
+dump\footnote{\url{http://dumps.wikimedia.org/enwiki/20150112/enwiki-20150112-pages-articles.xml.bz2} (January 12, 2015)}
+({\tt wiki}, 498,753,914 parentheses) and OpenStreetMap
+dump\footnote{\url{http://wiki.openstreetmap.org/wiki/Planet.osm} (January 10,
+  2015)} ({\tt osm}, 4,675,776,358 parentheses).
+The final input was a complete binary tree of depth 30 ({\tt ctree},
+2,147,483,644 parentheses).
 
-The experiments were carried out on a machine with four AMD
+The experiments were carried out on a machine with four 16-core AMD
 Opteron\texttrademark{} 6278 processors clocked at 2.4GHz,
-with 16 cores per processor, 64KB of L1 cache per core, 2MB of L2 cache shared by two cores,
-and 6MB of L3 cache shared by 8 cores.
-In total, we had 64 cores at our disposal.
+with 64KB of L1 cache per core, 2MB of L2 cache shared
+between two cores, and 6MB of L3 cache shared between 8 cores.
 The machine had 189GB of DDR3 RAM, clocked at 1333MHz.
 
 The running times of the algorithms were measured using
 the high-resolution (nanosecond) C functions in {\tt <time.h>}.
 Memory consumption was measured using the tools provided by
-{\tt malloc\_count} \cite{malloc-count}. In our experiments, the
-chunk size $s$ and the arity $k$ were fixed at 256 and 2, respectively.
+{\tt malloc\_count} \cite{malloc-count}.
+In our experiments, the chunk size $s$ and the arity $k$ were fixed at 256 and
+2, respectively.

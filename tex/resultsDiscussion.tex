@@ -1,250 +1,125 @@
-Table~\ref{tbl:parallelTimes} shows the wall-clock time results obtained by
-our {\tt psta} algorithm and state-of-the-art implementations {\tt libcds} and {\tt sdsl}, over different data sets.
-We repeated each experiment three non-consecutive times and recorded the minimum
-running time, assuming that slightly larger values of any given
-experiment are just ``noise'' from external processes such as
-operating system and networking tasks.
-Figure~\ref{fig:speedup} shows the speed-up for {\tt ctree} and {\tt osm} data sets. In the figure,
-{\tt psta-ctree} and {\tt psta-osm} represent the speed-up for both data sets, considering the sequential
-{\tt psta} algorithm ($p=1$) over the parallel {\tt psta} algorithm, meanwhile {\tt sdsl-ctree} and {\tt sdsl-osm}
-represent the speed-up considering the faster state-of-the-art implementation, {\tt sdsl}, over the parallel {\tt psta} algorithm.
+\subsubsection{Running time and speed-up.}
 
-First note that {\tt psta} outperformed {\tt libcds} by an order of
-magnitude even on a single core. There are two reasons for this:
-first, \verb+libcds+ implements a different version of \verb+RMMT+
-whereby it builds {\em rank} and {\em select} structures, while
-\verb+psta+ and \verb+sdsl+ do not\footnote{They are actually not part
-  of the original proposal by
-  \cite{Navarro:2014:FFS:2620785.2601073}.}. This makes the whole
-process costlier. Second, as we allowed {\tt psta} to utilize more
-cores, its advantage over {\tt libcds} only increased because {\tt
-  libcds} is a purely sequential program.  {\tt sdsl} was about 1.5
-times faster than {\tt psta} on a single core, but already using two
-cores {\tt psta} started to be faster than {\tt sdsl}, again because
-{\tt sdsl} is a purely sequential program.  The advantage of {\tt
-  sdsl} over {\tt psta} on a single core, in spite of implementing
-essentially the same algorithm, can be attributed to (1) lack of
+Table~\ref{tbl:parallelTimes} shows the wall-clock times achieved by
+{\tt psta}, {\tt libcds}, and {\tt sdsl} on different inputs.
+Each time is the minimum achieved over three non-consecutive runs, reflecting
+our assumption that slightly increased running times are just
+``noise'' from external processes such as operating system and networking tasks.
+Figure~\ref{fig:speedup} shows the speed-up for the {\tt ctree} and {\tt osm}
+inputs compared to the running times of {\tt psta} on a single core and
+of {\tt sdsl}.
+
+{\tt psta} on a single core and {\tt sdsl} outperformed {\tt libcds} by an order
+of magnitude.
+One of the reasons for this is that {\tt libcds} implements a different version
+of {\tt RMMT} including {\em rank} and {\em select} structures, while
+{\tt psta} and {\tt sdsl} do not.
+Constructing these structures is costly.
+On a single core {\tt sdsl} was about 1.5 times faster than {\tt psta}, but
+neither {\tt sdsl} nor {\tt libcds} were able to take advantage of multiple
+cores, so {\tt psta} outperformed both of them starting at $p = 2$.
+The advantage of {\tt sdsl} over {\tt psta} on a single core, in spite of
+implementing essentially the same algorithm, can be attributed to (1) lack of
 tuning of {\tt psta} and (2) some overhead with running parallel code
-on a single core, which {\tt sdsl} avoids by being a purely sequential
-program.
-%
-  {\noindent
-  \begin{minipage}{\textwidth}
-  \begin{minipage}[b]{0.48\textwidth}
-      \begin{tabular}{c|rrrrr}
-       $p$ & {\tt wiki} & {\tt prot} & {\tt dna} & {\tt ctree} & {\tt osm}\\
-       %   $(n)$ & (498,753,915) & (670,721,005) & (1,154,482,174) & (2,147,483,644) & (4,675,776,358)\\
-        \hline
-        \hline
-        {\tt libcds} & 33.16 & 44.24 & 75.87 & 140.41 & 339.21 \\
-        {\tt sdsl} & 1.93 & 2.66 & 4.57 & 8.35 & 18.10 \\
-        \hline
-        1 & 2.89 & 4.22 & 7.21 & 12.16 & 30.60 \\
-        2 & 1.44 & 2.13 & 3.64 & 6.15 & 15.43 \\
-        4 &  .73 & 1.10 & 1.87 & 3.18 & 7.98 \\
-        8 &  .37 &  .57 &  .98 & 1.59 & 4.14 \\
-%        12 &  .31 &  .44 &  .72 & 1.15 & 3.07 \\
-        16 &  .25 &  .35 &  .58 &  .86 & 2.21 \\
-%        20 &  .23 &  .32 &  .55 &  .76 & 1.83 \\
-%        24 &  .21 &  .28 &  .46 &  .69 & 1.72 \\
-%        28 &  .18 &  .28 &  .45 &  .63 & 1.55 \\
-        32 &  .18 &  .25 &  .39 &  .63 & 1.33 \\
-%        36 &  .16 &  .25 &  .39 &  .55 & 1.33 \\
-%        40 &  .18 &  .26 &  .35 &  .51 & 1.27 \\
-%        44 &  .17 &  .27 &  .35 &  .49 & 1.14 \\
-%        48 &  .22 &  .28 &  .38 &  .53 & 1.21 \\
-%        52 &  .24 &  .26 &  .33 &  .46 & 1.09 \\
-%        56 &  .21 &  .28 &  .39 &  .49 & 1.02 \\
-%        60 &  .28 &  .29 &  .39 &  .46 & 1.04 \\
-        64 &  .27 &  .29 &  .39 &  .48 & 1.01 \\
-         \hline
-      \end{tabular}
-      \captionof{table}{Running times (seconds) of {\tt PSTA} algorithm and state-of-the-art implementations.}
-      \label{tbl:parallelTimes}
-    \end{minipage}
-    \begin{minipage}[b]{0.51\textwidth}
-%      \centering
-      \includegraphics[scale=0.5]{./images/speedup}
-      \captionof{figure}{Relative speed-up achieved on {\tt ctree} and {\tt osm} data sets.}
-      \label{fig:speedup}
-    \end{minipage}
+on a single core.
+
+\begin{figure}
+  \begin{minipage}[b]{0.47\textwidth}
+    \setlength{\tabcolsep}{0pt}
+    \begin{tabular}{c@{\hspace{1em}}r@{ }r@{ }r@{ }r@{ }r}
+      \toprule
+      $p$ & {\tt wiki} & {\tt prot} & {\tt dna} & {\tt ctree} & {\tt osm}\\
+      \midrule
+      {\tt libcds} & 33.16 & 44.24 & 75.87 & 140.41 & 339.21 \\
+      {\tt sdsl} & 1.93 & 2.66 & 4.57 & 8.35 & 18.10 \\
+      \midrule
+      1 & 2.89 & 4.22 & 7.21 & 12.16 & 30.60 \\
+      2 & 1.44 & 2.13 & 3.64 & 6.15 & 15.43 \\
+      4 &  .73 & 1.10 & 1.87 & 3.18 & 7.98 \\
+      8 &  .37 &  .57 &  .98 & 1.59 & 4.14 \\
+      16 &  .25 &  .35 &  .58 &  .86 & 2.21 \\
+      32 &  .18 &  .25 &  .39 &  .63 & 1.33 \\
+      64 &  .27 &  .29 &  .39 &  .48 & 1.01 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}%
+  \hspace{\stretch{1}}%
+  \begin{minipage}[c]{0.5\textwidth}
+    \leavevmode\rlap{\includegraphics[width=1.04\textwidth]{./images/speedup}}
+  \end{minipage}\\[1ex]
+  \leavevmode\begin{minipage}[t]{0.47\textwidth}
+    \captionof{table}{Running times of {\tt PSTA}, {\tt libcds}, and {\tt sdsl}
+      in seconds.\label{tbl:parallelTimes}}
+  \end{minipage}%
+  \hspace{\stretch{1}}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \captionof{figure}{Speed-up on {\tt ctree} and {\tt osm}
+      data sets.\label{fig:speedup}}
   \end{minipage}
-      }
-%
-%\begin{minipage}{\textwidth}
-%    \begin{minipage}[b]{0.48\hsize}\centering
-%      \begin{tabular}{c|rrrrr}
-%       $p$ & {\tt wiki} & {\tt prot} & {\tt dna} & {\tt ctree} & {\tt osm}\\
-%       %   $(n)$ & (498,753,915) & (670,721,005) & (1,154,482,174) & (2,147,483,644) & (4,675,776,358)\\
-%        \hline
-%        \hline
-%        {\tt libcds} & 33.12 & 44.16 & 75.81 & 140.97 & 26.97 \\
-%        {\tt sdsl} & 1.93 & 2.66 & 4.57 & 8.35 & 18.10 \\
-%        1 & 2.89 & 4.22 & 7.21 & 12.16 & 30.60 \\
-%        4 &  .73 & 1.10 & 1.87 & 3.18 & 7.98 \\
-%        8 &  .37 &  .57 &  .98 & 1.59 & 4.14 \\
-%%        12 &  .31 &  .44 &  .72 & 1.15 & 3.07 \\
-%        16 &  .25 &  .35 &  .58 &  .86 & 2.21 \\
-%%        20 &  .23 &  .32 &  .55 &  .76 & 1.83 \\
-%%        24 &  .21 &  .28 &  .46 &  .69 & 1.72 \\
-%%        28 &  .18 &  .28 &  .45 &  .63 & 1.55 \\
-%        32 &  .18 &  .25 &  .39 &  .63 & 1.33 \\
-%%        36 &  .16 &  .25 &  .39 &  .55 & 1.33 \\
-%%        40 &  .18 &  .26 &  .35 &  .51 & 1.27 \\
-%%        44 &  .17 &  .27 &  .35 &  .49 & 1.14 \\
-%%        48 &  .22 &  .28 &  .38 &  .53 & 1.21 \\
-%%        52 &  .24 &  .26 &  .33 &  .46 & 1.09 \\
-%%        56 &  .21 &  .28 &  .39 &  .49 & 1.02 \\
-%%        60 &  .28 &  .29 &  .39 &  .46 & 1.04 \\
-%        64 &  .27 &  .29 &  .39 &  .48 & 1.01 \\
-%         \hline
-%      \end{tabular}
-%      \caption{Running times (seconds) {\tt PSTA} on different data sets, using 1 up to 64 cores.}
-%      \label{tbl:parallelTimes}
-%    \end{minipage}
-%    \begin{minipage}[b]{0.5\hsize}\centering
-%%      \begin{tabular}{c|rrrrr}
-%%        & {\tt wiki} & {\tt prot} & {\tt dna} & {\tt ctree} & {\tt osm}\\
-%%        \hline
-%%        \hline
-%%        {\tt libcds} & 33.12 & 44.16 & 75.81 & 140.97 & 26.97 \\
-%%        {\tt sdsl} & 1.93 & 2.66 & 4.57 & 8.35 & 18.10 \\
-%%        \hline
-%%      \end{tabular}
-%%      \caption{Running times (seconds) of state-of-the-art implementations.}% {\tt libcds} and {\tt sdsl}.}
-%%      \label{tbl:sequetialTimes}
-%
-%      \includegraphics[scale=0.5]{./images/speedup}
-%      \caption{Relative speed-up achieved on {\tt ctree} and {\tt osm} data sets.}
-%      \label{fig:speedup}
-%        
-%    \end{minipage}
-%\end{minipage}
-%
-Up to 16 cores, the speed-up is almost linear whenever $p$ is a power
-of $2$, which is quite good for multicore
-architectures. When $p$ is not a power of $2$, speed-up is slightly
-worse. The reason is that, when $p$ is a power of $2$, {\tt psta} can
-assign exactly one subtree per thread (see Algorithm
-\ref{algo:PSTA2}), distributing the work homogeneously across cores
-and thus not requiring any work stealing.  When the number of threads
-is not a power of two, some threads have to process more than one
-subtree and other threads process only one, which degrades
-performance.  Nevertheless, due to work stealing, no core sits idle
-for long and the slight performance degradation is due to the overhead
-of work stealing.
+\end{figure}
 
-The general performance degradation beyond 16 cores is most likely
-due to the architecture of the machine we ran our experiments on. The
-4 processors on this machine are arranged in a grid
-topology~\cite{Drepper2007}. Up to 16 cores, communication between
-the threads is limited to a single processor running these threads,
-with very little overhead. Between 16 and 32 cores require the use
-of two adjacent processors in the grid, which still keeps
-communication cost low.  Beyond 32 cores, three or four processors
-are needed and at least two of these processors are not adjacent in
-the grid, which increases the communication between the threads on
-these processors noticeably.
+Up to 16 cores, the speed-up of {\tt psta} is almost linear whenever $p$ is a
+power of $2$ and the efficiency (speed-up/$p$) is 75\% or higher.
+This is very good for multicore architectures.
+When $p$ is not a power of $2$, speed-up is slightly worse.
+The reason is that, when $p$ is a power of $2$, {\tt psta} can assign exactly
+one subtree to each thread (see Algorithm \ref{algo:PSTA2}), distributing the
+work homogeneously across cores without any work stealing.
+When the number of threads is not a power of two, some threads have to process
+more than one subtree and other threads process only one, which degrades
+performance due to the resulting overhead of work stealing.
 
-Besides the topology of the processors, the input size influences the general
-performance. When the input is large, as in {\tt osm} and {\tt ctree}, the speedup
-grows constantly along to the number of cores. However, when the input is smaller, but
-still big, the speedup stops growing. For example, the best speedup for
-{\tt wiki} is reached at $p=36$, meanwhile for {\tt osm} is at $p=64$. The reason
-of this is the amount of work that each thread has to do. When the input is small and
-the number of threads is high, there is not enough work for each thread to
-obtain a good speed-up. Additionally, for $p = 64$, the efficiency of {\tt psta} drops.
-This is likely because, on our 64-core machine, less than
-64 threads can execute on their own dedicated cores without
-interfering with OS processes, which can run on the 64th core. When
-using 64 threads, the threads of our program start to compete with OS
-processes for the available cores, which degrades performance.
-%
-%Since {\tt psta} generates tasks that work on different memory
-%regions, the generated cache misses \Leo{false sharing is misses} do
-%not degrade the performance. The same effect is present on
-%\emph{Domain Decomposition Algorithms}. Although the decomposition of
-%the {\tt RMMT} was not evident, we could produce a decomposition that
-%generated a competitive algorithm.\Norbert{I'm not sure what exactly
-%you're saying here.  Are you saying that, if the threads were working on the
-%same memory regions, maintaining cache coherence would essentially force
-%a lot of reads from RAM because pages in cache become invalid due to writes
-%by other processors, and given that all our threads work on different memory
-%regions, this issue does not arise?}
-%	
-%\begin{table}[ht]
-%  \centering
-%  \begin{tabular}{crrrrr}
-%\hline
-%    & xml & dna & psd7003 & protein & comptree\\
-%\hline
-% \verb|psta|   &  1.46  &  1.74  & 2.78  &  3.30 & 112.01\\
-% \verb|libcds|   &  .42 &  .58 & .77 &  1.08 & 38.25\\
-% \verb|sdsl|   &  .95 &  1.31 & 1.73 &  2.41 & 76.40\\
-% \hline
-%\end{tabular}
-%\caption{Peak memory consumption of the three algorithms on the data sets
-%  from Table~\ref{tbl:speedup}, measured in MB.}
-%\label{tbl:memory_consumption}
-%\end{table}
-%
-To measure memory consumption, we monitored how much memory was allocated with
-\texttt{malloc} and released with \texttt{free} at execution time and
-recorded the peak consumption. For {\tt psta}, only was measured the consumption of
-the single-threaded code ($p = 1$). The extra memory needed
-for thread scheduling when $p > 1$ was negligible. We only measured memory allocated
-during construction of the data structure, which does not include the
-memory allocated to store the parenthesis sequence. For lack of space, we only
-report the memory consumption of {\tt ctree} and {\tt osm}. For {\tt ctree}
-the memory consumption was (in MB) 38 for {\tt libcds}, 76 for {\tt sdsl}, 112 for {\tt psta},
-and for {\tt osm}, the consumption was 85 for {\tt libcds}, 194 for {\tt sdsl}, 331 for {\tt psta}.
-Even though {\tt psta} consumes more memory than both {\tt libcds} and {\tt sdsl},
-the difference between {\tt psta} and {\tt sdsl} is a factor of less
-than two. The difference between {\tt psta} and {\tt libcds} is no
-more than a factor of four and is outweighed by the substantially
-worse performance of {\tt libcds}, even compared to the
-single-threaded version of {\tt psta}.  More importantly, a memory
-consumption of 331MB for processing a 2-billion-node tree amounts to
-less than one bit per node and, so {\tt psta} can be considered very
-space-efficient.
+There were three other factors that limited the performance of {\tt psta} in
+our experiments: network topology, input size, and resource contention with
+the OS.
 
-Part of the higher memory consumption of {\tt psta} compared to {\tt
-  libcds} and {\tt sdsl} stems from the allocation of $e^{\prime}$,
-$m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ arrays to store the
-partial excess values in the algorithm.  Storing these values is a key
-factor that helps {\tt psta} to achieve very good performance.  Our
-implementation allocates 16 bits per excess value in these arrays.  It
-would be possible to use a simplification of Algorithm
-\ref{algo:PSTA1} to calculate the depth $d$ of the input sequence (the
-maximum excess value) and then allocate only $\lg d$ bits per excess
-value to reduce the space overhead of storing these areas and improve
-performance further by reducing the memory bandwidth required to read
-and write these arrays.
-%\begin{table*}[ht]
-%  \centering
-%  \begin{tabular}{crrrrrrrrrrrrrrr}
-%    \hline
-%    p & XML  & DNA  & psd7003 & Proteins & Concat & CompTree \\
-%    \hline
-%    1       & 0.60 & 0.64 & 0.63    & 0.61     & 0.62   & 0.69     \\
-%    4       & 2.30 & 2.48 & 2.41    & 2.41     & 2.43   & 2.62     \\
-%    8       & 4.36 & 4.67 & 4.21    & 4.60     & 4.55   & 5.24     \\
-%    12      & 4.63 & 5.01 & 4.87    & 5.88     & 6.31   & 7.23     \\
-%    16      & 4.32 & 5.38 & 4.59    & 5.21     & 6.51   & 9.74     \\
-%    20      & 4.38 & 5.38 & 5.07    & 7.29     & 7.66   & 10.93    \\
-%    24      & 3.51 & 4.58 & 5.69    & 5.98     & 6.03   & 12.13    \\
-%    28      & 2.73 & 3.71 & 3.42    & 4.02     & 6.90   & 13.24    \\
-%    32      & 2.14 & 3.24 & 4.03    & 3.58     & 7.01   & 13.22    \\
-%    36      & 4.16 & 6.29 & 2.59    & 4.73     & 5.72   & 15.23    \\
-%    40      & 1.63 & 3.11 & 4.09    & 3.96     & 5.19   & 16.34    \\
-%    44      & 1.98 & 2.07 & 3.36    & 3.23     & 4.60   & 16.97    \\
-%    48      & 1.15 & 2.85 & 2.33    & 3.60     & 5.60   & 15.82    \\
-%    52      & 1.30 & 1.82 & 1.78    & 2.31     & 5.01   & 17.94    \\
-%    56      & 1.01 & 1.35 & 2.13    & 3.10     & 3.54   & 17.07    \\
-%    60      & 1.03 & 1.67 & 1.59    & 1.85     & 3.82   & 18.30    \\
-%    64      & 1.34 & 1.44 & 2.11    & 2.58     & 2.68   & 17.39    \\
-%    \hline\hline
-%\end{tabular}
-%\caption{Speedup of {\tt psta} over the state-of-the-art implementation {\tt sdls}}
-%\label{tbl:speedup}
-%\end{table*}
+\textit{Topology.}
+The four processors on our machine were connected in a grid
+topology~\cite{Drepper2007}.
+Up to 32 threads, all threads can be run on a single processor or on two
+adjacent processors in the grid, which keeps the cost of communication between
+threads low.
+Beyond 32 threads, at least three processor are needed and
+at least two of them are not adjacent in the grid.
+This increases the cost of communication between threads on these processors
+noticeably.
+
+\textit{Input size.}
+For the two largest inputs we tested, {\tt osm} and {\tt ctree}, speed-up
+kept increasing as we added more cores.
+For {\tt wiki}, however, the best speed-up was achieved with 36 cores.
+Beyond this, the amount of work to be done per thread was small enough that
+the scheduling overhead caused by additional threads started to outweigh the
+benefit of reducing the processing time per thread further.
+
+\textit{Resource contention.}
+For $p < 64$, at least one core on our machine was available to OS processes,
+which allowed the remaining cores to be used exclusively by {\tt psta}.
+For $p = 64$, {\tt psta} competed with the OS for available cores.
+This had a detrimental effect on the efficiency of {\tt psta} for $p = 64$.
+
+\subsubsection{Memory consumption.}
+
+We measured the amount of working memory (i.e., memory not occupied by the raw
+parenthesis sequence) used by {\tt psta}, {\tt libcds}, and {\tt sdsl}.
+We did this by monitoring how much memory was allocated/released with
+\texttt{malloc}/\texttt{free} and recording the peak consumption.
+For {\tt psta}, we only measured the consumption for $p = 1$.
+The extra memory needed for thread scheduling when $p > 1$ was negligible.
+Due to lack of space, we report the results only for the two largest inputs,
+{\tt ctree} and {\tt osm}.
+For {\tt ctree}, {\tt psta}, {\tt libcds}, and {\tt sdsl} used 112MB, 38MB, and
+76MB of memory, respectively.
+For {\tt osm}, they used 331MB, 85MB, and 194MB, respectively.
+Even though {\tt psta} uses more memory than both {\tt libcds} and {\tt sdsl},
+the difference between {\tt psta} and {\tt sdsl} is a factor of less than two.
+The difference between {\tt psta} and {\tt libcds} is no more than a factor of
+four and is outweighed by the substantially worse performance of {\tt libcds}.
+More importantly, 331MB for processing a 2-billion-node tree amounts to less
+than one bit per node and, so {\tt psta} can be considered very space-efficient.
+
+Part of the higher memory usage of {\tt psta} stems from the allocation of
+$e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ arrays to store the
+partial excess values in the algorithm.
+Storing these values, however, is a key factor that helps {\tt psta} to achieve
+very good performance.

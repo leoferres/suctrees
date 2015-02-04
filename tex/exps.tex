@@ -1,21 +1,17 @@
 To evaluate the performance of our {\tt PSTA} algorithm, we compare it against
-{\tt libcds}~\cite{libcds} and {\tt
-  sdsl}~\cite{sdsl}.
-Both libraries implement the {\tt RMMT} which supports navigational operations in $O(\lg n)$ time.
-They also assume that the input tree is given as a parenthesis sequence, as we
-do here.
+{\tt libcds}~\cite{libcds} and {\tt sdsl}~\cite{sdsl}, which are
+state-of-the-art implementations of the {\tt RMMT}.
+Both assume that the input tree is given as a parenthesis sequence, as we do
+here.
 Our implementation of the {\tt PSTA} algorithm deviates from the description in
 Section~\ref{subsec:multicoreSTAlgorithm} in that the prefix sum computation in
 line~27 of the algorithm is done sequentially in our implementation.
-This changes the running time of the algorithm to $O(n/p + p)$ but simplifies the
-implementation.
+This changes the running time of the algorithm to $O(n/p + p)$ but simplifies
+the implementation.
 Since $p \ll n/p$ for the input sizes we are interested in and the numbers of
 processors available on current multicore systems, this simplification has an
-insignificant impact on the running time of our algorithm. Besides, the results of
-Patrascu explained in section \ref{subsec:idea} were not implemented, because they
-are not practical. Available implementations of
-the {\tt RMMT} do not implement this part either. There exist slight differences between
-our implementation and {\tt libcds} implementation. For each chunk, {\tt libcds} stores
-the \emph{local} excess value, that is, the excess value considering only the chunk, but not
-the excess values before the chunk. Meanwhile, our implementation consider the global excess
-value, as was introduced in Section \ref{subsec:suctrees}.
+insignificant impact on the running time of our algorithm.
+Moreover, the results of Patrascu explained in section \ref{subsec:idea} were
+not implemented, because they are not practical.\Norbert{Patrascu is not mentioned
+anywhere in Section 3.1 nor in the references. ???}
+Available implementations of the {\tt RMMT} do not implement this part either.
