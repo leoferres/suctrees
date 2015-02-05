@@ -6,22 +6,21 @@ Blocks (\url{threadingbuildingblocks.org}).
 
 In this model, a {\em multithreaded computation} is modelled as a directed
 acyclic graph (DAG) $G=(V,E)$ where the set of vertices $V$ are instructions
-and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{Notice that the
-  RAM model is a subset of the DYM model where the outdegree of every
-  vertex $v \in V$ is $1$, except the last vertex with outdegree $0$.}
+and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{The
+  RAM model is a special case of the DYM model where every vertex has in-
+  and out-degree $1$, except for two vertices with in-degree $0$ and
+  out-degree $0$, respectively.}
 The time $T_p$ needed to execute the computation on $p$ processors depends on
 two parameters of the computation: its {\em work} $T_1$ and its {\em span}
 $T_\infty$.
-Assuming each instruction takes constant time, the work is simpy the number of
-nodes (i.e., instructions) in $G$.
-Since each instruction takes constant time, it clearly takes $\Theta(T_1)$ time
-to execute $G$ on a single processor.
-More generally, $p$ processors can execute only $p$ instructions at a time, so
+The work is the running time on a single processor, which is simply the
+number of nodes (i.e., instructions) in $G$, assuming each instruction takes
+constant time.
+Since $p$ processors can execute only $p$ instructions at a time, we have
 $T_p = \Omega(T_1/p)$.
-The span is the length of the longest path in $G$.
+The span is the length of the longest path in~$G$.
 Since the instructions on this path need to be executed one after another, no
-matter how many processors we have at our disposal, we also have
-$T_p = \Omega(T_\infty)$.
+we also have $T_p = \Omega(T_\infty)$ for any $p$.
 Together, these two lower bounds give $T_p = \Omega(T_\infty + T_1/p)$ and
 work-stealing schedulers match this lower bound to within a constant factor
 (to within a factor 2 from the optimal
