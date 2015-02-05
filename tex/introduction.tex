@@ -45,10 +45,11 @@ Combined with the fast parallel construction algorithm presented in this
 paper, it provides an excellent tool for manipulating very large trees in
 many applications.
 
-We implemented our algorithm and tested its performance on a number of
-real-world input trees having billions of nodes.
-Our experiments showed that our algorithm achieves good speed-up on up to
-64 cores and likely beyond.
+We implemented and tested our algorithm on a number of real-world input trees
+having billions of nodes.
+Our experiments show that our algorithm run on a single core is competitive with
+state-of-the-art sequential constructions of the {\tt RMMT} structure and
+achieves good speed-up on up to 64 cores and likely beyond.
 
 The remainder of this paper is organized as follows:
 Section~\ref{sec:relwork} gives a brief overview of the {\tt RMMT} structure,
@@ -59,7 +60,6 @@ and reviews the dynamic multithreading model, which we use to analyze the
 theoretical running time of our algorithm.
 Section~\ref{sec:multicoreST} describes our parallel algorithm for constructing
 the {\tt RMMT} structure.
-Section~\ref{sec:exps} discusses our experimental results, including a
-description of the hardware and data sets we used for the evaluation.
-Section~\ref{sec:conclusion} offers concluding remarks and discusses some
+Section~\ref{sec:exps} discusses our experimental setup and results.
+Section~\ref{sec:conclusion} offers concluding remarks and discusses
 future work.
