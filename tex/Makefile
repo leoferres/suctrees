@@ -51,7 +51,11 @@ sea2015.bbl: sigproc.bib
 
 sea2015.bbl.once:
 	echo "BIBTEX $(@:.once=)"
-	bibtex $(@:.bbl.once=.aux) > /dev/null
+	if [ -f $(@:.bbl.once=.aux) ]; then \
+	  bibtex $(@:.bbl.once=.aux) > /dev/null; \
+	else \
+	  touch $(@:.once=); \
+	fi
 
 sea2015.bbl.maybe:
 	if [[ -f $(@:.bbl.maybe=.refs) ]]; then                                   \

@@ -9,14 +9,8 @@
 % Conclusions              1/3       1/3
 % References               1         1 + eps
 
-% This is LLNCS.DEM the demonstration file of
-% the LaTeX macro package from Springer-Verlag
-% for Lecture Notes in Computer Science,
-% version 2.4 for LaTeX2e as of 16. April 2010
-%
 \documentclass[runningheads]{llncs}
 \usepackage{graphicx}
-%\usepackage{bm}
 \usepackage{epstopdf}
 \usepackage{url}
 \usepackage[usenames]{xcolor}
@@ -39,37 +33,49 @@
 \begin{document}
 
 
-\title{Parallel Construction of Succinct Trees\thanks{This work was supported in part by Jos\'e Fuentes-Sepúlveda's scholarship, granted by Government of Canada.}}
+\title{Parallel Construction of Succinct Trees}
 \titlerunning{Parallel Construction of Succinct Trees}
 
-\author{Leo Ferres\inst{1} \and Jos\'e Fuentes-Sep\'ulveda\inst{1} \and Meng He\inst{2} \and Norbert Zeh\inst{2}}
+\author{Leo Ferres\inst{1}
+  \and
+  Jos\'e Fuentes-Sep\'ulveda\inst{1}\fnmsep\thanks{Supported
+    in part by a scholarship from the Goverment of Canada.}
+  \and
+  Meng He\inst{2}\fnmsep\thanks{Supported by NSERC.}
+  \and
+  Norbert Zeh\inst{2}\fnmsep\thanks{Supported by NSERC and the Canada Research
+    Chairs programme.}}
 
-\authorrunning{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh} % abbreviated author list (for running head)
-%
-%%%% list of authors for the TOC (use if author list has to be modified)
+\authorrunning{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
+
 \tocauthor{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
-%
-\institute{Department of Computer Science, Universidad de Concepci\'on, Chile,\\
-\email{\{lferres,jfuentess\}@udec.cl},
-\and
-Faculty of Computer Science, Dalhousie University, Canada,\\
-\email{\{mhe,nzeh\}@cs.dal.ca}}
-  
 
-\maketitle              % typeset the title of the contribution
+\institute{Department of Computer Science, Universidad de Concepci\'on, Chile,\\
+  \email{\{lferres,jfuentess\}@udec.cl},
+  \and
+  Faculty of Computer Science, Dalhousie University, Canada,\\
+  \email{\{mhe,nzeh\}@cs.dal.ca}}
+
+\maketitle
 
 \begin{abstract}
-Succinct representations of trees have been an elegant solution to make large trees fit in main memory while still supporting
-navigational operations in constant time. However, the construction time of succinct trees remains a computational bottleneck. In this
-paper, we introduce a practical parallel algorithm that improves the state of the art in succinct tree construction. Given a tree on
-$n$ nodes stored as a sequence of balanced parentheses, the proposed algorithm can build a succinct tree representation in
-$O(n/p+\lg p)$ time, where $p$ is the number of available processors. The constructed representation occupies $2n + o(n)$
-bits of storage and supports a rich set of navigational operations in $O(\lg n)$ time. We tested the algorithm on a $64$-core
-machine and on inputs of different sizes.
-In these experiments, it achieved good parallel speedup.
-We introduce another algorithm that takes $O(n/p + \lg p)$ time to construct
-the balanced parenthesis representation of the input tree required by our
-succinct tree construction algorithm.
+  Succinct representations of trees have been an elegant solution to make large
+  trees fit in main memory while still supporting navigational operations in
+  constant time.
+  However, the construction time of succinct trees remains a bottleneck.
+  In this paper, we introduce a practical parallel algorithm that improves the
+  state of the art in succinct tree construction.
+  Given a tree on $n$ nodes stored as a sequence of balanced parentheses, the
+  proposed algorithm can build a succinct tree representation in $O(n/p+\lg p)$
+  time, where $p$ is the number of available processors.
+  The constructed representation uses $2n + o(n)$
+  bits of space and supports a rich set of operations in $O(\lg n)$ time.
+  We tested the algorithm on a $64$-core machine and on inputs of different
+  sizes.
+  In these experiments, it achieved good parallel speedup.
+  We introduce another algorithm that takes $O(n/p + \lg p)$ time to construct
+  the balanced parenthesis representation of the input tree required by our
+  succinct tree construction algorithm.
 \end{abstract}
 %
 
