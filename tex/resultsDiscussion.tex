@@ -1,9 +1,9 @@
 \subsubsection{Running time and speed-up.}
 
-Table~\ref{tbl:parallelTimes} shows the wall-clock times achieved by
+Table~\ref{tbl:parallelTimes} shows the wall clock times achieved by
 {\tt psta}, {\tt libcds}, and {\tt sdsl} on different inputs.
 Each time is the minimum achieved over three non-consecutive runs, reflecting
-our assumption that slightly increased running times are just
+our assumption that slightly increased running times are the result of
 ``noise'' from external processes such as operating system and networking tasks.
 Figure~\ref{fig:speedup} shows the speed-up for the {\tt ctree} and {\tt osm}
 inputs compared to the running times of {\tt psta} on a single core and
@@ -15,7 +15,7 @@ One of the reasons for this is that {\tt libcds} implements a different version
 of {\tt RMMT} including {\em rank} and {\em select} structures, while
 {\tt psta} and {\tt sdsl} do not.
 Constructing these structures is costly.
-On a single core {\tt sdsl} was about 1.5 times faster than {\tt psta}, but
+On a single core, {\tt sdsl} was about 1.5 times faster than {\tt psta}, but
 neither {\tt sdsl} nor {\tt libcds} were able to take advantage of multiple
 cores, so {\tt psta} outperformed both of them starting at $p = 2$.
 The advantage of {\tt sdsl} over {\tt psta} on a single core, in spite of
@@ -59,15 +59,16 @@ on a single core.
 \end{figure}
 
 Up to 16 cores, the speed-up of {\tt psta} is almost linear whenever $p$ is a
-power of $2$ and the efficiency (speed-up/$p$) is 75\% or higher.
+power of $2$ and the efficiency (speed-up/$p$) is 70\% or higher, except for
+{\tt ctree} on 32 cores.
 This is very good for multicore architectures.
-When $p$ is not a power of $2$, speed-up is slightly worse.
+When $p$ is not a power of~$2$, speed-up is slightly worse.
 The reason is that, when $p$ is a power of $2$, {\tt psta} can assign exactly
 one subtree to each thread (see Algorithm \ref{algo:PSTA2}), distributing the
 work homogeneously across cores without any work stealing.
 When the number of threads is not a power of two, some threads have to process
 more than one subtree and other threads process only one, which degrades
-performance due to the resulting overhead of work stealing.
+performance due to the overhead of work stealing.
 
 There were three other factors that limited the performance of {\tt psta} in
 our experiments: network topology, input size, and resource contention with
@@ -98,25 +99,25 @@ which allowed the remaining cores to be used exclusively by {\tt psta}.
 For $p = 64$, {\tt psta} competed with the OS for available cores.
 This had a detrimental effect on the efficiency of {\tt psta} for $p = 64$.
 
-\subsubsection{Memory consumption.}
+\subsubsection{Memory usage.}
 
 We measured the amount of working memory (i.e., memory not occupied by the raw
 parenthesis sequence) used by {\tt psta}, {\tt libcds}, and {\tt sdsl}.
 We did this by monitoring how much memory was allocated/released with
-\texttt{malloc}/\texttt{free} and recording the peak consumption.
-For {\tt psta}, we only measured the consumption for $p = 1$.
+\texttt{malloc}/\texttt{free} and recording the peak usage.
+For {\tt psta}, we only measured the memory usage for $p = 1$.
 The extra memory needed for thread scheduling when $p > 1$ was negligible.
 Due to lack of space, we report the results only for the two largest inputs,
 {\tt ctree} and {\tt osm}.
-For {\tt ctree}, {\tt psta}, {\tt libcds}, and {\tt sdsl} used 112MB, 38MB, and
-76MB of memory, respectively.
+For the {\tt ctree} input, {\tt psta}, {\tt libcds}, and {\tt sdsl} used 112MB,
+38MB, and 76MB of memory, respectively.
 For {\tt osm}, they used 331MB, 85MB, and 194MB, respectively.
 Even though {\tt psta} uses more memory than both {\tt libcds} and {\tt sdsl},
 the difference between {\tt psta} and {\tt sdsl} is a factor of less than two.
 The difference between {\tt psta} and {\tt libcds} is no more than a factor of
 four and is outweighed by the substantially worse performance of {\tt libcds}.
 More importantly, 331MB for processing a 2-billion-node tree amounts to less
-than one bit per node and, so {\tt psta} can be considered very space-efficient.
+than one bit per node, so {\tt psta} can be considered very space-efficient.
 
 Part of the higher memory usage of {\tt psta} stems from the allocation of
 $e^{\prime}$, $m^{\prime}$, $M^{\prime}$ and $n^{\prime}$ arrays to store the

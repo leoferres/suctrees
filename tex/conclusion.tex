@@ -2,16 +2,15 @@ In this paper, we demonstrated that it is possible to improve the construction
 time of succinct trees using multicore parallelism.
 We introduced a practical algorithm that takes $O(n/p+\lg p)$ time to construct
 a succinct representation of a tree with $n$ nodes using $p$ threads.
-This representation supports a rich set of navigational operations in $O(\lg n)$
-time.
+This representation supports a rich set of operations in $O(\lg n)$ time.
 Our algorithm substantially outperformed state-of-the-art sequential
 constructions of this data structure, achieved very good speed-up up to 64
 cores, and is to the best of our knowledge the first parallel construction
-algorithm of a succinct tree representation.
+algorithm of a succinct representation of ordinal trees.
 
 While we focused on representing static trees succinctly in this paper, the
-approach we have taken may also extend to the construction of dynamic succinct
-trees (e.g., \cite{Navarro:2014:FFS:2620785.2601073}), of succinct
-representations of labelled trees, and of other succinct data structures that
-use succinct trees as building blocks (e.g., the succinct representation of
+approach we have taken may also extend to the construction of \emph{dynamic}
+succinct trees (e.g., \cite{Navarro:2014:FFS:2620785.2601073}), of succinct
+representations of \emph{labelled} trees, and of other succinct data structures
+that use succinct trees as building blocks (e.g., the succinct representation of
 planar graphs).
