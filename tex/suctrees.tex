@@ -103,7 +103,7 @@ Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$ of $P$ that is
 the concatenation of the chunks corresponding to the descendant leaves of $u$.
 Since the {\tt RMMT} is a complete tree, we do not need store its structure
 explicitly.
-Instead, we index its nodes as in a $k$-ary heap and refer to each node by
+Instead, we index its nodes as in a binary heap and refer to each node by
 its index.
 The representation of the {\tt RMMT} consists of four arrays $e'$, $m'$,
 $M'$, and $n'$, each of length equal to the number of nodes in the {\tt RMMT}.
@@ -119,7 +119,7 @@ value $m'[i]$.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[scale=0.19]{./images/Range-min-max-tree.png}
+  \includegraphics[scale=0.26]{./images/Range-min-max-tree.png}
   \caption{Range min-max tree}
   \label{fig:RangeMinMaxTree}
 \end{figure}
