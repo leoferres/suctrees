@@ -1,55 +1,42 @@
-{\em Dynamic multithreading} (DYM) \cite[Chapter~27]{Cormen2009} is a
-model of parallel computation that is faithful to several industry standards
-such as Intel's CilkPlus (\url{cilkplus.org}), OpenMP Tasks
-(\url{openmp.org/wp}), and Threading Building
-Blocks (\url{threadingbuildingblocks.org}).
+In DyM \cite[Chapter~27]{Cormen2009}, a {\em multithreaded
+computation} is modelled as a directed acyclic graph (DAG) $G=(V,E)$
+where the set of vertices $V$ are instructions and $(u,v) \in E$ if
+$u$ must be executed before $v$.  The time $T_p$ needed to execute the
+computation on $p$ cores depends on two parameters of the computation:
+its {\em work} $T_1$ and its {\em span} $T_\infty$.  The work is the
+running time on a single core, which is simply the number of nodes
+(i.e., instructions) in $G$, assuming each instruction takes constant
+time.  Since $p$ cores can execute only $p$ instructions at a time, we
+have $T_p = \Omega(T_1/p)$.  The span is the length of the longest
+path in~$G$.  Since the instructions on this path need to be executed
+one after another, no we also have $T_p = \Omega(T_\infty)$ for any
+$p$.  Together, these two lower bounds give $T_p = \Omega(T_\infty +
+T_1/p)$ and work-stealing schedulers match this lower bound to within
+a constant factor (to within a factor 2 from the optimal
+performance)~\cite{Blumofe:1999:SMC:324133.324234}.  The degree to
+which an algorithm can take advantage of the presence of $p > 1$ cores
+is captured by its {\em speed-up} $T_1 / T_p$ and its {\em
+parallelism} $T_1 / T_\infty$.  In the absence of cache effects, the
+best speed-up one can hope for is $p$, known as {\em linear speed-up}.
+Parallelism provides an upper bound on the achievable speed-up
+independent of the number of available cores.
 
-In this model, a {\em multithreaded computation} is modelled as a directed
-acyclic graph (DAG) $G=(V,E)$ where the set of vertices $V$ are instructions
-and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{The
-  RAM model is a special case of the DYM model where every vertex has in-
-  and out-degree $1$, except for two vertices with in-degree $0$ and
-  out-degree $0$, respectively.}
-The time $T_p$ needed to execute the computation on $p$ cores depends on
-two parameters of the computation: its {\em work} $T_1$ and its {\em span}
-$T_\infty$.
-The work is the running time on a single core, which is simply the
-number of nodes (i.e., instructions) in $G$, assuming each instruction takes
-constant time.
-Since $p$ cores can execute only $p$ instructions at a time, we have
-$T_p = \Omega(T_1/p)$.
-The span is the length of the longest path in~$G$.
-Since the instructions on this path need to be executed one after another, no
-we also have $T_p = \Omega(T_\infty)$ for any $p$.
-Together, these two lower bounds give $T_p = \Omega(T_\infty + T_1/p)$ and
-work-stealing schedulers match this lower bound to within a constant factor
-(to within a factor 2 from the optimal
-performance)~\cite{Blumofe:1999:SMC:324133.324234}.
-The degree to which an algorithm can take advantage of the presence of $p > 1$
-cores is captured by its {\em speed-up} $T_1 / T_p$ and its
-{\em parallelism} $T_1 / T_\infty$.
-In the absence of cache effects, the best speed-up one can hope for is $p$,
-known as {\em linear speed-up}.
-The parallelism provides an upper bound on the achievable speed-up independent
-of the number of available cores.
-
-In order to describe parallel algorithms in the DYM model, we augment sequential
-pseudocode with three keywords.
-The {\bf spawn} keyword, followed by a procedure call, indicates that the
-procedure should run in its own thread and {\em may} thus be executed in
-parallel to the thread that spawned the procedure call.
-The {\bf sync} keyword indicates that the current thread must wait for the
-termination of all the threads it has spawned before proceeding.
-It thus provides a simple barrier-style synchronization mechanism.
-Finally, {\bf parfor} is ``syntactic sugar'' for {\bf spawn}ing one thread per
-iteration in a for loop, thereby allowing these iterations to run in parallel,
-followed by a {\bf sync} operation that waits for all iterations to complete.
-In practice, the overhead is logarithmic in the number of iterations.
-If a procedure exits, either implicitly or explicitly using a {\bf return}
-statement, it implicitly performs a {\bf sync} to ensure all threads it spawned
-finish first.
-%\Norbert{Got rid of the ``strand'' stuff.
-%  It seems a technicality relevant only to the operation of work-stealing
-%  schedulers.
-%  If we actually use it in the analysis of the algorithm in Section 3, we
+To describe parallel algorithms in the DYM model, we augment
+sequential pseudocode with three keywords.  The {\bf spawn} keyword,
+followed by a procedure call, indicates that the procedure should run
+in its own thread and {\em may} thus be executed in parallel to the
+thread that spawned the procedure call.  The {\bf sync} keyword
+indicates that the current thread must wait for the termination of all
+the threads it has spawned before proceeding.  It thus provides a
+simple barrier-style synchronization mechanism.  Finally, {\bf parfor}
+is ``syntactic sugar'' for {\bf spawn}ing one thread per iteration in
+a for loop, thereby allowing these iterations to run in parallel,
+followed by a {\bf sync} operation that waits for all iterations to
+complete.  In practice, the overhead is logarithmic in the number of
+iterations.  If a procedure exits, either implicitly or explicitly
+using a {\bf return} statement, it implicitly performs a {\bf sync} to
+ensure all threads it spawned finish first.
+%\Norbert{Got rid of the ``strand'' stuff.  It seems a technicality
+%  relevant only to the operation of work-stealing schedulers.  If we
+%  actually use it in the analysis of the algorithm in Section 3, we
 %  may have to bring it back.}

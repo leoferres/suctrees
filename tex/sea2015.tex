@@ -16,6 +16,7 @@
 \usepackage[usenames]{xcolor}
 \usepackage[vlined]{algorithm2e}
 \usepackage{multirow}
+\usepackage{wrapfig}
 \usepackage{rotating}
 \usepackage{array}
 \usepackage{microtype}
@@ -27,7 +28,9 @@
 \newcommand{\Leo}[1]{{\color{blue} [[LEO:: #1]]}}
 \newcommand{\Meng}[1]{{\color{green} [[MENG:: #1]]}}
 \newcommand{\Norbert}[1]{{\color{orange} [[NORBERT:: #1]]}}
- 
+
+\newcommand{\ignore}[1]{}
+
 \input{preamble}
 
 \begin{document}
@@ -59,23 +62,22 @@
 \maketitle
 
 \begin{abstract}
-  Succinct representations of trees have been an elegant solution to make large
-  trees fit in main memory while still supporting navigational operations in
-  constant time.
-  However, the construction time of succinct trees remains a bottleneck.
-  In this paper, we introduce a practical parallel algorithm that improves the
-  state of the art in succinct tree construction.
-  Given a tree on $n$ nodes stored as a sequence of balanced parentheses, the
-  proposed algorithm can build a succinct tree representation in $O(n/p+\lg p)$
-  time, where $p$ is the number of available cores.
-  The constructed representation uses $2n + o(n)$
-  bits of space and supports a rich set of operations in $O(\lg n)$ time.
-  We tested the algorithm on a $64$-core machine and on inputs of different
-  sizes.
-  In these experiments, it achieved good parallel speedup.
-  We introduce another algorithm that takes $O(n/p + \lg p)$ time to construct
-  the balanced parenthesis representation of the input tree required by our
-  succinct tree construction algorithm.
+  Succinct representations of trees have been an elegant solution to
+  make large trees fit in main memory while still supporting
+  navigational operations in constant time.  However, the construction
+  time of succinct trees remains a bottleneck.  In this paper, we
+  introduce a practical parallel algorithm that improves the state of
+  the art in succinct tree construction.  Given a tree on $n$ nodes
+  stored as a sequence of balanced parentheses, the proposed algorithm
+  can build a succinct tree representation in $O(n/p+\lg p)$ time,
+  where $p$ is the number of available cores.  The constructed
+  representation uses $2n + o(n)$ bits of space and supports a rich
+  set of operations in $O(\lg n)$ time.  We tested the algorithm on a
+  $64$-core machine and on inputs of different sizes.  In these
+  experiments, it achieved good parallel speedup.  We introduce
+  another algorithm that takes $O(n/p + \lg p)$ time to construct the
+  balanced parenthesis representation of the input tree required by
+  our succinct tree construction algorithm.
 \end{abstract}
 %
 
@@ -100,7 +102,7 @@
 \label{subsec:suctrees}
 \input{suctrees}
 
-\subsubsection{Dynamic multithreading model.}
+\subsubsection{Dynamic multithreading model (DyM).}
 \label{subsec:dym}
 \input{dym}
 
@@ -112,17 +114,14 @@
 %%%%% MULTICORE SUCCINCT TREE %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{An Parallel Algorithm for Succinct Tree Construction}
+\section{A Parallel Algorithm for Succinct Tree Construction}
 \label{sec:multicoreST}
-\input{multicoreST}
-
+%\input{multicoreST}
 %\subsection{Parallel Succinct Tree}
 %\label{sec:PST}
-
 %\subsubsection{The idea}
 %\label{subsec:idea}
 %\input{multicoreSTIdea}
-
 %\subsubsection{Parallel Succinct Tree Algorithm}
 %\label{subsec:multicoreSTAlgorithm}
 \input{multicoreSTAlgorithm}
@@ -142,9 +141,8 @@
 \section{Experimental Results}
 \label{sec:exps}
 \input{exps}
-
-\subsection{Experimental Setup}
-\label{subsec:experimentalSetup}
+%\subsection{Experimental Setup}
+%\label{subsec:experimentalSetup}
 \input{setup}
 
 \subsection{Results and Discussion}
@@ -160,12 +158,8 @@
 \input{conclusion}
 
 \subsubsection*{Acknowledgements.}
-
-We would like to thank Diego Arroyuelo for discussions about the
-implementation of succinct trees, Roberto As\'{i}n for providing the machine
-we used in our experiments, and Rodrigo C\'{a}novas
-for helping us with reusing their data in
-\cite{Navarro:2014:FFS:2620785.2601073}.
+We would like to thank Diego Arroyuelo, Roberto As\'{i}n , and Rodrigo
+C\'{a}novas for their time and making resources available to us.
 
 \bibliographystyle{splncs03}
 \bibliography{sigproc}

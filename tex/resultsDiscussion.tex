@@ -9,19 +9,18 @@ Figure~\ref{fig:speedup} shows the speed-up for the {\tt ctree} and {\tt osm}
 inputs compared to the running times of {\tt psta} on a single core and
 of {\tt sdsl}.
 
-{\tt psta} on a single core and {\tt sdsl} outperformed {\tt libcds} by an order
-of magnitude.
-One of the reasons for this is that {\tt libcds} implements a different version
-of {\tt RMMT} including {\em rank} and {\em select} structures, while
-{\tt psta} and {\tt sdsl} do not.
-Constructing these structures is costly.
-On a single core, {\tt sdsl} was about 1.5 times faster than {\tt psta}, but
-neither {\tt sdsl} nor {\tt libcds} were able to take advantage of multiple
-cores, so {\tt psta} outperformed both of them starting at $p = 2$.
-The advantage of {\tt sdsl} over {\tt psta} on a single core, in spite of
-implementing essentially the same algorithm, can be attributed to (1) lack of
-tuning of {\tt psta} and (2) some overhead with running parallel code
-on a single core.
+The {\tt psta} algorithm on a single core and {\tt sdsl} outperformed
+{\tt libcds} by an order of magnitude.  One of the reasons for this is
+that {\tt libcds} implements a different version of {\tt RMMT}
+including {\em rank} and {\em select} structures, while {\tt psta} and
+{\tt sdsl} do not.  Constructing these structures is costly.  On a
+single core, {\tt sdsl} was about 1.5 times faster than {\tt psta},
+but neither {\tt sdsl} nor {\tt libcds} were able to take advantage of
+multiple cores, so {\tt psta} outperformed both of them starting at
+$p = 2$.  The advantage of {\tt sdsl} over {\tt psta} on a single
+core, in spite of implementing essentially the same algorithm, can be
+attributed to (1) lack of tuning of {\tt psta} and (2) some overhead
+with running parallel code on a single core.
 
 \begin{figure}
   \begin{minipage}[b]{0.47\textwidth}
