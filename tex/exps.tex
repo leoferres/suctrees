@@ -4,9 +4,9 @@ state-of-the-art implementations of the {\tt RMMT}.
 Both assume that the input tree is given as a parenthesis sequence, as we do
 here.
 Our implementation of the {\tt PSTA} algorithm deviates from the description in
-Section~\ref{subsec:multicoreSTAlgorithm} in that the prefix sum computation in
-line~27 of the algorithm is done sequentially in our implementation.
+Section~\ref{sec:multicoreST} in that the prefix sum computation in
+line~22 of the algorithm is done sequentially in our implementation.
 This changes the running time to $O(n/p + p)$ but simplifies the implementation.
 Since $p \ll n/p$ for the input sizes we are interested in and the numbers of
-processors available on current multicore systems, the impact on the running
+cores available on current multicore systems, the impact on the running
 time is insignificant.

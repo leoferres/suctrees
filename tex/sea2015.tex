@@ -67,7 +67,7 @@
   state of the art in succinct tree construction.
   Given a tree on $n$ nodes stored as a sequence of balanced parentheses, the
   proposed algorithm can build a succinct tree representation in $O(n/p+\lg p)$
-  time, where $p$ is the number of available processors.
+  time, where $p$ is the number of available cores.
   The constructed representation uses $2n + o(n)$
   bits of space and supports a rich set of operations in $O(\lg n)$ time.
   We tested the algorithm on a $64$-core machine and on inputs of different
@@ -112,22 +112,22 @@
 %%%%% MULTICORE SUCCINCT TREE %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Multicore Succinct Tree}
+\section{An Parallel Algorithm for Succinct Tree Construction}
 \label{sec:multicoreST}
 \input{multicoreST}
 
-\subsection{Parallel Succinct Tree}
-\label{sec:PST}
+%\subsection{Parallel Succinct Tree}
+%\label{sec:PST}
 
-\subsubsection{The idea}
-\label{subsec:idea}
-\input{multicoreSTIdea}
+%\subsubsection{The idea}
+%\label{subsec:idea}
+%\input{multicoreSTIdea}
 
-\subsubsection{Parallel Succinct Tree Algorithm}
-\label{subsec:multicoreSTAlgorithm}
+%\subsubsection{Parallel Succinct Tree Algorithm}
+%\label{subsec:multicoreSTAlgorithm}
 \input{multicoreSTAlgorithm}
 
-\subsubsection{Theoretical Analysis}
+\subsubsection{Theoretical Analysis.}
 \label{subsec:theoreticalAnalysis}
 \input{theoreticalAnalysis}
 
@@ -135,9 +135,6 @@
 %\label{subsec:parallelLargeTrees}
 %\input{parallelLargeTrees}
 
-\subsection{Parallel Folklore Encoding Algorithm}
-\label{subsec:parenthesesAlgorithm}
-\input{parenthesesAlgorithm}
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%% EXPERIMENTS %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -172,6 +169,15 @@ for helping us with reusing their data in
 
 \bibliographystyle{splncs03}
 \bibliography{sigproc}
+
+\newpage
+\appendix
+\begin{center}
+  \bf \Large Appendices
+\end{center}
+
+
+\input{parenthesesAlgorithm}
 
 \end{document}
 

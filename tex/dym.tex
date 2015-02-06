@@ -10,13 +10,13 @@ and $(u,v) \in E$ if $u$ must be executed before $v$.\footnote{The
   RAM model is a special case of the DYM model where every vertex has in-
   and out-degree $1$, except for two vertices with in-degree $0$ and
   out-degree $0$, respectively.}
-The time $T_p$ needed to execute the computation on $p$ processors depends on
+The time $T_p$ needed to execute the computation on $p$ cores depends on
 two parameters of the computation: its {\em work} $T_1$ and its {\em span}
 $T_\infty$.
-The work is the running time on a single processor, which is simply the
+The work is the running time on a single core, which is simply the
 number of nodes (i.e., instructions) in $G$, assuming each instruction takes
 constant time.
-Since $p$ processors can execute only $p$ instructions at a time, we have
+Since $p$ cores can execute only $p$ instructions at a time, we have
 $T_p = \Omega(T_1/p)$.
 The span is the length of the longest path in~$G$.
 Since the instructions on this path need to be executed one after another, no
@@ -26,12 +26,12 @@ work-stealing schedulers match this lower bound to within a constant factor
 (to within a factor 2 from the optimal
 performance)~\cite{Blumofe:1999:SMC:324133.324234}.
 The degree to which an algorithm can take advantage of the presence of $p > 1$
-processors is captured by its {\em speed-up} $T_1 / T_p$ and its
+cores is captured by its {\em speed-up} $T_1 / T_p$ and its
 {\em parallelism} $T_1 / T_\infty$.
 In the absence of cache effects, the best speed-up one can hope for is $p$,
 known as {\em linear speed-up}.
 The parallelism provides an upper bound on the achievable speed-up independent
-of the number of available processors.
+of the number of available cores.
 
 In order to describe parallel algorithms in the DYM model, we augment sequential
 pseudocode with three keywords.

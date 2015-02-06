@@ -1,68 +1,58 @@
-As we mentioned above, the input to {\tt RMMT} consists of a
+\section{Operations supported by the NS-representation}
+\label{sec:operations}
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular} {|p{4.7cm}|p{7.2cm}|} \hline
+operator name                             &descriptions        \\ \hline
+%$\rmqi(i,j)$ /$RMQi(i,j)$             &Position of the minimum/maximum excess value in $P[i..j]$ \\ \hline
+$\child(x,i)$                         & $i$th child of node $x$\\
+$\child\_rank(x)$                     & Number of left siblings of node $x$\\
+$\degree(x)$                          &Degree of node $x$\\
+$\depth(x)$                           & Depth of node $x$\\
+$\levelanc(x,i)$                      &Ancestor of node $x$ that is $i$ levels above node $x$ \\
+$\subtreesize(x)$                     &Number of nodes in the subtree rooted at node $x$ \\
+$\height(x)$                          &Height of the subtree rooted at $x$ \\
+$\deepestnode(x)$                     &Deepest node in the subtree rooted at node $x$\\
+$\lca(x,y)$                           &Lowest common ancestor of nodes $x$ and $y$ \\
+$\lmostleaf(x)$ /$\rmostleaf(x)$      &Leftmost/rightmost leaf of the subtree rooted at node $x$\\
+$\leafrank(x)$                        &Number of leaves before node $x$ in preorder\\
+$\leafselect(i)$                      &$i$th leaf from left to right\\
+$\prerank(x)$/$\postrank(x)$             &Number of nodes preceding node $x$ in preorder/postorder\\
+$\preselect$/$\postselect(i)$            &$i$th node in preorder/postorder\\       
+$\levellmost(i)$/$\levelrmost(i)$       &Leftmost/rightmost node among all the nodes with depth $i$ \\
+$\levelsucc(x)$/$\levelpred(x)$        &Node immediately to the left/right of node $x$ among nodes with depth $i$\\ \hline
+$\access(i)$                           &$P[i]$        \\ 
+$\findopen(i)$/$\findclose(i)$       &The matching parenthesis of $P[i]$ \\
+$\enclose(i)$                           &Closest enclosing matching parenthesis pair for $P[i]$ \\
+$\rankopen(i)$/$\rankclose(i)$       &Number of opening/closing parentheses in $P[1..i]$\\
+$\selectopen(i)$/$\selectclose(i)$   &The $i$th opening/closing parenthesis\\ \hline
+\end{tabular}
+\caption{Operations supported by the NS-representation~\cite{Navarro:2014:FFS:2620785.2601073}, including operations over the corresponding balanced parenthesis sequence.}
+\label{tbl:operations}
+\end{center}
+\end{table}
+
+
+\section{Parallel Folklore Encoding Algorithm}
+\label{subsec:parenthesesAlgorithm}
+
+As mentioned previously, the input to {\tt RMMT} includes a
 parentheses sequence $P$. However, sometimes $P$ is not available,
-instead we have un ordinal tree, $T$. The construction of $P$ from $T$
+and instead, we have an ordinal tree, $T$. The construction of $P$ from $T$
 has not been considered in previous implementations of the {\tt
   RMMT}. Here, we proposed an algorithm to compute $P$ in parallel,
-complementing our previous algorithms. We will call this algorithm
-\emph{Parallel Folklore Encoding Algorithm}, {\tt PFEA}. The key
-observation to obtain $P$ is that each parenthesis associated to an
+complementing our previous algorithms. We will call this algorithm the 
+\emph{Parallel Folklore Encoding Algorithm} ({\tt PFEA}). The key
+observation used to obtain $P$ is that each parenthesis associated to an
 edge $(u,v)$, ``('' or ``)'', is followed in the encoding by a
-parenthesis associated to an edge at distance 1 of the edge
-$(u,v)$. Considering this observation, we can assign each edge to a task
-that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm.
+parenthesis associated to an edge that shares an endpoint with the edge
+$(u,v)$.
+This observation allows us to chain the parentheses together to form a linked list, which is then copied into a bit vector in parallel. 
+Algorithm \ref{algo:PFEA} shows the pseudocode.
 
 
-\begin{minipage}[t]{.45\textwidth}
-  \begin{algorithm}[H]
-\small
-%\SetVlineSkip{-2cm}
-  % keywords
-%  \SetKwInOut{Input}{Input}
-%  \SetKwInOut{output}{output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  % I/o
-%  \Input{Parentheses sequence $P$, $k$, $s$, $num\_threads$}
-%  \output{$e^{\prime}, m^{\prime}, M^{\prime}, n^{\prime}$ and universal tables ({\tt RMMT})}
-%  \BlankLine% \SetAlgoNoLine
-  % algorithm
-  \setcounter{AlgoLine}{1}\ShowLn
-  \PFor{$x\leftarrow -w$ \KwTo $w$}{
-      \setcounter{AlgoLine}{2}\ShowLn
-      \PFor{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}$}{
-          \setcounter{AlgoLine}{3}\ShowLn
-          $i\leftarrow ((x+w) << w)$ OR $w$\;
-          \setcounter{AlgoLine}{4}\ShowLn
-          $near\_fwd\_pos[i] = w$\;
-          \setcounter{AlgoLine}{5}\ShowLn
-          $p=0$\;
-          \setcounter{AlgoLine}{6}\ShowLn
-          $excess=0$\;
-          \setcounter{AlgoLine}{7}\ShowLn
-          \Repeat{$p\geq w$}{
-              \setcounter{AlgoLine}{8}\ShowLn
-              $excess$ += $1-2*((y$ AND $(1 << p)) == 0)$\;
-              \setcounter{AlgoLine}{9}\ShowLn
-              \If{$excess == x$}{
-                  \setcounter{AlgoLine}{10}\ShowLn
-                  $near\_fwd\_pos[i] = p$\;
-                  \setcounter{AlgoLine}{11}\ShowLn
-                  $break$\;
-              }
-              \setcounter{AlgoLine}{12}\ShowLn
-              $p$ += $1$\;
-          }
-      }
-  }
-  \caption{{\tt PSTA} (part III)}
-  \label{algo:PSTA3}
-  \end{algorithm}
-\end{minipage}
-%\hfill
-\begin{minipage}[t]{.55\textwidth}
-  \begin{algorithm}[H]
+\begin{algorithm}[H]
 \small
 %\SetVlineSkip{-2cm}
   % keywords
@@ -77,7 +67,7 @@ that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm
   \output{Parentheses sequence}
   \BlankLine% \SetAlgoNoLine
   % algorithm
-  $ET, P$ = arrays of size $2*|E|$\;
+  $ET, P$ = arrays of length $2*|E|$\;
   \PFor{$i\leftarrow 0$ \KwTo $|E|-1$}{
   	$ET[2*i].value = 1$\tcp*[h]{(}\;
   	$ET[2*i+1].value = 0$\tcp*[h]{)}\;
@@ -89,7 +79,7 @@ that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm
   		$ET[2*i].succ = ET[2*next(E[i].destiny)]$\;
     }
   \BlankLine
-  	\eIf{$E[i].origin$ is a last incident egde}{
+  	\eIf{$E[i].origin$ is a last incident edge}{
   		$ET[2*i+1].succ = ET[2*parent(E[i].origin)+1]$\;
 	}
 	{
@@ -132,7 +122,6 @@ that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm
   \caption{{\tt PFEA}}
   \label{algo:PFEA}
   \end{algorithm}
-\end{minipage}
 
 
 
@@ -207,32 +196,14 @@ that will be executed in parallel. Algorithm \ref{algo:PFEA} shows the algorithm
 %  \label{algo:PFEA}
 %\end{algorithm}
 \normalsize
-The algorithm assumes has input an \emph{ordinal tree} $T$ with $n$ nodes, which is represented by an array of nodes, $V$, and an array of edges, $E$. Each node $v$ in $V$ contains an adjacency list with all incident edges of $v$ sorted in counterclockwise order. Each element in the adyacency list points to its corresponding edge in $E$. Each edge $e=(u,v)$ in $E$ points to the corresponding entries, of its endpoints, in $V$. In the Algorithm \ref{algo:PFEA}, we refer to $u$ as $e.origin$ and to $v$ as $e.destiny$. Besides, we assume that each endpoint of $e$ maintains a reference to its position in the corresponding adjacency list. The output will be the folklore encoding, $P$, of $T$.
+
+The input of this algorithm is an \emph{ordinal tree} $T$ on $n$ nodes, which is represented by an array of nodes, $V$, and an array of edges, $E$. Each node $v$ in $V$ contains an adjacency list with all incident edges of $v$ sorted in counterclockwise order. Each element in the adjacency list points to its corresponding edge in $E$. Each edge $e=(u,v)$ in $E$ points to the corresponding entries, of its endpoints, in $V$. In the Algorithm \ref{algo:PFEA}, we refer to $u$ as $e.origin$ and to $v$ as $e.destiny$. Besides, we assume that each endpoint of $e$ maintains a reference to its position in the corresponding adjacency list. The output will be the folklore encoding, $P$, of $T$.
 
 Given this representation of $T$, the algorithm works as follows: 
-First of all, the algorithm create two arrays, $ET$ and $P$, both of size $2*|E|$. Array $ET$ will be used as an auxiliar array, meanwhile $P$ will save the folklore encoding. Each entry in the array $ET$ contains three elements: $value$ which saves the symbol, $``("$ or $``)"$, $succ$ a pointer the next symbol in the encoding and $rank$ which is the final position of the symbol in the array $P$. In lines 2 to 12 of the Algorithm \ref{algo:PFEA}, the algorithm process each edge in parallel. For the $ith$ edge, the corresponding thread writes an $``("$ in $ET$ at position $2*i$ and a $``)"$ at position $2*i+1$. Then, the thread constructs pointers to the successors of both parentheses, in lines 5 to 8, for $``("$, and lines 9 to 12, for $``)"$. In the algorithm, $next(E[i].destiny)$ returns the position in $E$ of the next sibbling of $E[i].destiny$, in counterclockwise order, and $parent(E[i].origin)$ returns the position in $E$ of the edge that connects the node $E[i].origin$ with it parent. As convention, we assume that for any node $v$, the first entry of its adjacency list points to its parent. Note that, when finish this part, $ET$ will correspond to the \emph{Euler Tour} of $T$.
-With the first part done, the next step is compute the ranks of each parenthesis in $ET$. To do that, the algorithm uses an standard parallel list ranking algorithm, as \cite{Helman2001265}. We assume that the computed ranks are saved in the $rank$ fields of the $ET$ entries. Finally, the algorithm writes in parallel the parentheses in their final positions in $P$, using the ranks computed recently (lines 14 and 15).
+First of all, the algorithm create two arrays, $ET$ and $P$, both of length $2*|E|$. Array $ET$ will be used as an auxiliary array, while $P$ will save the folklore encoding. Each entry in the array $ET$ contains three elements: $value$ which saves the symbol $``("$ or $``)"$, $succ$ which is a pointer to the next symbol in the encoding and $rank$ which is the final position of the symbol in the array $P$. In lines 2 to 12 of the Algorithm \ref{algo:PFEA}, the algorithm processes each edge in parallel. For the $ith$ edge, the corresponding thread writes an $``("$ in $ET$ at position $2*i$ and a $``)"$ at position $2*i+1$. Then, the thread constructs pointers to the successors of both parentheses, in lines 5 to 8, for $``("$, and lines 9 to 12, for $``)"$. In the algorithm, $next(E[i].destiny)$ returns the position in $E$ of the next sibling of $E[i].destiny$, in counterclockwise order, and $parent(E[i].origin)$ returns the position in $E$ of the edge that connects the node $E[i].origin$ with it parent. As convention, we assume that for any node $v$, the first entry of its adjacency list points to its parent. Note that, upon the completion of this part, $ET$ will correspond to the \emph{Euler Tour} of $T$.
+With the first part done, the next step is compute the ranks of each parenthesis in $ET$. To do this, the algorithm uses an standard parallel list ranking algorithm \cite{Helman2001265}. We assume that the computed ranks are saved in the $rank$ fields of the $ET$ entries. Finally, the algorithm writes in parallel the parentheses in their final positions in $P$, using the ranks computed recently (lines 14 and 15).
 
-Considering the first part of {\tt PFEA} algorithm (lines 2 to 12), $T_1 = O(n)$, since it traverses the array $E$, $T_p = O(n/p)$, since each thread, on average, processes $|E|/p$ edges, and $T_{\infty} = O(1)$. The complexities of the second part (line 13) are $T_1=O(n)$, $T_p=O(n/p+\lg p)$ and $T_{\infty}=O(\lg n)$, which is the complexities of parallel algorithms of list ranking \Jose{Confirm}. The third part (lines 14 and 15) has the same complexities of the first part, since both contains a {\bf parfor} and each iteration is $O(1)$. Therefore, complexities of {\tt PFEA} algorithm are
+Considering the first part of {\tt PFEA} algorithm (lines 2 to 12), we have $T_1 = O(n)$, since it traverses the array $E$, $T_p = O(n/p)$, since each thread, on average, processes $|E|/p$ edges, and $T_{\infty} = O(1)$. The complexities of the second part (line 13) are $T_1=O(n)$, $T_p=O(n/p+\lg p)$ and $T_{\infty}=O(\lg n)$, which are the complexities of parallel algorithms of list ranking. The third part (lines 14 and 15) has the same complexities as the first part, since both contain a {\bf parfor} and each iteration requires $O(1)$ time. Therefore, complexities of the {\tt PFEA} algorithm are
 $T_1=O(n)$, $T_p=O(n/p+\lg p)$ and $T_{\infty}=O(\lg n)$. The speedup, $T_1/T_p$, is $O(np/(n+p\lg p))$ and the parallelism is $T_1/T_{\infty} = O(n/\lg n)$.
 
-If we consider this algorithm as the initial step of {\tt PSTA} algorithm, the time complexities of {\tt PSTA} do not change.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+If we consider this algorithm as the initial step of the {\tt PSTA} algorithm, the time complexities of {\tt PSTA} do not change.
