@@ -23,6 +23,7 @@ attributed to (1) lack of tuning of {\tt psta} and (2) some overhead
 with running parallel code on a single core.
 
 \begin{figure}
+\vspace{-10pt}
   \begin{minipage}[b]{0.47\textwidth}
     \setlength{\tabcolsep}{0pt}
     \begin{tabular}{c@{\hspace{1em}}r@{ }r@{ }r@{ }r@{ }r}
@@ -55,6 +56,7 @@ with running parallel code on a single core.
     \captionof{figure}{Speed-up on {\tt ctree} and {\tt osm}
       data sets.\label{fig:speedup}}
   \end{minipage}
+\vspace{-20pt}
 \end{figure}
 
 Up to 16 cores, the speed-up of {\tt psta} is almost linear whenever $p$ is a
@@ -98,8 +100,8 @@ which allowed the remaining cores to be used exclusively by {\tt psta}.
 For $p = 64$, {\tt psta} competed with the OS for available cores.
 This had a detrimental effect on the efficiency of {\tt psta} for $p = 64$.
 
+\vspace{-13pt}
 \subsubsection{Memory usage.}
-
 We measured the amount of working memory (i.e., memory not occupied by the raw
 parenthesis sequence) used by {\tt psta}, {\tt libcds}, and {\tt sdsl}.
 We did this by monitoring how much memory was allocated/released with

@@ -30,11 +30,19 @@ constructing this representation.
 
 The NS-representation is based on the balanced parenthesis sequence
 $P$ of the input tree $T$, which is obtained by performing a preorder
-traversal of $T$ and writing down an opening parenthesis when visiting
-a node for the first time and a closing parenthesis after visiting all
+traversal of $T$ and writing down an opening parenthesis when visiting a node for the 
+\begin{wrapfigure}{l}{0.7\textwidth}
+%\vspace{-20pt}
+\centering
+   \includegraphics[scale=0.28]{./images/Range-min-max-tree.png}
+   \caption{Range min-max tree}
+   \label{fig:RangeMinMaxTree}
+\vspace{-20pt}
+\end{wrapfigure}
+first time and a closing parenthesis after visiting all
 its descendants.  Thus, the length of $P$ is $2n$.
 
-The NS-representation is not the first structure to use balanced
+The NS-representa\-tion is not the first structure to use balanced
 parentheses to represent trees.  Munro and Raman~\cite{mr1997} were
 the first to design succinct representations of balanced parentheses
 and used them to represent ordinal trees succinctly by reducing a set
@@ -91,7 +99,7 @@ the {\tt RMMT} we implemented, we partition $P$ into disjoint chunks
 of size $s = w \lg n$, where $w$ is the machine word size.  For
 simplicity, we assume that the length of $P$ is a multiple of~$s$.
 The {\tt RMMT} is a complete binary tree over the sequence of
-chunks. Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$
+chunks (see Figure \ref{fig:RangeMinMaxTree}). Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$
 of $P$ that is the concatenation of the chunks corresponding to the
 descendant leaves of $u$.  Since the {\tt RMMT} is a complete tree, we
 do not need store to its structure explicitly.  Instead, we index its
@@ -105,7 +113,6 @@ $e'[u]$ stores the excess at the last position in $P_u$.  $m'[i]$ and
 $M'[i]$ store the minimum and maximum excess at any position in $P_u$,
 respectively.  $n'[i]$ stores the number of positions in $P_u$ that
 have the minimum excess value $m'[i]$.
-
 % \begin{figure}[t]
 %   \centering
 %   \includegraphics[scale=0.26]{./images/Range-min-max-tree.png}
