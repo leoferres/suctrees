@@ -24,7 +24,7 @@ trees, which are used in representations of text indexes.  In
 tree construction were introduced.  Both algorithms perform $O(n\lg
 \sigma)$ work and have span $O(n)$, where $n$ is the input size and
 $\sigma$ is the alphabet size.  In \cite{DBLP:journals/corr/Shun14},
-Shun introduced 3 new algorithms to construct Wavelet trees in
+Shun introduced three new algorithms to construct Wavelet trees in
 parallel.  The in practice best algorithm performs $O(n\lg \sigma)$
 work and has span $O(\lg n\lg \sigma)$.  Shun also explained how to
 parallelize the construction of rank/select structures so it requires
@@ -33,7 +33,7 @@ $O(\lg n)$ span for select structures.
 
 In this paper, we provide a parallel algorithm that constructs the
 {\tt RMMT} tree representation of
-~\cite{Navarro:2014:FFS:2620785.2601073} in $O(n/p + \lg p)$ time
+\cite{Navarro:2014:FFS:2620785.2601073} in $O(n/p + \lg p)$ time
 using $p$ cores.  This structure uses $2n + o(n)$ bits to store an
 ordinal tree with $n$ nodes and supports a rich set of basic
 operations on these trees in $O(\lg n)$ time.  While this query time
