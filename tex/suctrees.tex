@@ -28,18 +28,18 @@ existing representations in most cases and performs most operations
 faster.  In this paper, we provide a parallel algorithm for
 constructing this representation.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[scale=0.28]{./images/Range-min-max-tree.png}
+  \caption{Range min-max tree}
+  \label{fig:RangeMinMaxTree}
+\vspace{-20pt}
+\end{figure}
+
 The NS-representation is based on the balanced parenthesis sequence
 $P$ of the input tree $T$, which is obtained by performing a preorder
-traversal of $T$ and writing down an opening parenthesis when visiting a node for the 
-\begin{wrapfigure}{l}{0.7\textwidth}
-%\vspace{-20pt}
-\centering
-   \includegraphics[scale=0.28]{./images/Range-min-max-tree.png}
-   \caption{Range min-max tree}
-   \label{fig:RangeMinMaxTree}
-\vspace{-20pt}
-\end{wrapfigure}
-first time and a closing parenthesis after visiting all
+traversal of $T$ and writing down an opening parenthesis when visiting a node
+for the first time and a closing parenthesis after visiting all
 its descendants.  Thus, the length of $P$ is $2n$.
 
 The NS-representa\-tion is not the first structure to use balanced
