@@ -1,10 +1,10 @@
 In the DyM model \cite[Chapter~27]{Cormen2009}, a {\em multithreaded
 computation} is modelled as a directed acyclic graph $G=(V,E)$
 whose vertices are instructions and where $(u,v) \in E$ if
-$u$ must be executed before $v$.  The time $T_p$ needed to execute the
+$u$ must be executed before~$v$.  The time $T_p$ needed to execute the
 computation on $p$ cores depends on two parameters of the computation:
 its {\em work} $T_1$ and its {\em span} $T_\infty$.  The work is the
-running time on a single core, equal to the number of nodes
+running time on a single core, that is, the number of nodes
 (i.e., instructions) in $G$, assuming each instruction takes constant
 time.  Since $p$ cores can execute only $p$ instructions at a time, we
 have $T_p = \Omega(T_1/p)$.  The span is the length of the longest
@@ -20,7 +20,7 @@ parallelism} $T_1 / T_\infty$.  In the absence of cache effects, the
 best possible speed-up is $p$, known as {\em linear speed-up}.
 Parallelism provides an upper bound on the achievable speed-up.
 
-To describe parallel algorithms in the DYM model, we augment
+To describe parallel algorithms in the DyM model, we augment
 sequential pseudocode with three keywords.  The {\bf spawn} keyword,
 followed by a procedure call, indicates that the procedure should run
 in its own thread and {\em may} thus be executed in parallel to the

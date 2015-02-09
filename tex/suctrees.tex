@@ -1,4 +1,4 @@
-Jacobson~\cite{j1989} was the first to  proposed the design of succinct data
+Jacobson~\cite{j1989} was the first to  propose the design of succinct data
 structures.  He showed how to represent an ordinal tree on $n$ nodes
 using $2n+o(n)$ bits so that computing the first child, next sibling
 or parent of any node takes $O(\lg n)$ time in the bit probe
@@ -74,7 +74,7 @@ $\fwdsearch(P,\pi,i,0)$.  Thus, it (almost)\footnote{A few
   these operations.} suffices to support the primitive operations above for
 $g \in \{\pi, \phi, \psi\}$.  To do so, Navarro and Sadakane designed
 a simple data structure called \emph{Range Min-Max Tree} ({\tt RMMT}),
-which supports the primitive operations in logarithmic time when used
+which supports the primitive operations above in logarithmic time when used
 to represent the entire sequence~$P$.  To achieve constant-time
 operations, $P$ is partitioned into chunks.  Each chunk is represented
 using an {\tt RMMT}, which supports primitive operations inside the
@@ -83,21 +83,18 @@ structures are used to support operations on the entire sequence $P$
 in constant time.
 
 \begin{figure}[t]
-  \centering
-  \includegraphics[scale=0.28]{./images/Range-min-max-tree.png}
+  \centerline{\includegraphics[scale=0.28]{./images/Range-min-max-tree.png}}
+  \vspace{1ex}
   \caption{Range min-max tree}
   \label{fig:RangeMinMaxTree}
-\vspace{-20pt}
 \end{figure}
-
-% --- HERE Fri Feb  6 20:26:15 AST 2015 ---
 
 Next we briefly review the {\tt RMMT} structure and how it supports
 the primitive operations for $g = \pi$.  Navarro and
 Sadakane~\cite{Navarro:2014:FFS:2620785.2601073} discussed how to make
 it support these operations also for $\phi$ and $\psi$ while
 increasing its size by only $O(n/\lg^c n)$.  To define the version of
-the {\tt RMMT} we implemented, we partition $P$ into disjoint chunks
+the {\tt RMMT} we implemented, we partition $P$ into chunks
 of size $s = w \lg n$, where $w$ is the machine word size.  For
 simplicity, we assume that the length of $P$ is a multiple of~$s$.
 The {\tt RMMT} is a complete binary tree over the sequence of
@@ -116,23 +113,21 @@ $M'[i]$ store the minimum and maximum excess, respectively, at any position in
 $P_u$.  $n'[i]$ stores the number of positions in $P_u$ that
 have the minimum excess value $m'[i]$.
 
-% --- HERE Fri Feb  6 23:15:53 AST 2015 ---
-
-Combined with a standard technique called {\em table lookup}, an {\tt RMMT} can
-support the primitive operations
-for $\pi$ in $O(\lg n)$ time.  For example, consider
-$\fwdsearch(P,\pi,i,d)$.  We first check the chunk containing $P[i]$
-to see if the answer is inside this chunk.  This can be done in
-$O(\lg n)$ time by breaking up the chunk into portions of length $w/2$
+Combined with a standard technique called {\em table lookup}, an {\tt RMMT}
+supports the primitive operations
+for $\pi$ in $O(\lg n)$ time.  Consider
+$\fwdsearch(P,\pi,i,d)$ for example.  We first check the chunk containing $P[i]$
+to see if the answer is inside this chunk.  This takes
+$O(\lg n)$ time by dividing the chunk into portions of length $w/2$
 and testing for each portion in turn whether it contains the answer.
-After constructing a lookup table whose content does not
+Using a lookup table whose content does not
 depend on $P$, the test for each portion of length $w/2$ takes
-constant time: For each possible bit vector of length $w/2$, and each
-of the $w/2$ position in it, the table stores the answer
+constant time: For each possible bit vector of length $w/2$ and each
+of the $w/2$ positions in it, the table stores the answer
 of $\fwdsearch(P,\pi,i,d)$ if it can be found inside this bit vector,
 or $-1$ otherwise.  As there are $2^{w/2}$ bit vectors of length
 $w/2$, this table uses $2^{w/2}\poly(w)$ bits.  If we find the answer
-inside the chunk containing~$P[i]$, we report this answer.
+inside the chunk containing~$P[i]$, we report it.
 Otherwise, let $u$ be the leaf corresponding to this
 chunk.  If $u$ has a right sibling, we inspect the sibling's $m'$ and
 $M'$ values to determine whether it contains the answer.  If so, we
@@ -142,8 +137,8 @@ corresponding subsequence $P_v$ contains the query answer.  Then we
 use a similar procedure to descend down the tree starting from $v$ to
 look for the leaf descendant of $v$ containing the answer and spend
 another $O(\lg n)$ time to determine the position of the answer
-inside this leaf's chunk.  Since we spend $O(\lg n)$ time for each of
-the two leaves inspected by this procedure and the tests for any other
+inside its chunk.  Since we spend $O(\lg n)$ time for each of
+the two leaves we inspect and the tests for any other
 node in the tree take constant time, the cost is $O(\lg n)$.
 
 Supporting operations on the leaves, such as finding the $i$th leaf
@@ -153,7 +148,7 @@ $P[i+1] = 0$.  $\rankop$ and $\selop$ operations over $P_1$ in turn
 reduce to $\sumop$ and $\fwdsearch$ operations over $P_1$ and can thus
 be supported by an {\tt RMMT} for $P_1$.  $P_1$ does not need to be
 stored explicitly because any consecutive $O(w)$ bits of $P_1$ can be
-computed from $P$ using table lookup.
+computed from the corresponding bits of $P$ using table lookup.
 
 To analyze the space usage, observe that storing $P$ requires $2n$
 bits, while the space needed to store the vectors $e'$, $m'$, $M'$,

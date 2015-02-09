@@ -36,25 +36,25 @@
 \begin{document}
 
 
-\title{Parallel Construction of Succinct Trees}
+\title{Parallel Construction of Succinct Trees\thanks{This work was
+    supported by the Emerging Leaders in in the Americas scholarship
+    programme, NSERC, and the Canada Research Chairs programme.}}
 \titlerunning{Parallel Construction of Succinct Trees}
 
 \author{Leo Ferres\inst{1}
   \and
-  Jos\'e Fuentes-Sep\'ulveda\inst{1}\fnmsep\thanks{Supported
-    in part by a scholarship from the Goverment of Canada.}
+  Jos\'e Fuentes-Sep\'ulveda\inst{1}
   \and
-  Meng He\inst{2}\fnmsep\thanks{Supported by NSERC.}
+  Meng He\inst{2}
   \and
-  Norbert Zeh\inst{2}\fnmsep\thanks{Supported by NSERC and the Canada Research
-    Chairs programme.}}
+  Norbert Zeh\inst{2}}
 
 \authorrunning{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
 
 \tocauthor{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
 
 \institute{Department of Computer Science, Universidad de Concepci\'on, Chile,\\
-  \email{\{lferres,jfuentess\}@udec.cl},
+  \email{\{lferres,jfuentess\}@udec.cl}
   \and
   Faculty of Computer Science, Dalhousie University, Canada,\\
   \email{\{mhe,nzeh\}@cs.dal.ca}}
@@ -62,19 +62,20 @@
 \maketitle
 
 \begin{abstract}
-  Succinct representations of trees have been an elegant solution to
+  Succinct representations of trees are an elegant solution to
   make large trees fit in main memory while still supporting
-  navigational operations in constant time.  However, the construction
-  time of succinct trees remains a bottleneck.  In this paper, we
+  navigational operations in constant time.  However, their construction
+  time remains a bottleneck.  We
   introduce a practical parallel algorithm that improves the state of
   the art in succinct tree construction.  Given a tree on $n$ nodes
-  stored as a sequence of balanced parentheses, the proposed algorithm
-  can build a succinct tree representation in $O(n/p+\lg p)$ time,
+  stored as a sequence of balanced parentheses, our algorithm
+  builds a succinct tree representation in $O(n/p+\lg p)$ time,
   where $p$ is the number of available cores.  The constructed
   representation uses $2n + o(n)$ bits of space and supports a rich
-  set of operations in $O(\lg n)$ time.  We tested the algorithm on a
-  $64$-core machine and on inputs of different sizes.  In these
-  experiments, it achieved good parallel speedup.  We also present an
+  set of operations in $O(\lg n)$ time.  In experiments using up to
+  64 cores and on inputs of different sizes, our algorithm
+  achieved good parallel speed-up.
+  We also present an
   algorithm that takes $O(n/p + \lg p)$ time to construct the
   balanced parenthesis representation of the input tree required by
   our succinct tree construction algorithm.
@@ -106,52 +107,22 @@
 \label{subsec:dym}
 \input{dym}
 
-%\subsection{Multicore succinct data structures}
-%\label{subsec:multicoreSDS}
-%\input{multicoreSDS}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% MULTICORE SUCCINCT TREE %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{A Parallel Algorithm for Succinct Tree Construction}
 \label{sec:multicoreST}
-%\input{multicoreST}
-%\subsection{Parallel Succinct Tree}
-%\label{sec:PST}
-%\subsubsection{The idea}
-%\label{subsec:idea}
-%\input{multicoreSTIdea}
-%\subsubsection{Parallel Succinct Tree Algorithm}
-%\label{subsec:multicoreSTAlgorithm}
 \input{multicoreSTAlgorithm}
 
 \subsubsection{Theoretical Analysis.}
 \label{subsec:theoreticalAnalysis}
 \input{theoreticalAnalysis}
 
-%\subsection{Parallel Succinct Tree for Large Trees}
-%\label{subsec:parallelLargeTrees}
-%\input{parallelLargeTrees}
-
-%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% EXPERIMENTS %%%%%
-%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Experimental Results}
 \label{sec:exps}
 \input{exps}
-%\subsection{Experimental Setup}
-%\label{subsec:experimentalSetup}
 \input{setup}
 
 \subsection{Results and Discussion}
 \label{subsec:resultsDiscussion}
 \input{resultsDiscussion}
-
-%%%%%%%%%%%%%%%%%%%%%%
-%%%%% CONCLUSION %%%%%
-%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
@@ -169,7 +140,6 @@ C\'{a}novas for their time and making resources available to us.
 \begin{center}
   \bf \Large Appendices
 \end{center}
-
 
 \input{parenthesesAlgorithm}
 
