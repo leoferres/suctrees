@@ -17,167 +17,139 @@ systems is generally much smaller than the input size $n$, so this
 cost is indeed negligible in practice.
 
 \begin{figure}[t!]
-\begin{minipage}[t]{.50\textwidth}
-  \vspace{0pt}
-  \begin{algorithm}[H]
-\small
-  \SetKwInOut{Input}{Input}
-  \SetKwInOut{output}{Output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  % I/o
-  \Input{$P$, $s$, $threads$}
-  \output{$e', m', M', n'$ and universal tables ({\tt RMMT})}  \BlankLine% \SetAlgoNoLine
-  % algorithm
-  $o$ = $\lceil 2n/s \rceil-1$\tcp*[h]{\# internal nodes}\;
-  $e'$ = array of size $\lceil 2n/s \rceil$\;
-  $m', M', n'$ = arrays of size $\lceil 2n/s \rceil + o$\;
-  $ct$ = $\lceil 2n/s \rceil/threads$\;%\tcp*[h]{Chunks per thread}\;
-  \PFor{$t\leftarrow 0$ \KwTo $threads-1$}{
-	  $e'_t, m'_t, M'_t, n'_t$ = $0$\;
-
-	  \For{$chk \leftarrow 0$ \KwTo $ct-1$}{
-		  $low$ = $t*ct*s+chk*s$\;
-		  $up$ = $low+s$\;
-		  \For{$par \leftarrow low$ \KwTo $up-1$}{
-			$e'_t$ += $2*P[par]-1$\;
-		    \uIf{$e'_t < m'_t$}{
-				$m'_t$ = $e'_t$;
-				$n'_t$ = $1$
-			}
-			\uElseIf{$e'_t == m'_t$}{
-				$n'_t$ += $1$\;
-			}
-			\uElseIf{$e'_t > M'_t$}{
-				$M'_t$ = $e'_t$\;
-			}
-		  }
-		  $e'[t*ct+chk]$ = $e'_t$\;
-		  $m'[t*ct+chk+o]$ = $m'_t$\;
-		  $M'[t*ct+chk+o]$ = $M'_t$\;
-		  $n'[t*ct+chk+o]$ = $n'_t$\;
-	  }
-  }
-  \BlankLine
-  $parallel\_prefix\_sum(e', ct)$\;
-  \BlankLine
-  \PFor{$t\leftarrow 1$ \KwTo $threads-1$}{
-	  \For{$chk \leftarrow 0$ \KwTo $ct-1$}{
-	  	\If{$chk < ct-1$}{
-	  	  $e'[t*ct+chk]$ += $e'[t*ct-1]$\;
-	  	}
-  	  	$m'[t*ct+chk+o]$ += $e'[t*ct-1]$\;
-  	  	$M'[t*ct+chk+o]$ += $e'[t*ct-1]$\;
-	  }
-  }
-  \vspace{1ex}
-  \caption{{\tt PSTA} (part I)}
-  \label{algo:PSTA1}
-  \end{algorithm}
-\end{minipage}
-\begin{minipage}[t]{.51\textwidth}
-  \vspace{0pt}
-  \begin{algorithm}[H]
-\small
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  \SetAlgoLined
-  \setcounter{AlgoLine}{1}\ShowLn
-  $lvl$ = $\lceil \lg threads \rceil$\;
-  \setcounter{AlgoLine}{2}\ShowLn
-  \PFor{$st\leftarrow 0$ \KwTo $2^{lvl}-1$}{
-      \setcounter{AlgoLine}{3}\ShowLn
-	  \For{$l\leftarrow \lceil\lg (2n/s)\rceil-1$ \KwTo $lvl$}{
-          \setcounter{AlgoLine}{4}\ShowLn
-		  \For{$d\leftarrow 0$ \KwTo $2^{l-lvl}-1$}{
-            \setcounter{AlgoLine}{5}\ShowLn
-		  	$i$ = $d + 2^{l} - 1 +st*2^{l-lvl}$\;
-          \setcounter{AlgoLine}{6}\ShowLn
-			$concat(i,m',M',n')$\;	  	
-		  }
-	  }
-  }
-  \BlankLine
-  \setcounter{AlgoLine}{7}\ShowLn
-  \For{$l\leftarrow lvl-1$ \KwTo $0$}{
-	  \setcounter{AlgoLine}{8}\ShowLn
-	  \PFor{$d\leftarrow 0$ \KwTo $2^{l}-1$}{
-        \setcounter{AlgoLine}{9}\ShowLn
-	  	$i$ = $d + 2^{l}-1$\;
-        \setcounter{AlgoLine}{10}\ShowLn
-		$concat(i,m',M',n')$\;	  	
-	  }
-  }
-  \vspace{1ex}
-  \caption{{\tt PSTA} (part II)}
-  \label{algo:PSTA2}
-	  \end{algorithm}
-          \medskip
-  \begin{algorithm}[H]
-\small
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  \setcounter{AlgoLine}{1}\ShowLn
-  \PFor{$x\leftarrow -w$ \KwTo $w-1$}{
-      \setcounter{AlgoLine}{2}\ShowLn
-      \PFor{$y\leftarrow 0$ \KwTo $\sqrt{2^{w}}-1$}{
-          \setcounter{AlgoLine}{3}\ShowLn
-          $i\leftarrow ((x+w) << w)$ OR $w$\;
-          \setcounter{AlgoLine}{4}\ShowLn
-          $near\_fwd\_pos[i] = w$\;
-          \setcounter{AlgoLine}{5}\ShowLn
-          $p, excess$ = $0$\;
-          \setcounter{AlgoLine}{6}\ShowLn
-          \Repeat{$p\geq w$}{
-              \setcounter{AlgoLine}{7}\ShowLn
-              $excess$ += $1-2*((y$ AND $(1 << p)) == 0)$\;
-              \setcounter{AlgoLine}{8}\ShowLn
-              \If{$excess == x$}{
-                  \setcounter{AlgoLine}{9}\ShowLn
-                  $near\_fwd\_pos[i] = p$\;
-                  \setcounter{AlgoLine}{10}\ShowLn
-                  $break$\;
-              }
-              \setcounter{AlgoLine}{11}\ShowLn
-              $p$ += $1$\;
+  \begin{minipage}[t]{.50\textwidth}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \SetKwFor{PFor}{parfor}{do}{end}
+    \LinesNumbered
+    \DontPrintSemicolon
+    \SetVlineSkip{0.5ex}
+    \SetCommentSty{textit}
+    \vspace{0pt}
+    \begin{algorithm}[H]
+      \small
+      % I/o
+      \Input{$P$, $s$, $\threads$}
+      \Output{{\tt RMMT} represented as arrays $e', m', M', n'$ and universal
+        lookup tables}
+      \BlankLine
+      % algorithm
+      $o \asgn \lceil 2n/s \rceil-1$ \tcp*[h]{\# internal nodes}\;
+      $e' \asgn {}$array of size $\lceil 2n/s \rceil$\;
+      $m', M', n' \asgn {}$arrays of size $\lceil 2n/s \rceil + o$\;
+      $\ct \asgn \lceil 2n/s \rceil/\threads$\;
+      \PFor{$t \asgn 0$ \KwTo $\threads-1$}{
+        $e'_t, m'_t, M'_t, n'_t \asgn 0$\;
+        \For{$\chk \asgn 0$ \KwTo $\ct-1$}{
+          $\low \asgn (t*\ct + \chk)*s$\;
+          $\up \asgn \low+s$\;
+          \For{$\pr \asgn \low$ \KwTo $\up-1$}{
+            $e'_t \pasgn 2*P[\pr]-1$\;
+            \uIf{$e'_t < m'_t$}{
+              $m'_t \asgn e'_t$;
+              $n'_t \asgn 1$
+            }
+            \uElseIf{$e'_t \eq m'_t$}{
+              $n'_t \pasgn 1$\;
+            }
+            \ElseIf{$e'_t > M'_t$}{
+              $M'_t \asgn e'_t$\;
+            }
           }
+          $e'[t*\ct+\chk] \asgn e'_t$\;
+          $m'[t*\ct+\chk+o] \asgn m'_t$\;
+          $M'[t*\ct+\chk+o] \asgn M'_t$\;
+          $n'[t*\ct+\chk+o] \asgn n'_t$\;
+        }
       }
-  }
-  \vspace{1ex}
-  \caption{{\tt PSTA} (part III)}
-  \label{algo:PSTA3}
-  \end{algorithm}
-  \medskip
-\begin{function}[H]
- \SetKwInOut{Input}{Input}
-  \SetKwInOut{output}{output}
-  \SetKwFor{PFor}{parfor}{do}{end}
-  \LinesNumbered
-  \SetAlgoNoEnd
-  \DontPrintSemicolon
-  \SetAlgoLined
-  % I/o
-  \Input{$i$, $m'$, $M'$, $n'$}
-  \BlankLine% \SetAlgoNoLine
-   $m'[i]$ = $min(m'[2i+1], m'[2i+2])$\;
-   $M'[i]$ = $max(M'[2i+1], M'[2i+2])$\;
-   $n'[i]$ = $n'[2i+1]$\;
-   \uIf{$m'[2i+1]>m'[2i+2]$}{
-	   $n'[i]$ = $n'[2i+2]$\;
-    }\uElseIf{$m'[2i+1]==m'[2i+2]$}{
-	  $n'[i]$ += $n'[2i+2]$\;
-	}
-  \vspace{1ex}
-  \caption{concat()}
-  \label{func:concat}
-\end{function}
-\end{minipage}
+      \BlankLine
+      $\id{parallel\_prefix\_sum}(e', \ct)$\;
+      \BlankLine
+      \PFor{$t \asgn 1$ \KwTo $\threads-1$}{
+        \For{$\chk \asgn 0$ \KwTo $\ct-1$}{
+          \If{$\chk < \ct-1$}{
+            $e'[t*\ct+\chk] \pasgn e'[t*\ct-1]$\;
+          }
+          $m'[t*\ct+\chk+o] \pasgn e'[t*\ct-1]$\;
+          $M'[t*\ct+\chk+o] \pasgn e'[t*\ct-1]$\;
+        }
+      }
+      \vspace{1ex}
+      \caption{{\tt PSTA} (part I)}
+      \label{algo:PSTA1}
+    \end{algorithm}
+  \end{minipage}
+  \begin{minipage}[t]{.51\textwidth}
+    \SetKwInOut{Input}{Input}
+    \SetKwFor{PFor}{parfor}{do}{end}
+    \SetKw{KwDownTo}{downto}
+    \LinesNumbered
+    \DontPrintSemicolon
+    \SetVlineSkip{0.5ex}
+    \vspace{0pt}
+    \begin{algorithm}[H]
+      \small
+      $lvl \asgn \lceil \lg \threads \rceil$\;
+      \PFor{$\st \asgn 0$ \KwTo $2^{\lvl}-1$}{
+        \For{$l \asgn \lceil\lg (2n/s)\rceil-1$ \KwDownTo $\lvl$}{
+          \For{$d \asgn 0$ \KwTo $2^{l-\lvl}-1$}{
+            $i \asgn d + 2^{l} - 1 +st*2^{l-\lvl}$\;
+            $\id{concat}(i,m',M',n')$\;	  	
+          }
+        }
+      }
+      \BlankLine
+      \For{$l \asgn \lvl-1$ \KwTo $0$}{
+        \PFor{$d \asgn 0$ \KwTo $2^{l}-1$}{
+          $i \asgn d + 2^{l}-1$\;
+          $\id{concat}(i,m',M',n')$\;	  	
+        }
+      }
+      \vspace{1ex}
+      \caption{{\tt PSTA} (part II)}
+      \label{algo:PSTA2}
+    \end{algorithm}
+    \medskip
+    \begin{algorithm}[H]
+      \small
+      \PFor{$x \asgn -w$ \KwTo $w-1$}{
+        \PFor{$y \asgn 0$ \KwTo $\sqrt{2^{w}}-1$}{
+          $i \asgn ((x+w) << w)$ OR $w$\;
+          $\id{near\_fwd\_pos}[i] \asgn w$\;
+          $p, \id{excess} \asgn 0$\;
+          \Repeat{$p \geq w$}{
+            $\id{excess} \pasgn 1-2*((y \mathop{\mathrm{AND}} (1 << p)) = 0)$\;
+            \If{$\id{excess} \eq x$}{
+              $\id{near\_fwd\_pos}[i] \asgn p$\;
+              \KwSty{break}\;
+            }
+            $p \pasgn 1$\;
+          }
+        }
+      }
+      \vspace{1ex}
+      \caption{{\tt PSTA} (part III)}
+      \label{algo:PSTA3}
+    \end{algorithm}
+    \medskip
+    \begin{function}[H]
+      % I/o
+      \Input{$i$, $m'$, $M'$, $n'$}
+      \BlankLine
+      $m'[i] \asgn \min(m'[2i+1], m'[2i+2])$\;
+      $M'[i] \asgn \max(M'[2i+1], M'[2i+2])$\;
+      \uIf{$m'[2i+1]<m'[2i+2]$}{
+        $n'[i] \asgn n'[2i+1]$\;
+      }\uElseIf{$m'[2i+1]>m'[2i+2]$}{
+        $n'[i] \asgn n'[2i+2]$\;
+      }\ElseIf{$m'[2i+1] \eq m'[2i+2]$}{
+        $n'[i] \asgn n'[2i+1] + n'[2i+2]$\;
+      }
+      \vspace{1ex}
+      \caption{concat()}
+      \label{func:concat}
+    \end{function}
+  \end{minipage}
 \end{figure}
 
 Before describing the {\tt PSTA} algorithm, we observe
@@ -200,68 +172,61 @@ In the third phase (Algorithm~\ref{algo:PSTA3}), it computes the universal
 lookup tables used to answer queries.
 The input to our algorithm consists of the balanced parenthesis sequence,
 $P$, the size of each chunk, $s$, and the number of available threads,
-$\mathit{threads}$.
+$\threads$.
 
-% --- HERE Sat Feb  7 12:27:37 AST 2015 ---
+To compute the entries of arrays $e'$, $m'$, $M'$, and $n'$ corresponding
+to the leaves of the {\tt RMMT} (Algorithm~\ref{algo:PSTA1}), we first
+assign the same number of consecutive chunks, $\ct$, to each thread (line~4).
+We call such a concatenation of chunks assigned to a single thread
+a \emph{superchunk}.
+For simplicity, we assume that the total number of chunks,
+$\lceil 2n / s\rceil$, is divisible by $\threads$.
+Each thread then computes the \emph{local} excess value of the last
+position in each of its assigned chunks, as well as the minimum and
+maximum local excess in each chunk, and the number of times the minimum
+local excess occurs in each chunk (lines 8--17).
+These values are stored in the entries of $e'$, $m'$, $M'$, and
+$n'$ corresponding to this chunk (lines 18--21).
+The local excess value of a position $i$ in $P$ is defined to be $\sumop(P,\pi,j,i)$,
+where $j$ is the index of the first position of the superchunk containing
+position $i$.
+Note that the locations with minimum local excess in each chunk are the same as
+the positions with minimum global excess because the difference between local
+and global excess is exactly $\sumop(P,\pi,0,j-1)$.
+Thus, the entries in $n'$ corresponding to leaves store their final values at the
+end of the loop in lines 5--21, while the corresponding entries of $e'$, $m'$,
+and $M'$ store \emph{local} excess values.
 
-Algorithm \ref{algo:PSTA1} presents the pseudocode for computing the
-leaves of the {\tt RMMT}.  Recall that the size of array $e'$
-is the number of leaves in the {\tt RMMT} (line 2), and the size of
-arrays $m'$, $M'$ and $n'$ is the total number
-of nodes in the {\tt RMMT}, i.e., $2\lceil 2n/s \rceil-1$ (lines 1 and
-3).  In this algorithm, we first assign the same number of consecutive
-chunks to each core.  The number $ct$ of chunks assigned to each core
-is computed as $\lceil 2n / s\rceil / threads $ (line 4); we assume
-that $\lceil 2n / s\rceil$ is divisible by $threads$ for simplicity.
-The chunks assigned to each core forms a contiguous subsequence of
-$P$, and we compute in parallel the {\em local} excess value of the
-last position in each chunk by letting each core loop through the
-subsequence assigned to it.  Here the local excess value of a position
-$i$ is defined to be $\sumop(P,\pi,j,i)$, where $j$ is the index in
-$P$ that corresponds to the starting position of the subsequence
-assigned to the core that computes the local excess value at position
-$i$.  These local excess values are stored in $e'$.  During this
-process, we also compute the minimum and maximum values of the local
-excess values in each chunk, and store them in the corresponding
-entries $m$ and $M'$, respectively.  During this process, we can
-correctly compute the entries of $n'$ that correspond to leaves.
-Lines 4 to 21 show the computation.
+To convert the entries in $e'$ into global excess values, observe that the
+global excess at the end of each superchunk equals the sum of the local excess
+values at the ends of all superchunks up to and including this superchunk.
+Thus, we use a parallel prefix sum algorithm~\cite{Helman2001265} in line~22
+to compute the global excess values at the ends of all superchunks and store
+these values in the corresponding entries of $e'$.
+The remaining local excess values in $e'$, $m'$, and $M'$ can now be converted
+into global excess values by increasing each by the global excess at the end
+of the preceding superchunk.
+Lines 23--28 do exactly this.
 
-The arrays $e'$, $m'$ and $M'$ now store the local excess values for
-the leaf nodes of the {\tt RMMT}, and we next update them to store the
-corresponding global excess values in $P$.  To do this, we first
-update the excess value of the last position of the subsequence
-assigned to each core.  We observe that for the $i$th core, the global
-excess value of the last position in its subsequence is equal to the
-sum of the local excess values of the last positions in the
-subsequences assigned to the first $i$ cores.  Therefore, we can use a
-parallel prefix sum algorithm~\cite{Helman2001265} to update all these
-values (line 22).  Each process can now then update the remaining
-excess, minimum and maximum values in parallel, by making use of the
-excess value of the last position of the subsequence assigned to the
-previous core (lines 23 to 28).
+The computation of entries of $m'$, $M'$, and $n'$ (Algorithm~\ref{algo:PSTA2})
+first chooses the level closest to the root which contains at least $\threads$
+nodes and creates one thread for each such node $v$.
+The thread associated with node $v$ calculates the $m'$, $M'$, and $n'$ values
+of all nodes in the subtree with root $v$, by applying the function
+$\id{concat}$ to the nodes in the subtree bottom up (lines 2--6).
+The invocation of this function for a node computes its $m'$, $M'$, and $n'$
+values from the corresponding values of its children.
+With a scheduler that balances the work, such as a
+work-stealing scheduler, cores have a similar workload.
+Lines 7--10 apply a similar bottom-up strategy for computing the $m'$, $M'$,
+and $n'$ values of the nodes in the top $\lvl$ levels, but they do this by
+processing these levels sequentially and, for each level, processing the
+nodes on this level in parallel.
 
-Algorithm \ref{algo:PSTA2} shows the computation of the internal
-nodes.  Here, we first compute the closest level, $lvl$, to the root
-that has at least $p$ nodes (line 1).  Note that we number the levels
-incrementally starting from the root, which is at level $0$.  Then for
-each node at level $lvl$, we assign the subtree rooted at it to a
-core.  This core computes the entries of $m$, $M'$ and $n'$ that
-correspond to each node in this subtree, by processing the entries of
-$m$, $M'$ and $n'$ corresponding to its two children (lines 2-6). Line
-6 calls $concat$, whose pseudocode is also given.  Notice that one
-core could compute more than one subtree and those subtrees may be
-non-consecutive. With a scheduler that balances the work, such as a
-work-stealing scheduler, cores have a similar workload.  Finally, for
-each of the remaining levels (levels $lvl-1, lvl-2, \ldots 0$), the
-algorithm computes the entries of $m$, $M'$ and $n'$ that correspond
-to the nodes at each level in parallel (lines 7-10).
-
-In the last phase of {\tt PSTA}, Algorithm \ref{algo:PSTA3} shows the
-computation of universal tables.  As each entry in a universal table
-can be computed independently, we can easily compute them in parallel.
-To simplify the explanation, Algorithm \ref{algo:PSTA3} just shows the
-computation of one universal table, $near\_fwd\_pos$, which is the one
-used to support the {\fwdsearch} operation (its content is described
-in Section~\ref{subsec:suctrees}). The same algorithm can be applied
-to the other tables.
+Algorithm~\ref{algo:PSTA3} illustrates the construction of universal lookup
+tables using the construction of the table $\id{near\_fwd\_pos}$ as an example.
+This table is used to support the {\fwdsearch} operation (see
+Section~\ref{subsec:suctrees}).
+Other lookup tables can be constructed analogously.
+As each entry in such a universal table can be computed independently, we can
+easily compute them in parallel.

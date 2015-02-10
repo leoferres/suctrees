@@ -1,4 +1,4 @@
-Jacobson~\cite{j1989} was the first to  propose the design of succinct data
+Jacobson~\cite{j1989} was the first to propose the design of succinct data
 structures.  He showed how to represent an ordinal tree on $n$ nodes
 using $2n+o(n)$ bits so that computing the first child, next sibling
 or parent of any node takes $O(\lg n)$ time in the bit probe
@@ -35,14 +35,13 @@ for the first time and a closing parenthesis after visiting all
 its descendants.  Thus, the length of $P$ is $2n$.
 
 The NS-representa\-tion is not the first structure to use balanced
-parentheses to represent trees.  Munro and Raman~\cite{mr1997} were
-the first to design succinct representations of balanced parentheses
-and used them to represent ordinal trees succinctly by reducing a set
-of navigational operations on trees to operations on their balanced
-parenthesis sequences.  Their solution supports only a subset of the
+parentheses to represent trees.  Munro and Raman~\cite{mr1997} used
+succinct representations of balanced parentheses to represent ordinal trees
+and reduced a set of navigational operations on trees to operations on their
+balanced parenthesis sequences.  Their solution supports only a subset of the
 operations supported by the NS-representation.  Additional operations
 can be supported using auxiliary data structures~\cite{ly2008}, but
-supporting all operations supported by the NS-representation requires many
+supporting all operations in Appendix~\ref{sec:operations} requires many
 auxiliary structures, which increases the size of the final data structure
 and makes it complex in both theory and practice.  The main novelty of
 the NS-representation lies in its reduction of a large set of
@@ -98,7 +97,11 @@ the {\tt RMMT} we implemented, we partition $P$ into chunks
 of size $s = w \lg n$, where $w$ is the machine word size.  For
 simplicity, we assume that the length of $P$ is a multiple of~$s$.
 The {\tt RMMT} is a complete binary tree over the sequence of
-chunks (see Figure \ref{fig:RangeMinMaxTree}). Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$
+chunks (see Figure \ref{fig:RangeMinMaxTree}).
+(If the number of chunks is not a power of $2$, we pad the sequence
+with chunks of zeroes to reach the closest power of $2$.
+These chunks are not stored explicitly.)
+Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$
 of $P$ that is the concatenation of the chunks corresponding to the
 descendant leaves of $u$.  Since the {\tt RMMT} is a complete tree, we
 do not need to store its structure explicitly.  Instead, we index its
@@ -143,7 +146,7 @@ node in the tree take constant time, the cost is $O(\lg n)$.
 
 Supporting operations on the leaves, such as finding the $i$th leaf
 from the left, reduces to $\rankop$ and $\selop$ operations over
-another bit vector $P_1[1..2n]$ where $P_1[i] = 1$ iff $P[i] = 1$ and
+a bit vector $P_1[1..2n]$ where $P_1[i] = 1$ iff $P[i] = 1$ and
 $P[i+1] = 0$.  $\rankop$ and $\selop$ operations over $P_1$ in turn
 reduce to $\sumop$ and $\fwdsearch$ operations over $P_1$ and can thus
 be supported by an {\tt RMMT} for $P_1$.  $P_1$ does not need to be
