@@ -60,7 +60,7 @@ with running parallel code on a single core.
 Up to 16 cores, the speed-up of {\tt psta} is almost linear whenever $p$ is a
 power of $2$ and the efficiency (speed-up/$p$) is 70\% or higher, except for
 {\tt ctree} on 32 cores.
-This is very good for multicore architectures.
+This is very good for a multicore architecture.
 When $p$ is not a power of~$2$, speed-up is slightly worse.
 The reason is that, when $p$ is a power of $2$, {\tt psta} can assign exactly
 one subtree to each thread (see Algorithm \ref{algo:PSTA2}), distributing the
@@ -98,7 +98,6 @@ which allowed the remaining cores to be used exclusively by {\tt psta}.
 For $p = 64$, {\tt psta} competed with the OS for available cores.
 This had a detrimental effect on the efficiency of {\tt psta} for $p = 64$.
 
-\vspace{-13pt}
 \subsubsection{Memory usage.}
 We measured the amount of working memory (i.e., memory not occupied by the raw
 parenthesis sequence) used by {\tt psta}, {\tt libcds}, and {\tt sdsl}.
