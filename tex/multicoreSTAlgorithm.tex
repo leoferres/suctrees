@@ -62,9 +62,7 @@ cost is indeed negligible in practice.
           $n'[t*\ct+\chk+o] \asgn n'_t$\;
         }
       }
-      \BlankLine
       $\id{parallel\_prefix\_sum}(e', \ct)$\;
-      \BlankLine
       \PFor{$t \asgn 1$ \KwTo $\threads-1$}{
         \For{$\chk \asgn 0$ \KwTo $\ct-1$}{
           \If{$\chk < \ct-1$}{
@@ -98,7 +96,6 @@ cost is indeed negligible in practice.
           }
         }
       }
-      \BlankLine
       \For{$l \asgn \lvl-1$ \KwTo $0$}{
         \PFor{$d \asgn 0$ \KwTo $2^{l}-1$}{
           $i \asgn d + 2^{l}-1$\;

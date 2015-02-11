@@ -7,6 +7,7 @@ SHELL=zsh
 MAIN_MASTER=sea2015.tex
 
 MAIN_OTHER_SOURCES=introduction.tex \
+		   preamble.tex \
 		   relwork.tex \
 		   suctrees.tex \
 		   dym.tex \
