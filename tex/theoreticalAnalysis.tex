@@ -19,8 +19,7 @@ $O(p)$. Moreover, the
 parallelism $T_1/T_{\infty}$ (the maximum theoretical speedup) of {\tt
 PSTA} is $\frac{n+\sqrt{2^{w}}\poly(w)}{\lg n}$.
 
-An important advantage\Norbert{Advantage over which other algorithm?} of our algorithm is its working space. The {\tt
-PSTA} algorithm does not need any extra memory related to the use of
+The {\tt PSTA} algorithm does not need any extra memory related to the use of
 threads. Indeed, it just needs space proportional to the input size
 and the space needed to schedule the threads. A work-stealing
 scheduler, like the one used by the DyM model, exhibits at most a
@@ -29,7 +28,7 @@ amount of space used by the scheduler for any execution of a
 multithreaded computation using one core. This upper bound is
 optimal within a constant factor
 \cite{Blumofe:1999:SMC:324133.324234}. In summary, the working space
-needed by our algorithm is $O(n\lg n+S_1p)$ bits.\Norbert{I'm confused. $P$ needs $2n$ bits.  Our experiments claim that we use about 1 bit per element in $P$ of additional working space, so this would be $O(n)$ not $O(n \lg n)$.  Where does the extra space come from?  Either way, $O(n)$ or $O(n \lg n)$ is claimed out of the blue here without an argument where this bound on the amount of working space comes from.  This should be fixed.  We have the space to discuss this.} Thus, since in modern
+needed by our algorithm is $O(n\lg n+S_1p)$ bits. Thus, since in modern
 machines it is usual that $p\ll n$, the scheduling space is negligible
 and the working space is dominated by $O(n\lg n)$.
 
