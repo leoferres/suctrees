@@ -7,7 +7,8 @@ Lines~1--6 of Algorithm~\ref{algo:PSTA2} require $O(n/s)$ work and have
 span $O(n/sp)$.
 Lines~7--10 require $O(p)$ work and have span $O(\lg p)$.
 Algorithm \ref{algo:PSTA3} requires $O(\sqrt{2^w}\poly(w))$ work and
-has span $O(\sqrt{2^{w}}\poly(w)/p)$.
+has span $O(\sqrt{2^{w}}\poly(w)/p)$. As was defined in Section \ref{subsec:suctrees},
+$w$ is the machine word size.
 Thus, the total work of {\tt PSTA} is $T_1 = O(n + \lg p + \sqrt{2^w}\poly(w))$
 and its span is $O(n/p + \lg p + \sqrt{2^w}\poly(w)/p)$.
 For $p \rightarrow \infty$, we get a span of $T_\infty = O(\lg n)$.
