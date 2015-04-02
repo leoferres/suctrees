@@ -6,8 +6,9 @@ tree $T$.
 This is a tree representation commonly used in practice, particularly in
 secondary storage, and known as the ``folklore encoding''.
 For trees whose folklore encoding is not directly available,
-Appendix~\ref{subsec:parenthesesAlgorithm} describes a parallel algorithm that
-can compute such an encoding in $O(n/p + \lg p)$ time.
+we have designed a parallel algorithm that
+can compute such an encoding in $O(n/p + \lg p)$ time, and the
+details are omitted due to space constraint.
 Our algorithms assume that manipulating $w$ bits takes constant time.
 Additionally, we assume the (time and space) overhead
 of scheduling threads on cores is negligible. This is
@@ -206,7 +207,7 @@ of the preceding superchunk.
 Lines 23--28 do exactly this.
 
 The computation of entries of $m'$, $M'$, and $n'$ (Algorithm~\ref{algo:PSTA2})
-first chooses the level closest to the root which contains at least $\threads$
+first chooses the level closest to the root that contains at least $\threads$
 nodes and creates one thread for each such node $v$.
 The thread associated with node $v$ calculates the $m'$, $M'$, and $n'$ values
 of all nodes in the subtree with root $v$, by applying the function

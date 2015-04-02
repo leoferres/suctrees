@@ -20,7 +20,7 @@ previous tree representations achieved a redundancy of $o(n)$ bits,
 their redundancy was $\Omega(n \lg\lg n / \lg n)$ bits, that is, just
 slightly sub-linear.  The NS-representation also supports a large
 number of navigational operations in constant time (see
-Appendix~\ref{sec:operations});
+Table I in~\cite{Navarro:2014:FFS:2620785.2601073});
 only the work in \cite{hms2012,fm2014} supports two additional operations.
 An experimental study of succinct trees~\cite{ACNSalenex10} showed that a
 simplified version of the NS-representation uses less space than other
@@ -41,7 +41,8 @@ and reduced a set of navigational operations on trees to operations on their
 balanced parenthesis sequences.  Their solution supports only a subset of the
 operations supported by the NS-representation.  Additional operations
 can be supported using auxiliary data structures~\cite{ly2008}, but
-supporting all operations in Appendix~\ref{sec:operations} requires many
+    supporting all operations in Table I of~\cite{Navarro:2014:FFS:2620785.2601073}
+    requires many
 auxiliary structures, which increases the size of the final data structure
 and makes it complex in both theory and practice.  The main novelty of
 the NS-representation lies in its reduction of a large set of
@@ -104,17 +105,17 @@ These chunks are not stored explicitly.)
 Each node $u$ of the {\tt RMMT} represents a subsequence $P_u$
 of $P$ that is the concatenation of the chunks corresponding to the
 descendant leaves of $u$.  Since the {\tt RMMT} is a complete tree, we
-do not need to store its structure explicitly.  Instead, we index its
+need not store its structure explicitly.  Instead, we index its
 nodes as in a binary heap and refer to each node by its index.  The
 representation of the {\tt RMMT} consists of four arrays $e'$, $m'$,
 $M'$, and $n'$, each of length equal to the number of nodes in the
 {\tt RMMT}.  The $u$th entry of each of these arrays stores some
 crucial information about $P_u$: Let the {\em excess} at position $i$
 of $P$ be defined as $\sumop(P,\pi,0,i) = \sum_{k=0}^{i} \pi(P[k])$.
-$e'[u]$ stores the excess at the last position in $P_u$.  $m'[i]$ and
-$M'[i]$ store the minimum and maximum excess, respectively, at any position in
-$P_u$.  $n'[i]$ stores the number of positions in $P_u$ that
-have the minimum excess value $m'[i]$.
+$e'[u]$ stores the excess at the last position in $P_u$.  $m'[u]$ and
+$M'[u]$ store the minimum and maximum excess, respectively, at any position in
+$P_u$.  $n'[u]$ stores the number of positions in $P_u$ that
+have the minimum excess value $m'[u]$.
 
 Combined with a standard technique called {\em table lookup}, an {\tt RMMT}
 supports the primitive operations
@@ -158,4 +159,4 @@ bits, while the space needed to store the vectors $e'$, $m'$, $M'$,
 and $n'$ is $2(n/s) \lg n = 2n/w$.  The space needed to store the same
 vectors for the {\tt RMMT} of $P_1$ is the same.  Since we can assume
 that $w = \Omega(\lg n)$, the total size of the {\tt RMMT} is thus
-$2n + O(n / \lg n)$.
+$2n + O(n / \lg n)$ bits.

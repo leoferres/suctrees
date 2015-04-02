@@ -8,9 +8,8 @@ a bottleneck, particularly when they do not fit in memory.  Succinct
 tree representations store trees using as few bits as possible and
 thereby significantly increase the size of trees that fit in memory
 while still supporting important primitive operations in constant
-time.  There exist such representations that use only $2n - \Theta(\lg
-n)$ bits\footnote{We use $\lg x$ to mean $\log_{2}x$ throughout this
-paper.} to store the topology of a tree with $n$ nodes, which is close
+time.  There exist such representations that use only $2n + o(n)$
+bits to store the topology of a tree with $n$ nodes, which is close
 to the information-theoretic lower bound and much less than the space
 used by traditional pointer-based representations.
 
@@ -18,17 +17,18 @@ Alas, the construction of succinct trees is quite slow compared to the
 construction of pointer-based representations.  Multicore parallelism
 offers one possible tool to speed up the construction of succinct
 trees, but little work has been done in this direction so far.  The
-only results we are aware of focus on the construction of Wavelet
+only results we are aware of focus on the construction of wavelet
 trees, which are used in representations of text indexes.  In
-\cite{Fuentes2014}, two practical multicore algorithms for Wavelet
+\cite{Fuentes2014}, two practical multicore algorithms for wavelet
 tree construction were introduced.  Both algorithms perform $O(n\lg
-\sigma)$ work and have span $O(n)$, where $n$ is the input size and
+\sigma)$\footnote{We use $\lg x$ to mean $\log_{2}x$ throughout this
+paper.} work and have span $O(n)$, where $n$ is the input size and
 $\sigma$ is the alphabet size.  In \cite{DBLP:journals/corr/Shun14},
-Shun introduced three new algorithms to construct Wavelet trees in
+Shun introduced three new algorithms to construct wavelet trees in
 parallel. Among these three algorithms, the best algorithm in practice
 performs $O(n\lg \sigma)$
 work and has span $O(\lg n\lg \sigma)$. Shun also explained how to
-parallelize the construction of rank/select structures so it requires
+parallelize the construction of rank/select structures so that it requires
 $O(n)$ work and $O(1)$ span for rank structures, and $O(n)$ work and
 $O(\lg n)$ span for select structures.
 
@@ -36,7 +36,7 @@ In this paper, we provide a parallel algorithm that constructs the
 {\tt RMMT} tree representation of
 \cite{Navarro:2014:FFS:2620785.2601073} in $O(n/p + \lg p)$ time
 using $p$ cores.  This structure uses $2n + o(n)$ bits to store an
-ordinal tree with $n$ nodes and supports a rich set of basic
+ordinal tree on $n$ nodes and supports a rich set of basic
 operations on these trees in $O(\lg n)$ time.  While this query time
 is theoretically suboptimal, the {\tt RMMT} structure is simple enough
 to be practical and has been verified experimentally to be very small

@@ -1,0 +1,139 @@
+% PAGE BUDGET
+%
+%                          TARGET    CURRENT
+%
+% Abstract + Introduction  1 3/4     1 3/4
+% Preliminaries            3         3 3/4
+% Algorithm description    3 1/2     6
+% Experiments              2 1/4     2 1/2
+% Conclusions              1/3       1/3
+% References               1         1 + eps
+
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{url}
+\usepackage[usenames]{xcolor}
+\usepackage[vlined]{algorithm2e}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{cite}
+\usepackage[font=small,labelfont=bf,tableposition=top,skip=0pt,justification=raggedright]{caption}
+\usepackage{booktabs}
+
+\newcommand{\Jose}[1]{{\color{red} [[JOSE:: #1]]}}
+\newcommand{\Leo}[1]{{\color{blue} [[LEO:: #1]]}}
+\newcommand{\Meng}[1]{{\color{green} [[MENG:: #1]]}}
+\newcommand{\Norbert}[1]{{\color{orange} [[NORBERT:: #1]]}}
+
+\newcommand{\ignore}[1]{}
+
+\input{preamble}
+
+\begin{document}
+
+
+\title{Parallel Construction of Succinct Trees\thanks{This work was
+    supported by the Emerging Leaders in the Americas scholarship
+    programme, NSERC, and the Canada Research Chairs programme.}}
+\titlerunning{Parallel Construction of Succinct Trees}
+
+\author{Leo Ferres\inst{1}
+  \and
+  Jos\'e Fuentes-Sep\'ulveda\inst{1}
+  \and
+  Meng He\inst{2}
+  \and
+  Norbert Zeh\inst{2}}
+
+\authorrunning{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
+
+\tocauthor{Leo Ferres, Jos\'e Fuentes-Sep\'ulveda, Meng He, and Norbert Zeh}
+
+\institute{Department of Computer Science, Universidad de Concepci\'on, Chile,\\
+  \email{\{lferres,jfuentess\}@udec.cl}
+  \and
+  Faculty of Computer Science, Dalhousie University, Canada,\\
+  \email{\{mhe,nzeh\}@cs.dal.ca}}
+
+\maketitle
+
+\begin{abstract}
+  Succinct representations of trees are an elegant solution to
+  make large trees fit in main memory while still supporting
+  navigational operations in constant time.  However, their construction
+  time remains a bottleneck.  We
+  introduce a practical parallel algorithm that improves the state of
+  the art in succinct tree construction.  Given a tree on $n$ nodes
+  stored as a sequence of balanced parentheses, our algorithm
+  builds a succinct tree representation in $O(n/p+\lg p)$ time,
+  where $p$ is the number of available cores.  The constructed
+  representation uses $2n + o(n)$ bits of space and supports a rich
+  set of operations in $O(\lg n)$ time.  In experiments using up to
+  64 cores and on inputs of different sizes, our algorithm
+  achieved good parallel speed-up.
+  We also present an
+  algorithm that takes $O(n/p + \lg p)$ time to construct the
+  balanced parenthesis representation of the input tree required by
+  our succinct tree construction algorithm.
+\end{abstract}
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% INTRODUCTION %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+\label{sec:introduction}
+\input{introduction}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% PRELIMINARIES %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Preliminaries}
+\label{sec:relwork}
+\input{relwork}
+
+\subsubsection{Succinct trees.}
+\label{subsec:suctrees}
+\input{suctrees}
+
+\subsubsection{Dynamic multithreading (DyM) model.}
+\label{subsec:dym}
+\input{dym}
+
+\section{A Parallel Algorithm for Succinct Tree Construction}
+\label{sec:multicoreST}
+\input{multicoreSTAlgorithm}
+
+\subsubsection{Theoretical analysis.}
+\label{subsec:theoreticalAnalysis}
+\input{theoreticalAnalysis}
+
+\section{Experimental Results}
+\label{sec:exps}
+\input{exps}
+\input{setup}
+
+%\subsection{Results and Discussion}
+%\label{subsec:resultsDiscussion}
+\input{resultsDiscussion}
+
+\section{Conclusions and Future Work}
+\label{sec:conclusion}
+\input{conclusion}
+
+\subsubsection*{Acknowledgements.}
+We would like to thank Diego Arroyuelo, Roberto As\'{i}n, and Rodrigo
+C\'{a}novas for their time and making resources available to us.
+
+\bibliographystyle{splncs03}
+\bibliography{sigproc}
+
+\end{document}
+

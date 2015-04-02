@@ -29,7 +29,9 @@ amount of space used by the scheduler for any execution of a
 multithreaded computation using one core. This upper bound is
 optimal within a constant factor
 \cite{Blumofe:1999:SMC:324133.324234}. In summary, the working space
-needed by our algorithm is $O(n\lg n+S_1p)$ bits. Thus, since in modern
+needed by our algorithm is $O(n\lg n+S_1p)$ bits. Since in our
+algorithm the scheduler does not need to consider the input
+size to schedule threads, $S_1=O(1)$. Thus, since in modern
 machines it is usual that $p\ll n$, the scheduling space is negligible
 and the working space is dominated by $O(n\lg n)$.
 
@@ -40,5 +42,5 @@ $T_p = O(n/p + \lg p)$.
 Thus, we have the following theorem:
 \begin{theorem}\label{lem:lg}
 A $(2n+o(n))$-bit representation of an ordinal tree on $n$ nodes and its balanced parenthesis sequence can be computed in $O(n/p + \lg p)$ time using $O(n\lg n)$ bits of working space, where $p$ is the number of cores.
-This representation can support the operations in Table~\ref{tbl:operations} in $O(\lg n)$ time.
+This representation can support the operations in Table I of~\cite{Navarro:2014:FFS:2620785.2601073} in $O(\lg n)$ time.
 \end{theorem}
